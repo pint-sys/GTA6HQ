@@ -1369,8 +1369,15 @@ function updateCountdown(){
 (function init(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
-  updateTokenUI();updateCountdown();
+  updateTokenUI();
+  
+  // 1. Run it instantly on load
+  updateCountdown();
+  // 2. Tell the browser to repeat it every 1000 milliseconds (1 second)
+  setInterval(updateCountdown, 1000); 
+  
   setInterval(renderSidebarNews, 50000);
+})();
 
   // welcome nudge
   setTimeout(function () {
