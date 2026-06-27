@@ -11,46 +11,53 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
 }
 
 const db = admin.firestore();
-const BLOCKLIST = ["scam", "fake", "giveaway", "free hack", "leaked download"];
+const BLOCKLIST = ["scam", "fake", "giveaway", "free hack", "leaked download", "clickbait"];
 
 async function runNewsAutomation() {
   try {
-    console.log("Fetching live GTA 6 streams...");
-    const feedUrl = "https://www.reddit.com/r/GTA6/new.json?limit=15";
-    const response = await axios.get(feedUrl, { headers: { 'User-Agent': 'GTA6HQ-Bot/1.0' } });
-    const articles = response.data.data.children;
+    console.log("Fetching live, verified GTA 6 news feeds...");
+    
+    // Using a fully open Google News RSS-to-JSON feed for GTA 6 (Highly reliable)
+    const feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGTA%2B6%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen";
+    const response = await axios.get(feedUrl);
+    
+    const items = response.data.items || [];
+    console.log(`Found ${items.length} raw articles to process.`);
 
-    for (let item of articles) {
-      const post = item.data;
-      const title = post.title;
-      const originalUrl = `https://www.reddit.com${post.permalink}`;
+    for (let item of items) {
+      const title = item.title;
+      const originalUrl = item.link;
 
+      // 1. FILTRATION Engine
       const containsSpam = BLOCKLIST.some(word => title.toLowerCase().includes(word));
-      if (containsSpam) continue;
+      if (containsSpam) {
+        console.log(`Filtered out spam post: ${title}`);
+        continue;
+      }
 
-      // Deterministic deduplication ID mapping
+      // 2. DEDUPLICATION Engine using unique clean URL hashes
       const uniqueDocId = Buffer.from(originalUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, "").substring(0, 40);
       const docReference = db.collection("automated_news").doc(uniqueDocId);
       const docSnapshot = await docReference.get();
 
       if (!docSnapshot.exists) {
+        // Fallback placeholder image since Google RSS feeds are text-only
         let imagePreview = "img/news-placeholder.jpg"; 
-        if (post.thumbnail && post.thumbnail.startsWith("http")) {
-          imagePreview = post.thumbnail;
-        }
 
         await docReference.set({
           title: title,
           url: originalUrl,
-          tag: post.link_flair_text ? post.link_flair_text.toLowerCase() : "news",
-          time: new Date(post.created_utc * 1000).toLocaleDateString(),
+          tag: "news",
+          time: new Date(item.pubDate).toLocaleDateString(),
           img: imagePreview,
-          timestamp: admin.FieldValue.serverTimestamp()
+          timestamp: admin.firestore.FieldValue.serverTimestamp()
         });
-        console.log(`Added: ${title}`);
+        console.log(`Successfully Added Fresh Content: ${title}`);
+      } else {
+        console.log(`Duplicate Skipped: ${title}`);
       }
     }
-    console.log("Done!");
+    console.log("Automation synchronization finished cleanly!");
   } catch (error) {
     console.error("Execution failed:", error);
     process.exit(1);
