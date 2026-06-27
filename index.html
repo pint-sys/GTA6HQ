@@ -1394,9 +1394,12 @@ function updateCountdown(){
   setInterval(updateCountdown, 1000);
   setInterval(renderSidebarNews, 50000);
 
-  // welcome nudge
+ // welcome nudge (CRASH-PROOF)
   setTimeout(function () {
-    if (typeof S !== 'undefined' && !S.loggedIn) {
+    if (typeof S !== 'undefined' && S && !S.loggedIn) {
+      notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
+    } else if (typeof S === 'undefined') {
+      // Fallback if S doesn't exist yet so the site doesn't break
       notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
     }
   }, 2000);
