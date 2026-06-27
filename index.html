@@ -1318,7 +1318,7 @@ function switchAuthTab(m,btn){
   btn.classList.add('active');
   document.getElementById('auth-login').style.display=m==='login'?'block':'none';
   document.getElementById('auth-register').style.display=m==='register'?'block':'none';
-}
+<script type="module">}
 function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(25,'Daily login bonus');closeModal('auth-modal');saveS();}
 function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(100,'Welcome bonus');closeModal('auth-modal');saveS();}
 function submitQuestion(){earnTokens(100,'Posted a question');closeModal('ask-modal');notify('Question posted! +100 TKN earned.');}
@@ -1354,7 +1354,6 @@ function notify(msg){
   t.classList.add('show');
   ntTimer=setTimeout(function(){t.classList.remove('show');},3600);
 }
-
 // ─── COUNTDOWN ───
 function updateCountdown(){
   var target=new Date('2026-11-19T08:00:00-08:00').getTime();
@@ -1371,11 +1370,17 @@ function updateCountdown(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();updateCountdown();
-  setInterval(updateCountdown,1000);
-  setInterval(renderSidebarNews,50000);
+  setInterval(renderSidebarNews, 50000);
+
   // welcome nudge
-  setTimeout(function(){if(!S.loggedIn)notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');},2000);
+  setTimeout(function () {
+    if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
+  }, 2000);
 })();
 </script>
+
+<!-- PLACE YOUR FIREBASE LINK HERE, OUTSIDE THE MAIN SCRIPT -->
+<script type="module" src="firebase-config.js"></script>
+
 </body>
 </html>
