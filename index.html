@@ -1360,35 +1360,36 @@ function notify(msg){
   }
 }
 
-// ─── COUNTDOWN (BULLETPROOF TARGETING) ───
+// ─── COUNTDOWN (CRASH-PROOF TARGETING) ───
 function updateCountdown(){
   var target = new Date("2026-11-19T08:00:00").getTime();
   var now = Date.now();
   var diff = target - now;
   
-  // Find elements safely whether they use ID or are inside the countdown container
-  var elDays  = document.getElementById('cd-days')  || document.querySelector('[id*="days"]');
-  var elHours = document.getElementById('cd-hours') || document.querySelector('[id*="hours"]');
-  var elMins  = document.getElementById('cd-mins')  || document.querySelector('[id*="mins"]');
-  var elSecs  = document.getElementById('cd-secs')  || document.querySelector('[id*="secs"]');
+  // Safely check for elements without throwing a crash if they aren't loaded yet
+  var elDays  = document.getElementById('cd-days');
+  var elHours = document.getElementById('cd-hours');
+  var elMins  = document.getElementById('cd-mins');
+  var elSecs  = document.getElementById('cd-secs');
+
+  // If the elements aren't rendered on the screen yet, exit gracefully instead of crashing
+  if (!elDays || !elHours || !elMins || !elSecs) {
+    return;
+  }
 
   if (diff <= 0 || isNaN(diff)) {
-    if(elDays)  elDays.textContent = '0';
-    if(elHours) elHours.textContent = '0';
-    if(elMins)  elMins.textContent = '0';
-    if(elSecs)  elSecs.textContent = '0';
+    elDays.textContent = '0';
+    elHours.textContent = '0';
+    elMins.textContent = '0';
+    elSecs.textContent = '0';
     return;
   }
   
-  var d = Math.floor(diff / 86400000);
-  var h = Math.floor((diff % 86400000) / 3600000);
-  var m = Math.floor((diff % 3600000) / 60000);
-  var s = Math.floor((diff % 60000) / 1000);
-
-  if(elDays)  elDays.textContent  = d;
-  if(elHours) elHours.textContent = h;
-  if(elMins)  elMins.textContent  = m;
-  if(elSecs)  elSecs.textContent  = s;
+  // Update text contents cleanly
+  elDays.textContent  = Math.floor(diff / 86400000);
+  elHours.textContent = Math.floor((diff % 86400000) / 3600000);
+  elMins.textContent  = Math.floor((diff % 3600000) / 60000);
+  elSecs.textContent  = Math.floor((diff % 60000) / 1000);
 }
 // ─── INIT ───
 (function init(){
