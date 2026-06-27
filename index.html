@@ -1363,12 +1363,18 @@ function notify(msg){
   document.getElementById('notifyMsg').textContent=msg;
   t.classList.add('show');
   ntTimer=setTimeout(function(){t.classList.remove('show');},3600);
-}
 // ─── COUNTDOWN ───
 function updateCountdown(){
-  var target = new Date('2026/11/19 08:00:00').getTime();
-  var now=Date.now(),diff=target-now;
-  if(diff<=0){document.getElementById('cd-days').textContent='0';document.getElementById('cd-hours').textContent='0';document.getElementById('cd-mins').textContent='0';document.getElementById('cd-secs').textContent='0';return;}
+  // Use the standard ISO 8601 format (with a T) to ensure all browsers parse it correctly
+  var target = new Date('2026-11-19T08:00:00').getTime();
+  var now=Date.now(), diff=target-now;
+  if(diff <= 0){
+    document.getElementById('cd-days').textContent='0';
+    document.getElementById('cd-hours').textContent='0';
+    document.getElementById('cd-mins').textContent='0';
+    document.getElementById('cd-secs').textContent='0';
+    return;
+  }
   document.getElementById('cd-days').textContent=Math.floor(diff/86400000);
   document.getElementById('cd-hours').textContent=Math.floor((diff%86400000)/3600000);
   document.getElementById('cd-mins').textContent=Math.floor((diff%3600000)/60000);
