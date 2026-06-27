@@ -1390,39 +1390,29 @@ function updateCountdown(){
   elHours.textContent = Math.floor((diff % 86400000) / 3600000);
   elMins.textContent  = Math.floor((diff % 3600000) / 60000);
   elSecs.textContent  = Math.floor((diff % 60000) / 1000);
-}
-// ─── INIT (SAFE DOM LOADING) ───
-function init(){
+// ─── INIT ───
+(function init(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
   
-  // Run instantly on load now that the elements are guaranteed to exist
+  // 1. Run the countdown immediately
   updateCountdown();
   
-  // Set accurate 1-second interval loops
+  // 2. Start the intervals safely
   setInterval(updateCountdown, 1000);
   setInterval(renderSidebarNews, 50000);
 
-  // welcome nudge (CRASH-PROOF)
+  // 3. Welcome nudge inside the safe execution block
   setTimeout(function () {
     if (typeof S !== 'undefined' && S && !S.loggedIn) {
       notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
-    } else if (typeof S === 'undefined') {
-      notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
     }
   }, 2000);
-}
-
-// Force the browser to wait until the HTML layout is fully drawn before executing
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+})();
 </script>
 
-<!-- Firebase configuration safely loaded as an external module -->
+<!-- Firebase configuration module loads completely outside -->
 <script type="module" src="firebase-config.js"></script>
 
 </body>
