@@ -1,0 +1,26 @@
+name: Auto Fetch GTA 6 News
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Runs automatically every 2 hours
+  workflow_dispatch: # Adds a manual play button under your Actions tab
+
+jobs:
+  fetch-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Scraper
+      env:
+        FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      run: node fetch-news.js
