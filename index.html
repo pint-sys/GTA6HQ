@@ -1391,29 +1391,35 @@ function updateCountdown(){
   elMins.textContent  = Math.floor((diff % 3600000) / 60000);
   elSecs.textContent  = Math.floor((diff % 60000) / 1000);
 }
-// ─── INIT ───
-(function init(){
+// ─── INIT (SAFE DOM LOADING) ───
+function init(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
   
-  // Run instantly on load
+  // Run instantly on load now that the elements are guaranteed to exist
   updateCountdown();
   
   // Set accurate 1-second interval loops
   setInterval(updateCountdown, 1000);
   setInterval(renderSidebarNews, 50000);
 
- // welcome nudge (CRASH-PROOF)
+  // welcome nudge (CRASH-PROOF)
   setTimeout(function () {
     if (typeof S !== 'undefined' && S && !S.loggedIn) {
       notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
     } else if (typeof S === 'undefined') {
-      // Fallback if S doesn't exist yet so the site doesn't break
       notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
     }
   }, 2000);
-})();
+}
+
+// Force the browser to wait until the HTML layout is fully drawn before executing
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 
 <!-- Firebase configuration safely loaded as an external module -->
