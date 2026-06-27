@@ -1389,9 +1389,8 @@ function updateCountdown(){
   elDays.textContent  = Math.floor(diff / 86400000);
   elHours.textContent = Math.floor((diff % 86400000) / 3600000);
   elMins.textContent  = Math.floor((diff % 3600000) / 60000);
- elSecs.textContent  = Math.floor((diff % 60000) / 1000);
-}   // ← add this to close updateCountdown()
-
+  elSecs.textContent  = Math.floor((diff % 60000) / 1000);
+}
 // ─── INIT ───
 (function init(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
