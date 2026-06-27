@@ -1348,13 +1348,6 @@ function share(title) {
   notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN');
 }
 
-</script>
-
-<!-- 1. The Firebase module sits cleanly outside in the HTML body -->
-<script type="module" src="firebase-config.js"></script>
-
-<!-- 2. The separate configuration script block containing your logic -->
-<script>
 // ─── NOTIFY ───
 var ntTimer;
 function notify(msg){
@@ -1363,9 +1356,10 @@ function notify(msg){
   document.getElementById('notifyMsg').textContent=msg;
   t.classList.add('show');
   ntTimer=setTimeout(function(){t.classList.remove('show');},3600);
+}
+
 // ─── COUNTDOWN ───
 function updateCountdown(){
-  // Use the standard ISO 8601 format (with a T) to ensure all browsers parse it correctly
   var target = new Date('2026-11-19T08:00:00').getTime();
   var now=Date.now(), diff=target-now;
   if(diff <= 0){
@@ -1386,20 +1380,19 @@ function updateCountdown(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
-  
-  // 1. Run it instantly on load
   updateCountdown();
-  // 2. Tell the browser to repeat it every 1000 milliseconds (1 second)
-  setInterval(updateCountdown, 1000); 
-  
+  setInterval(updateCountdown, 1000);
   setInterval(renderSidebarNews, 50000);
-})();
 
   // welcome nudge
   setTimeout(function () {
     if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
   }, 2000);
 })();
+</script>
+
+<!-- Firebase configuration loads cleanly here at the very end -->
+<script type="module" src="firebase-config.js"></script>
 
 </body>
 </html>
