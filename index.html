@@ -1343,8 +1343,18 @@ function appendAI(text,role,cls){
 function removeTyping(){var t=document.querySelector('.typing-msg');if(t)t.remove();}
 
 // ─── SHARE ───
-function share(title){earnTokens(200,'Shared content');notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN');}
+function share(title) {
+  earnTokens(200, 'Shared content');
+  notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN');
+}
 
+</script>
+
+<!-- 1. The Firebase module sits cleanly outside in the HTML body -->
+<script type="module" src="firebase-config.js"></script>
+
+<!-- 2. The separate configuration script block containing your logic -->
+<script>
 // ─── NOTIFY ───
 var ntTimer;
 function notify(msg){
@@ -1384,10 +1394,6 @@ function updateCountdown(){
     if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
   }, 2000);
 })();
-</script>
-
-<!-- PLACE YOUR FIREBASE LINK HERE, OUTSIDE THE MAIN SCRIPT -->
-<script type="module" src="firebase-config.js"></script>
 
 </body>
 </html>
