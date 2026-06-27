@@ -1318,7 +1318,7 @@ function switchAuthTab(m,btn){
   btn.classList.add('active');
   document.getElementById('auth-login').style.display=m==='login'?'block':'none';
   document.getElementById('auth-register').style.display=m==='register'?'block':'none';
-<script type="module">}
+}
 function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(25,'Daily login bonus');closeModal('auth-modal');saveS();}
 function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(100,'Welcome bonus');closeModal('auth-modal');saveS();}
 function submitQuestion(){earnTokens(100,'Posted a question');closeModal('ask-modal');notify('Question posted! +100 TKN earned.');}
@@ -1389,7 +1389,9 @@ function updateCountdown(){
   elDays.textContent  = Math.floor(diff / 86400000);
   elHours.textContent = Math.floor((diff % 86400000) / 3600000);
   elMins.textContent  = Math.floor((diff % 3600000) / 60000);
-  elSecs.textContent  = Math.floor((diff % 60000) / 1000);
+ elSecs.textContent  = Math.floor((diff % 60000) / 1000);
+}   // ← add this to close updateCountdown()
+
 // ─── INIT ───
 (function init(){
   renderNews('all');renderVideos('all');renderGuides();renderMods('all');
