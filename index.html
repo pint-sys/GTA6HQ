@@ -975,14 +975,89 @@ var NEWS=[
   {id:6,cat:'official',tag:'Official',emoji:'💻',title:'PC Version: No Official Date — History Suggests 12–18 Months After Console',excerpt:'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months. PC specs are all predictions.',time:'2d ago',views:'211K',likes:3102},
 ];
 
-var VIDEOS=[
-  {id:1,src:'youtube',cat:'guides',title:'How to Complete the Port Heist — Full Walkthrough',dur:'18:42',views:'2.1M',ch:'GTA6HQ',reward:100,thumb:'🎮'},
-  {id:2,src:'discord',cat:'gameplay',title:'GTA 6 Beta Stream — First 2 Hours (Discord Exclusive)',dur:'2:04:11',views:'890K',ch:'GTA6HQ Discord',reward:200,thumb:'🎬'},
-  {id:3,src:'instagram',cat:'clips',title:"Lucia's Best Moments — IG Compilation",dur:'4:20',views:'3.4M',ch:'GTA6HQ IG',reward:75,thumb:'📱'},
-  {id:4,src:'youtube',cat:'guides',title:'Every Starter Job Ranked — Best Money Methods',dur:'22:17',views:'1.6M',ch:'GTA6Pro',reward:100,thumb:'💰'},
-  {id:5,src:'youtube',cat:'guides',title:'How to Unlock All Weapons Early',dur:'11:55',views:'980K',ch:'GTA6HQ',reward:100,thumb:'🔫'},
-  {id:6,src:'instagram',cat:'clips',title:'Craziest GTA 6 Moments This Week',dur:'6:45',views:'2.8M',ch:'GTA6HQ IG',reward:75,thumb:'🔥'},
-];
+var VIDEOS=[];
+var VIDEOS_LOADED=false;
+
+function formatViewCount(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000) return (n/1000).toFixed(1)+'K';
+  return String(n);
+}
+
+function formatDuration(iso){
+  var m=iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if(!m) return '0:00';
+  var h=parseInt(m[1]||0),mn=parseInt(m[2]||0),s=parseInt(m[3]||0);
+  if(h>0) return h+':'+(mn<10?'0':'')+mn+':'+(s<10?'0':'')+s;
+  return mn+':'+(s<10?'0':'')+s;
+}
+
+function calcReward(views,likes){
+  var score=(views/1000)+(likes*2);
+  if(score>500000) return 300;
+  if(score>100000) return 200;
+  if(score>50000)  return 150;
+  if(score>10000)  return 100;
+  return 50;
+}
+
+async function fetchYouTubeVideos(){
+  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
+  var queries=['GTA 6 gameplay','GTA VI official','GTA 6 trailer','GTA 6 news 2025','GTA 6 Lucia'];
+  var allIds=[];
+  var grid=document.getElementById('videoGrid');
+  if(grid) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-family:var(--font-u);font-size:13px;">Loading videos...</div>';
+  try{
+    for(var qi=0;qi<queries.length;qi++){
+      var q=queries[qi];
+      var url='https://www.googleapis.com/youtube/v3/search?part=snippet&q='+encodeURIComponent(q)+'&type=video&maxResults=10&order=viewCount&relevanceLanguage=en&key='+YT_KEY;
+      var res=await fetch(url);
+      var data=await res.json();
+      if(data.error) throw new Error(data.error.message);
+      if(data.items) data.items.forEach(function(item){
+        if(item.id&&item.id.videoId&&allIds.indexOf(item.id.videoId)===-1) allIds.push(item.id.videoId);
+      });
+    }
+    if(!allIds.length) throw new Error('No video IDs found');
+
+    var statsUrl='https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id='+allIds.join(',')+'&key='+YT_KEY;
+    var statsRes=await fetch(statsUrl);
+    var statsData=await statsRes.json();
+    if(!statsData.items||!statsData.items.length) throw new Error('No stats returned');
+
+    var sorted=statsData.items.sort(function(a,b){
+      var aScore=parseInt(a.statistics.viewCount||0)+(parseInt(a.statistics.likeCount||0)*10);
+      var bScore=parseInt(b.statistics.viewCount||0)+(parseInt(b.statistics.likeCount||0)*10);
+      return bScore-aScore;
+    });
+
+    VIDEOS=sorted.map(function(item,i){
+      var views=parseInt(item.statistics.viewCount||0);
+      var likes=parseInt(item.statistics.likeCount||0);
+      var thumb=item.snippet.thumbnails.high?item.snippet.thumbnails.high.url
+               :item.snippet.thumbnails.medium?item.snippet.thumbnails.medium.url:'';
+      return {
+        id:i+1,
+        src:'youtube',
+        youtubeId:item.id,
+        cat:'guides',
+        title:item.snippet.title,
+        dur:formatDuration(item.contentDetails.duration),
+        views:formatViewCount(views),
+        viewCount:views,
+        likeCount:likes,
+        ch:item.snippet.channelTitle,
+        thumb:thumb,
+        reward:calcReward(views,likes)
+      };
+    });
+    VIDEOS_LOADED=true;
+    renderVideos('all');
+  }catch(e){
+    console.warn('YouTube fetch failed:',e);
+    if(grid) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);"><div style="font-size:32px;margin-bottom:12px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
+  }
+}
 
 var GUIDES=[
   {id:1,tag:'Guide',emoji:'🏦',title:'How to Complete the Portsands Heist — Step by Step',excerpt:'Full setup guide: crew selection, approach route, loadout, and getaway. Includes fail-state recovery tips.',time:'3h ago',views:'44K',likes:601},
@@ -1081,7 +1156,12 @@ function openVideo(vid){
   if(S.videosWatched.has(vid.id)&&!confirm('You already earned tokens for this video. Watch again for free (no extra tokens)?')) return;
   watchState={active:true,videoId:vid.id,progress:0,interval:null,reward:vid.reward,tabSwitches:0,claimed:false,title:vid.title};
   document.getElementById('watchTitle').textContent=vid.title;
-  document.getElementById('watchVideoMsg').textContent=vid.thumb+' — '+vid.title+' (simulated player)';
+  var area=document.getElementById('watchVideoArea');
+  if(vid.youtubeId){
+    area.innerHTML='<iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube.com/embed/'+vid.youtubeId+'?autoplay=1&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block;"></iframe>';
+  } else {
+    area.innerHTML='<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">'+vid.thumb+' — '+vid.title+'</p></div>';
+  }
   document.getElementById('watchPct').textContent='0%';
   document.getElementById('watchProgFill').style.width='0%';
   document.getElementById('watchEarnBtn').className='wm-earn-btn';
@@ -1123,6 +1203,9 @@ function closeWatchModal(){
   }
   clearInterval(watchState.interval);
   watchState.active=false;
+  // destroy iframe so video stops playing in background
+  var area=document.getElementById('watchVideoArea');
+  area.innerHTML='<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">Video playing… watch to 80% to unlock tokens</p></div>';
   document.getElementById('watch-modal').classList.remove('open');
 }
 
@@ -1141,9 +1224,11 @@ function renderVideos(f){
   var srcColor={youtube:'#ff0000',discord:'#5865F2',instagram:'#e1306c'};
   document.getElementById('videoGrid').innerHTML=items.map(function(v){
     var watched=S.videosWatched.has(v.id);
-    return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(v).replace(/"/g,"'")+')">'
+    return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(v).replace(/"/g,"'")+')" data-vid-id="'+v.id+'">'
       +'<div class="vp-thumb">'
-      +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.2;">'+v.thumb+'</div>'
+      +(v.thumb&&v.thumb.startsWith('http')
+        ?'<img src="'+v.thumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display=\'none\'">'
+        :'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">'+v.thumb+'</div>')
       +'<div class="vp-overlay">'
       +'<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:'+srcColor[v.src]+';flex-shrink:0;"></span>'+srcLabel[v.src]+'</div>'
       +'<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'
@@ -1393,7 +1478,7 @@ function updateCountdown(){
 }
 // ─── INIT ───
 (function init(){
-  renderNews('all');renderVideos('all');renderGuides();renderMods('all');
+  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
   
