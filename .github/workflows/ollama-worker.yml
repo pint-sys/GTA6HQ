@@ -1,8 +1,42 @@
-- name: Improve Existing Website Code
+  name: Ollama Web Developer Worker
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  build-website:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'make-website')
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+        - name: Setup Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          sleep 5
+          ollama pull qwen2.5-coder:7b
+
+      - name: Improve Existing Website Code
         id: generate
         run: |
-          PROMPT=(echo "{{ github.event.issue.body }}" | sed 's/"/\\"/g')
-          ollama run qwen2.5-coder:7b "You are a web developer. Here is the current website code: HTML: (cat index.html) CSS: (cat style.css) JS: (cat script.js) Improve or update this website based on the user request: PROMPT. Provide the updated code. Output ONLY the raw code inside standard markdown blocks. Do not explain anything." > output.md
+          PROMPT=\$(echo "{{ github.event.issue.body }}" | sed 's/"/\\"/g')
+          
+          # This tells Ollama to pull your current files into its active window memory
+          ollama run qwen2.5-coder:7b "You are a web developer. Here is the current website code: HTML: \((cat index.html) CSS:\)(cat style.css) JS: \((cat script.js) Improve or update this website based on the user request:\)PROMPT. Provide the updated code. Output ONLY the raw code inside standard markdown blocks. Do not explain anything." > output.md
+          
+          # Overwrite your old local files with the newly optimized code blocks
           sed -n '/```html/,/```/p' output.md | grep -v '```' > index.html
           sed -n '/```css/,/```/p' output.md | grep -v '```' > style.css
           sed -n '/```javascript/,/```/p' output.md | grep -v '```' > script.js
+
+      - name: Commit and Push Website to GitHub
+        run: |
+          git config --global user.name "Ollama-Worker-Bot"
+          git config --global user.email "actions@github.com"
+          git add web-site/*
+          git commit -m "Auto-generated website from Issue #${{ github.event.issue.number }}"
+          git push
