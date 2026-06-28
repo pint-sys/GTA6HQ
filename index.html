@@ -1036,7 +1036,7 @@ function calcReward(views,likes){
 }
 
 async function fetchYouTubeVideos(){
-  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
+  var YT_KEY='AIzaSyDmc92n8MrWjpdvTdO9AYF80lINCdsrw1k';
   var queries=['GTA 6 gameplay','GTA VI official','GTA 6 trailer','GTA 6 news 2025','GTA 6 Lucia'];
   var allIds=[];
   var grid=document.getElementById('videoGrid');
@@ -1629,7 +1629,7 @@ function renderVTPStreams(){
 
 async function fetchStreams(){
   // Fetch live/upcoming GTA 6 streams from YouTube
-  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
+  var YT_KEY='AIzaSyDmc92n8MrWjpdvTdO9AYF80lINCdsrw1k';
   try{
     var url='https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=live&maxResults=6&key='+YT_KEY;
     var res=await fetch(url);
