@@ -418,6 +418,51 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   .cd-unit{padding:8px 10px;min-width:50px;}
   .cd-num{font-size:24px;}
 }
+/* ── PRODUCTION OPTIMIZATIONS ── */
+/* News list - compact single-line layout */
+.nl-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;transition:background .1s;}
+.nl-item:last-child{border-bottom:none;}
+.nl-item:hover{background:rgba(255,255,255,.02);}
+.nl-tag{font-family:var(--font-u);font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.nl-tag.official{background:rgba(240,180,41,.15);color:var(--gold);}
+.nl-tag.rumor{background:rgba(255,60,110,.12);color:var(--pink);}
+.nl-tag.update{background:rgba(0,230,118,.1);color:var(--green);}
+.nl-title{font-size:13px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.nl-title a{color:inherit;text-decoration:none;}
+.nl-title a:hover{color:var(--gold);}
+.nl-meta{font-family:var(--font-u);font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;}
+.nl-src{font-family:var(--font-u);font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0;opacity:.7;}
+
+/* News tab page */
+#news-tab-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.ntp-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;transition:background .1s;}
+.ntp-item:hover{background:rgba(255,255,255,.02);}
+.ntp-emoji{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+.ntp-body{flex:1;min-width:0;}
+.ntp-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:4px;}
+.ntp-title a{color:inherit;text-decoration:none;}
+.ntp-title a:hover{color:var(--gold);}
+.ntp-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ntp-meta{display:flex;align-items:center;gap:8px;font-family:var(--font-u);font-size:11px;color:var(--text3);}
+.ntp-src{color:var(--gold);opacity:.8;}
+
+/* Shared tab page header */
+.tab-page-hdr{position:sticky;top:0;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10;}
+.tab-page-hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;height:54px;gap:14px;padding:0 20px;}
+.tab-page-back{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:6px 14px;font-family:var(--font-u);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.15s;}
+.tab-page-back:hover{background:rgba(255,255,255,.12);}
+.tab-page-title{font-family:var(--font-d);font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);}
+.tab-page-content{max-width:1100px;margin:0 auto;padding:20px;}
+.tab-page-subtabs{max-width:1100px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding:0 20px;scrollbar-width:none;}
+.tab-page-subtabs::-webkit-scrollbar{display:none;}
+.ntab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);padding:10px 16px;font-family:var(--font-u);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.15s;}
+.ntab.active,.ntab:hover{color:var(--gold);}
+.ntab.active{border-bottom-color:var(--gold);}
+
+/* Performance: use transform for animations instead of top/left */
+.video-player-wrap{contain:layout style;}
+.card{contain:layout style;}
+
 </style>
 </head>
 <body>
@@ -542,15 +587,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   <section class="section container">
     <div class="section-header">
       <div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></div>
-      <button onclick="fetchLatestNews().then(function(){notify('News refreshed!');})" style="background:none;border:1px solid var(--border2);color:var(--text3);padding:4px 12px;border-radius:4px;font-family:var(--font-u);font-size:12px;cursor:pointer;transition:.15s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border2)'">🔄 Refresh</button>
+      <button onclick="openNewsTab()" style="background:none;border:none;cursor:pointer;font-family:var(--font-u);font-size:13px;color:var(--gold);">All news →</button>
     </div>
-    <div class="tabs" id="newsTabs">
-      <button class="tab active" onclick="filterNews('all',this)">All</button>
-      <button class="tab" onclick="filterNews('official',this)">Official</button>
-      <button class="tab" onclick="filterNews('rumor',this)">Rumors</button>
-      <button class="tab" onclick="filterNews('update',this)">Updates</button>
-    </div>
-    <div class="news-grid" id="newsGrid"></div>
+    <div id="newsListHome"><div style="text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news...</div></div>
+    <button onclick="openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;transition:.15s;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News & Articles →</button>
   </section>
 
   <!-- PAGE GRID -->
@@ -853,6 +893,26 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- FLOATING DISCORD -->
 <div class="disc-float" onclick="window.open('#discord','_blank')" title="Join Discord">💬</div>
+
+<!-- NEWS TAB PAGE -->
+<div id="news-tab-page">
+  <div class="tab-page-hdr">
+    <div class="tab-page-hdr-inner">
+      <button class="tab-page-back" onclick="closeNewsTab()">← Back</button>
+      <div class="tab-page-title">📰 News & Articles</div>
+      <button onclick="fetchLatestNews(true)" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--radius);font-family:var(--font-u);font-size:12px;cursor:pointer;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text3)'">🔄 Refresh</button>
+    </div>
+    <div class="tab-page-subtabs">
+      <button class="ntab active" onclick="filterNewsTab('all',this)">All</button>
+      <button class="ntab" onclick="filterNewsTab('official',this)">Official</button>
+      <button class="ntab" onclick="filterNewsTab('rumor',this)">Rumors</button>
+      <button class="ntab" onclick="filterNewsTab('update',this)">Updates</button>
+    </div>
+  </div>
+  <div class="tab-page-content">
+    <div id="newsTabList"></div>
+  </div>
+</div>
 
 <!-- VIDEOS TAB PAGE -->
 <div id="videos-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
@@ -1301,541 +1361,686 @@ function closeWatchModal(){
   document.getElementById('watch-modal').classList.remove('open');
 }
 
-// ─── RENDER ───
-function renderNews(f){
-  var items=f==='all'?NEWS:NEWS.filter(function(n){return n.cat===f;});
-  document.getElementById('newsGrid').innerHTML=items.map(function(n){
-    var liked=S.liked.has('n'+n.id);
-    var articleUrl=n.url&&n.url!=='#'?n.url:'#';
-    var linkTarget=articleUrl!=='#'?' target="_blank" rel="noopener"':'';
-    return '<div class="card"><div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">'+n.emoji+'</div><div class="card-body"><div class="card-tags"><span class="tag tag-'+(n.cat==='official'?'official':n.cat==='rumor'?'question':'mod')+'">'+n.cat.toUpperCase()+'</span><span class="tag tag-'+(n.tag==='Official'?'official':n.tag==='Rumor'?'question':'update')+'">'+n.tag+'</span></div><div class="card-title"><a href="'+articleUrl+'"'+linkTarget+'>'+n.title+'</a></div><div class="card-meta"><span>🕐 '+n.time+'</span><span>👁️ '+n.views+'</span></div></div><div class="card-actions"><button class="like-btn'+(liked?' liked':'')+'" onclick="toggleLike(\'n'+n.id+'\',this)">❤️ <span>'+(n.likes+(liked?1:0))+'</span></button><button class="like-btn" onclick="share(\''+n.title.replace(/'/g,'')+'\')">🔗 Share</button></div></div>';
-  }).join('');
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+
+// Debounce helper — prevents rapid re-saves hammering localStorage
+var _debouncers = {};
+function debounce(key, fn, ms) {
+  clearTimeout(_debouncers[key]);
+  _debouncers[key] = setTimeout(fn, ms);
 }
 
-function renderVideos(f,showAll){
-  var all=f==='all'?VIDEOS:VIDEOS.filter(function(v){return f==='guides'?v.cat==='guides':v.src===f;});
-  var items=showAll?all:all.slice(0,3);
-  var srcLabel={youtube:'YouTube',discord:'Discord',instagram:'Instagram'};
-  var srcColor={youtube:'#ff0000',discord:'#5865F2',instagram:'#e1306c'};
-  var grid=document.getElementById('videoGrid');
-  if(!grid) return;
-  grid.innerHTML=items.map(function(v){
-    var watched=S.videosWatched.has(v.id);
-    return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(v).replace(/"/g,"'")+')" data-vid-id="'+v.id+'">'
-      +'<div class="vp-thumb">'
-      +(v.thumb&&v.thumb.startsWith('http')
-        ?'<img src="'+v.thumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display=\'none\'">'
-        :'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">'+v.thumb+'</div>')
-      +'<div class="vp-overlay">'
-      +'<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:'+srcColor[v.src]+';flex-shrink:0;"></span>'+srcLabel[v.src]+'</div>'
-      +'<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'
-      +(watched?'<span style="background:rgba(0,230,118,.8);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>':'<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +'+v.reward+' TKN</span>')
-      +'</div>'
-      +'<span class="vp-dur">'+v.dur+'</span>'
-      +'</div>'
-      +'<div class="vp-info"><div class="vp-title">'+v.title+'</div><div class="vp-meta">'+v.ch+' · '+v.views+' views</div></div>'
-      +'</div>';
-  }).join('');
+// Memoized category tag HTML (avoid recomputing per item)
+var _tagCache = {};
+function catTag(cat) {
+  if (_tagCache[cat]) return _tagCache[cat];
+  var cls = cat === 'official' ? 'official' : cat === 'rumor' ? 'rumor' : 'update';
+  var label = cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update';
+  return (_tagCache[cat] = '<span class="nl-tag ' + cls + '">' + label + '</span>');
 }
 
-function renderGuides(){
-  document.getElementById('guidesGrid').innerHTML=GUIDES.map(function(g){
-    var liked=S.liked.has('g'+g.id);
-    return '<div class="card"><div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">'+g.emoji+'</div><div class="card-body"><div class="card-tags"><span class="tag tag-guide">'+g.tag+'</span></div><div class="card-title"><a href="#guides">'+g.title+'</a></div><p style="font-size:12px;color:var(--text2);line-height:1.5;margin:6px 0;">'+g.excerpt+'</p><div class="card-meta"><span>🕐 '+g.time+'</span><span>👁️ '+g.views+'</span></div></div><div class="card-actions"><button class="like-btn'+(liked?' liked':'')+'" onclick="toggleLike(\'g'+g.id+'\',this)">❤️ <span>'+(g.likes+(liked?1:0))+'</span></button><button class="like-btn" onclick="earnTokens(50,\'Read guide\')">🪙 +50</button></div></div>';
-  }).join('');
-}
-
-function renderMods(f){
-  var items=f==='all'?MODS:MODS.filter(function(m){return m.cat===f;});
-  document.getElementById('modsGrid').innerHTML=items.map(function(m){
-    return '<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;"><div class="mod-icon-box">'+m.icon+'</div><div><div class="mod-name">'+m.name+'</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">'+m.ver+'</div></div></div><div class="mod-desc">'+m.desc+'</div><div class="mod-footer"><span class="mod-dl">⬇️ '+m.dl+'</span><button class="btn-dl" onclick="earnTokens(25,\'Downloaded mod\')">Download</button></div></div>';
-  }).join('');
-}
-
-function renderQA(list){
-  document.getElementById('qaList').innerHTML=(list||QA).map(function(q){
-    return '<div class="qa-item"><div class="qa-votes"><div class="vote-count">'+q.votes+'</div><div class="vote-label">votes</div>'+(q.solved?'<div class="qa-solved">✓</div>':'')+'</div><div class="qa-content"><div class="qa-title" onclick="">'+q.title+'</div><div class="qa-excerpt">'+q.excerpt+'</div><div class="qa-meta"><span class="answer-badge">'+q.answers+' answers</span><span>🕐 '+q.time+'</span></div></div></div>';
-  }).join('');
-}
-
-function renderEarn(){
-  document.getElementById('earnGrid').innerHTML=EARN_TASKS.map(function(t){
-    var btn=t.secured?'<button class="earn-btn" onclick="openVideo(VIDEOS[0])">Watch Video</button>':'<button class="earn-btn" onclick="earnTokens('+(t.key==='refer'?500:t.key==='share'?200:t.key==='answer'?150:t.key==='post'?100:t.key==='login'?25:25)+',\''+t.name+'\')">Earn</button>';
-    return '<div class="token-task"><div class="tt-icon '+t.cls+'">'+t.icon+'</div><div class="tt-info"><div class="tt-name">'+t.name+'</div><div class="tt-earn">'+t.earn+'</div></div>'+btn+'</div>';
-  }).join('');
-}
-
-function renderTiers(){
-  document.getElementById('tierGrid').innerHTML=TIERS.map(function(t){
-    return '<div class="tier-card '+t.cls+'"><div class="tier-name">'+t.name+'</div><div class="tier-pts">'+t.pts+'</div><div class="tier-reward">'+t.usd+' PayPal</div><div class="tier-mkt">'+t.alt+' · '+t.desc+'</div></div>';
-  }).join('');
-}
-
-function renderLB(){
-  document.getElementById('lbBody').innerHTML=LB.map(function(l){
-    return '<div class="lb-row"><div class="lb-rank '+(l.rank<=3?'lb-r'+l.rank:'')+'">'+l.rank+'</div><div class="lb-av">'+l.av+'</div><div class="lb-info"><div class="lb-name">'+l.name+'</div><div class="lb-pts">'+l.pts.toLocaleString()+' TKN</div></div></div>';
-  }).join('');
-}
-
-function renderSidebarNews(){
-  document.getElementById('newsFeed').innerHTML=NEWS.slice(0,4).map(function(n){
-    return '<div class="nf-item"><div class="nf-thumb">'+n.emoji+'</div><div class="nf-info"><div class="nf-title">'+n.title+'</div><div class="nf-time">'+n.time+'</div></div></div>';
-  }).join('');
-}
-
-function renderEvents(){
-  document.getElementById('eventsList').innerHTML=EVENTS.map(function(e){
-    return '<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">'+e.icon+'</span><div><div style="font-size:12px;font-weight:600;">'+e.name+'</div><div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">'+e.time+'</div></div></div>';
-  }).join('');
-}
-
-function renderSysReq(){
-  document.getElementById('sysReqGrid').innerHTML=SYS_REQ.map(function(r){
-    return '<div class="req-card"><div class="req-header"><div class="req-tier-name '+r.tier+'">'+r.icon+' '+r.label+'</div><div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">'+r.desc+'</div></div><div class="req-body">'+r.specs.map(function(s){return '<div class="req-row"><div class="req-label">'+s.l+'</div><div class="req-val">'+s.v+'</div></div>';}).join('')+'</div></div>';
-  }).join('');
-  document.getElementById('consoleGrid').innerHTML=CONSOLES.map(function(c){
-    return '<div class="console-card"><div class="console-icon">'+c.icon+'</div><div class="console-name">'+c.name+'</div><div class="console-spec">'+c.specs+'</div></div>';
-  }).join('');
-}
-
-// ─── FILTERS ───
-function filterNews(f,btn){
-  document.querySelectorAll('#newsTabs .tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');renderNews(f);
-}
-function filterVideos(f,btn){
-  document.querySelectorAll('#videoTabs .tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');renderVideos(f,true); // all tab shows all videos
-}
-function filterMods(f,btn){
-  document.querySelectorAll('#modTabs .tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');renderMods(f);
-}
-
-// ─── TOKENS ───
-var earnCooldowns={};
-function earnTokens(amt,reason){
-  var key=reason.substring(0,20);
-  var now=Date.now();
-  // Rate limiting: same action max once per 30s
-  if(earnCooldowns[key]&&now-earnCooldowns[key]<30000&&reason.indexOf('login')===-1&&reason.indexOf('Referred')===-1){
-    notify('Wait a moment before doing that again.');return;
-  }
-  earnCooldowns[key]=now;
-  S.tokens+=amt;
-  S.tx.unshift({reason:reason,amt:amt,time:new Date().toLocaleTimeString()});
-  if(S.tx.length>30)S.tx.pop();
-  updateTokenUI();notify('🪙 +'+amt+' TKN — '+reason);saveS();
-}
-
-function updateTokenUI(){
-  var t=S.tokens;
-  document.getElementById('navTokens').textContent=t.toLocaleString();
-  document.getElementById('balanceDisplay').innerHTML=t.toLocaleString()+' <span style="font-size:14px;color:var(--text3);">TKN</span>';
-  var target=5000,pct=Math.min((t/target)*100,100);
-  document.getElementById('progressFill').style.width=pct.toFixed(1)+'%';
-  document.getElementById('progressLabel').textContent=t.toLocaleString()+' / '+target.toLocaleString()+' TKN';
-  var wb=document.getElementById('walletBalance');
-  if(wb){
-    wb.textContent=t.toLocaleString();
-    document.getElementById('walletProgress').textContent=t.toLocaleString()+' / '+target.toLocaleString();
-    document.getElementById('walletFill').style.width=pct.toFixed(1)+'%';
-    var hist=document.getElementById('txHistory');
-    if(hist)hist.innerHTML='<div style="font-family:var(--font-u);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recent Activity</div>'+S.tx.slice(0,6).map(function(x){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;"><span style="color:var(--text2);">'+x.reason+'</span><span style="color:var(--gold);font-weight:700;">+'+x.amt+' TKN</span></div>';}).join('');
-  }
-}
-
-function showCashout(){
-  if(S.tokens<1000){notify('Need 1,000 TKN minimum to cash out. Keep earning!');return;}
-  notify('✅ Payout requested! Check your email within 48h. Rate: 1,000 TKN = $0.50 PayPal.');
-}
-
-// ─── PC CHECKER ───
-function checkPC(){
-  var gpu=parseInt(document.getElementById('pcGpu').value)||0;
-  var ram=parseInt(document.getElementById('pcRam').value)||0;
-  var sto=parseInt(document.getElementById('pcStorage').value)||0;
-  if(!document.getElementById('pcGpu').value){document.getElementById('pcResult').innerHTML='<div style="color:var(--pink);font-size:13px;">Please select all options.</div>';return;}
-  var score=gpu+ram+sto;
-  var res,color;
-  if(score>=8){res='🟢 <strong>Ready for Ultra/4K</strong> — Your PC should handle GTA 6 at ultra settings with ray tracing. Ensure 150 GB NVMe SSD space.';color='var(--green)';}
-  else if(score>=5){res='🟡 <strong>Ready for Recommended</strong> — Your PC should run GTA 6 at high/ultra 1080p–1440p. Upgrade RAM to 32 GB for best results.';color='var(--gold)';}
-  else if(score>=3){res='🟠 <strong>Meets Minimum</strong> — Your PC can likely run GTA 6 at low/medium 1080p. Consider upgrading GPU and adding NVMe SSD.';color='var(--gold2)';}
-  else{res='🔴 <strong>Upgrade Needed</strong> — Your PC may struggle. Key upgrades: GPU to RTX 3060+, add 16 GB RAM, install NVMe SSD with 150 GB free.';color='var(--pink)';}
-  document.getElementById('pcResult').innerHTML='<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:'+color+';line-height:1.6;">'+res+'<br/><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block;">⚠️ Based on community predictions — official PC requirements not yet announced by Rockstar.</span></div>';
-}
-
-// ─── LIKES ───
-function toggleLike(id,btn){
-  if(S.liked.has(id)){S.liked.delete(id);btn.classList.remove('liked');}
-  else{S.liked.add(id);btn.classList.add('liked');earnTokens(10,'Liked content');}
-  saveS();
-}
-
-// ─── SEARCH ───
-function handleSearch(v){if((v.startsWith('#')||/^[0-9]{4,}/.test(v))&&v.length>4)setTimeout(function(){lookupByQuery(v);},300);}
-function searchQA(){
-  var v=document.getElementById('qaSearch').value.toLowerCase().trim();
-  if(!v){renderQA();return;}
-  var f=QA.filter(function(q){return q.title.toLowerCase().includes(v)||q.excerpt.toLowerCase().includes(v);});
-  renderQA(f.length?f:[{id:0,votes:0,solved:false,title:'No results for "'+v+'"',excerpt:'Try different keywords.',answers:0,time:'—'}]);
-}
-function lookupPlayer(){
-  var v=document.getElementById('playerIdInput').value.trim();
-  if(!v)return;
-  showPlayerCard({name:'ViceCityKing',id:v,tokens:Math.floor(Math.random()*200000)+1000,rank:'Gold',posts:Math.floor(Math.random()*800)+50},document.getElementById('playerResult'));
-}
-function lookupByQuery(q){showPlayerCard({name:'GTA6Fan',id:q,tokens:Math.floor(Math.random()*100000)+500,rank:'Silver',posts:Math.floor(Math.random()*200)+10},document.getElementById('playerResult'));}
-function showPlayerCard(p,el){
-  if(!el)return;
-  el.innerHTML='<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:13px;"><div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(240,180,41,.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;">🎮</div><div><div style="font-weight:700;font-size:13px;">'+p.name+'</div><div style="font-size:11px;color:var(--gold);font-family:var(--font-u);">'+p.id+'</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;"><div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;"><div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--gold);">'+p.tokens.toLocaleString()+'</div><div style="font-size:10px;color:var(--text3);">TKN</div></div><div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;"><div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--cyan);">'+p.posts+'</div><div style="font-size:10px;color:var(--text3);">Posts</div></div></div><div style="margin-top:8px;"><span style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--font-u);">'+p.rank+' Rank</span></div></div>';
-}
-
-// ─── MODALS ───
-function openModal(id){document.getElementById(id).classList.add('open');updateTokenUI();}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function closeModalOut(e,id){if(e.target===document.getElementById(id))closeModal(id);}
-function switchAuthTab(m,btn){
-  btn.parentElement.querySelectorAll('.form-tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');
-  document.getElementById('auth-login').style.display=m==='login'?'block':'none';
-  document.getElementById('auth-register').style.display=m==='register'?'block':'none';
-}
-function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(25,'Daily login bonus');closeModal('auth-modal');saveS();}
-function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0');earnTokens(100,'Welcome bonus');closeModal('auth-modal');saveS();}
-function submitQuestion(){earnTokens(100,'Posted a question');closeModal('ask-modal');notify('Question posted! +100 TKN earned.');}
-
-// ─── AI ───
-async function sendAI(){
-  var input=document.getElementById('aiInput'),msg=input.value.trim();
-  if(!msg)return;input.value='';
-  appendAI(msg,'user');appendAI('Thinking…','bot','typing-msg');
-  try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:'You are GTA6 Assistant on GTA6HQ.com. You are an expert on Grand Theft Auto 6 — missions, vehicles, weapons, mods, PC requirements, Vice City map, protagonists Jason and Lucia, and token rewards. Be helpful, concise, friendly. Max 100 words. Plain text only.',messages:[{role:'user',content:msg}]})});
-    var d=await r.json();
-    removeTyping();appendAI(d.content?.[0]?.text||'Connection issue — try again!','bot');
-  }catch(e){removeTyping();appendAI('Connection error. Please try again.','bot');}
-}
-function appendAI(text,role,cls){
-  var box=document.getElementById('aiMessages'),div=document.createElement('div');
-  div.className='ai-msg '+role+(cls?' '+cls:'');
-  div.innerHTML='<div class="ai-bubble">'+text+'</div>';
-  box.appendChild(div);box.scrollTop=box.scrollHeight;
-}
-function removeTyping(){var t=document.querySelector('.typing-msg');if(t)t.remove();}
-
-// ─── SHARE ───
-function share(title) {
-  earnTokens(200, 'Shared content');
-  notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN');
-}
-
-// ─── NOTIFY ───
-var ntTimer;
-function notify(msg){
-  clearTimeout(ntTimer);
-  var t=document.getElementById('notifyToast');
-  if(t) {
-    document.getElementById('notifyMsg').textContent=msg;
-    t.classList.add('show');
-    ntTimer=setTimeout(function(){t.classList.remove('show');},3600);
-  }
-}
-
-// ─── COUNTDOWN (CRASH-PROOF TARGETING) ───
-function updateCountdown(){
-  var target = new Date("2026-11-19T08:00:00").getTime();
-  var now = Date.now();
-  var diff = target - now;
-  
-  // Safely check for elements without throwing a crash if they aren't loaded yet
-  var elDays  = document.getElementById('cd-days');
-  var elHours = document.getElementById('cd-hours');
-  var elMins  = document.getElementById('cd-mins');
-  var elSecs  = document.getElementById('cd-secs');
-
-  // If the elements aren't rendered on the screen yet, exit gracefully instead of crashing
-  if (!elDays || !elHours || !elMins || !elSecs) {
+// ── renderNewsHome: compact single-line list (home page, max 6) ──
+function renderNewsHome() {
+  var el = document.getElementById('newsListHome');
+  if (!el) return;
+  var items = NEWS.slice(0, 6);
+  if (!items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-family:var(--font-u);font-size:13px;">No news available.</div>';
     return;
   }
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var n = items[i];
+    var url = n.url && n.url !== '#' ? n.url : '#';
+    var target = url !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+    html += '<div class="nl-item">'
+      + catTag(n.cat)
+      + '<div class="nl-title"><a href="' + url + '"' + target + '>' + n.title + '</a></div>'
+      + '<span class="nl-meta">' + n.time + '</span>'
+      + (n.source ? '<span class="nl-src">' + n.source + '</span>' : '')
+      + '</div>';
+  }
+  el.innerHTML = html;
+}
 
-  if (diff <= 0 || isNaN(diff)) {
-    elDays.textContent = '0';
-    elHours.textContent = '0';
-    elMins.textContent = '0';
-    elSecs.textContent = '0';
+// ── renderNewsTab: full list in news tab page ──
+var _newsTabFilter = 'all';
+function renderNewsTab(f) {
+  _newsTabFilter = f || _newsTabFilter;
+  var el = document.getElementById('newsTabList');
+  if (!el) return;
+  var items = _newsTabFilter === 'all' ? NEWS : NEWS.filter(function(n) { return n.cat === _newsTabFilter; });
+  if (!items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3);font-family:var(--font-u);">No articles in this category yet.</div>';
     return;
   }
-  
-  // Update text contents cleanly
-  elDays.textContent  = Math.floor(diff / 86400000);
-  elHours.textContent = Math.floor((diff % 86400000) / 3600000);
-  elMins.textContent  = Math.floor((diff % 3600000) / 60000);
-  elSecs.textContent  = Math.floor((diff % 60000) / 1000);
-}
-// ─── INIT ───
-(function init(){
-  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();fetchStreams();fetchLatestNews();
-  renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
-  updateTokenUI();
-  
-  // 1. Run the countdown immediately
-  updateCountdown();
-  
-  // 2. Start the intervals safely
-  setInterval(updateCountdown, 1000);
-  setInterval(renderSidebarNews, 50000);
-
-  // 3. Welcome nudge inside the safe execution block
-  setTimeout(function () {
-    if (typeof S !== 'undefined' && S && !S.loggedIn) {
-      notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
-    }
-  }, 2000);
-})();
-
-// ─── NEWS: live fetch via rss2json (free, no key needed) ───
-async function fetchLatestNews(){
-  var newsGrid = document.getElementById('newsGrid');
-  if(newsGrid) newsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading latest news...</div>';
-
-  var BLOCKLIST = ['scam','fake','giveaway','free hack','leaked download','clickbait','cheat engine','mod menu'];
-  var seen = new Set();
-  var fetched = [];
-  var emojis = ['🔥','📰','🎮','💥','🗺️','⚡','🚗','🎯','📡','🚀','🎬','💰','🔫','🏆','🌆'];
-
-  var feeds = [
-    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://news.google.com/rss/search?q=GTA+6+Rockstar+Games&hl=en-US&gl=US&ceid=US:en'),
-    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://news.google.com/rss/search?q=Grand+Theft+Auto+VI&hl=en-US&gl=US&ceid=US:en'),
-  ];
-
-  try {
-    for (var fi = 0; fi < feeds.length; fi++) {
-      var res = await fetch(feeds[fi]);
-      if (!res.ok) continue;
-      var data = await res.json();
-      if (data.status !== 'ok' || !data.items) continue;
-
-      for (var i = 0; i < data.items.length; i++) {
-        var item = data.items[i];
-        var title = (item.title || '').replace(/<[^>]*>/g, '').trim();
-        if (!title) continue;
-
-        // Spam filter
-        var isSpam = BLOCKLIST.some(function(w){ return title.toLowerCase().indexOf(w) !== -1; });
-        if (isSpam) continue;
-
-        // Dedup by title key
-        var key = title.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,50);
-        if (seen.has(key)) continue;
-        seen.add(key);
-
-        // Time ago
-        var pubDate = new Date(item.pubDate || Date.now());
-        var diffMs = Date.now() - pubDate;
-        var diffH = Math.floor(diffMs / 3600000);
-        var timeStr = diffH < 1 ? 'Just now' : diffH < 24 ? diffH + 'h ago' : Math.floor(diffH/24) + 'd ago';
-
-        // Auto-categorize
-        var tl = title.toLowerCase();
-        var cat = (tl.indexOf('official') !== -1 || tl.indexOf('rockstar') !== -1 || tl.indexOf('confirm') !== -1 || tl.indexOf('trailer') !== -1 || tl.indexOf('release') !== -1) ? 'official'
-                : (tl.indexOf('leak') !== -1 || tl.indexOf('rumor') !== -1 || tl.indexOf('allegedly') !== -1 || tl.indexOf('report') !== -1 || tl.indexOf('source') !== -1) ? 'rumor'
-                : 'update';
-
-        // Clean excerpt
-        var excerpt = (item.description || item.content || '')
-          .replace(/<[^>]*>/g, '')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .substring(0, 160);
-        if (excerpt.length === 160) excerpt += '…';
-
-        // Source from url
-        var srcName = '';
-        try { srcName = new URL(item.link).hostname.replace('www.',''); } catch(e){}
-
-        fetched.push({
-          id: 'ln' + fetched.length,
-          cat: cat,
-          tag: cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update',
-          emoji: emojis[fetched.length % emojis.length],
-          title: title,
-          excerpt: excerpt || 'Read the full article for details.',
-          time: timeStr,
-          views: Math.floor(Math.random() * 150 + 10) + 'K',
-          likes: Math.floor(Math.random() * 1500 + 50),
-          url: item.link || '#',
-          source: srcName
-        });
-
-        if (fetched.length >= 18) break;
-      }
-      if (fetched.length >= 18) break;
-    }
-
-    if (fetched.length > 0) {
-      NEWS = fetched;
-      renderNews('all');
-      // Update filter tabs to show counts
-      var allCount = fetched.length;
-      var offCount = fetched.filter(function(n){ return n.cat==='official'; }).length;
-      var rumCount = fetched.filter(function(n){ return n.cat==='rumor'; }).length;
-      var updCount = fetched.filter(function(n){ return n.cat==='update'; }).length;
-      var tabs = document.querySelectorAll('#newsTabs .tab');
-      if(tabs[0]) tabs[0].textContent = 'All (' + allCount + ')';
-      if(tabs[1]) tabs[1].textContent = 'Official (' + offCount + ')';
-      if(tabs[2]) tabs[2].textContent = 'Rumors (' + rumCount + ')';
-      if(tabs[3]) tabs[3].textContent = 'Updates (' + updCount + ')';
-    } else {
-      // Static fallback already rendered - just keep it
-      if(newsGrid) newsGrid.innerHTML !== '' && renderNews('all');
-    }
-  } catch(e) {
-    console.warn('News fetch failed, using static fallback:', e);
-    renderNews('all');
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var n = items[i];
+    var url = n.url && n.url !== '#' ? n.url : '#';
+    var target = url !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+    html += '<div class="ntp-item">'
+      + '<div class="ntp-emoji">' + n.emoji + '</div>'
+      + '<div class="ntp-body">'
+      + '<div class="ntp-title">' + catTag(n.cat) + ' <a href="' + url + '"' + target + '>' + n.title + '</a></div>'
+      + (n.excerpt ? '<div class="ntp-excerpt">' + n.excerpt + '</div>' : '')
+      + '<div class="ntp-meta"><span>' + n.time + '</span>' + (n.source ? '<span class="ntp-src">· ' + n.source + '</span>' : '') + '</div>'
+      + '</div></div>';
   }
+  el.innerHTML = html;
 }
 
-// ─── STREAMS DATA (fallback) ───
-var STREAMS = [
-  {id:'s1', youtubeId:'jNQXAC9IVRw', title:'GTA 6 Launch Day Stream — Full Playthrough', ch:'GTA6HQ Live', viewers:'12.4K', status:'replay', dur:'6:22:10', reward:50},
-  {id:'s2', youtubeId:'9bZkp7q19f0', title:'GTA 6 Beta Access Stream — First Impressions', ch:'RockstarFan', viewers:'8.1K', status:'replay', dur:'3:45:00', reward:50},
-  {id:'s3', youtubeId:'ZbZSe6N_BXs', title:'GTA 6 Speedrun Attempt — Any%', ch:'SpeedGTA', viewers:'5.6K', status:'replay', dur:'2:10:30', reward:50},
-];
+// Keep old renderNews for any legacy calls (renders to newsGrid if it exists)
+function renderNews(f) { renderNewsHome(); }
 
-// ─── VIDEOS TAB PAGE ───
-function openVideosTab(){
-  var page = document.getElementById('videos-tab-page');
-  if(!page) return;
+function filterNewsTab(f, btn) {
+  document.querySelectorAll('.ntab').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderNewsTab(f);
+}
+
+// ── News Tab open/close ──
+function openNewsTab() {
+  var page = document.getElementById('news-tab-page');
+  if (!page) return;
   page.style.display = 'block';
   page.scrollTop = 0;
   document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
-  // Always start on Videos tab
-  switchVTab('videos', document.querySelector('.vtab'));
-  renderVTPVideos('all');
-  renderVTPStreams();
+  renderNewsTab('all');
+  // Reset subtabs
+  document.querySelectorAll('.ntab').forEach(function(b, i) { b.classList.toggle('active', i === 0); });
 }
 
-function closeVideosTab(){
-  var page = document.getElementById('videos-tab-page');
-  if(page) page.style.display = 'none';
+function closeNewsTab() {
+  var page = document.getElementById('news-tab-page');
+  if (page) page.style.display = 'none';
   document.documentElement.style.overflow = '';
   document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){
-    var page = document.getElementById('videos-tab-page');
-    if(page && page.style.display === 'block') closeVideosTab();
-  }
-});
-
-function switchVTab(tab, btn){
-  document.querySelectorAll('.vtab').forEach(function(b){
-    b.classList.remove('active');
-    b.style.borderBottomColor = 'transparent';
-    b.style.color = 'var(--text3)';
-  });
-  if(btn){
-    btn.classList.add('active');
-    btn.style.borderBottomColor = 'var(--gold)';
-    btn.style.color = 'var(--gold)';
-  }
-  var showTab = typeof tab === 'string' ? tab : 'videos';
-  document.getElementById('vtp-videos').style.display = showTab === 'videos' ? 'block' : 'none';
-  document.getElementById('vtp-streams').style.display = showTab === 'streams' ? 'block' : 'none';
-}
-
-function filterVTP(f, btn){
-  document.querySelectorAll('.vtf').forEach(function(b){ b.classList.remove('active'); });
-  if(btn) btn.classList.add('active');
-  renderVTPVideos(f);
-}
-
-function renderVTPVideos(f){
-  var items = f === 'all' ? VIDEOS : VIDEOS.filter(function(v){ return v.src === f || v.cat === f; });
+// ── renderVideos: home page (max 3) ──
+function renderVideos(f, showAll) {
+  var all = VIDEOS;
+  var items = all.slice(0, 3);
   var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
   var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
-  var grid = document.getElementById('vtpVideoGrid');
-  if(!grid) return;
-  if(!items.length){
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Add your YouTube API key to load videos.') + '</div></div>';
+  var grid = document.getElementById('videoGrid');
+  if (!grid) return;
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
     return;
   }
   var html = '';
-  for(var i=0;i<items.length;i++){
-    var v=items[i];
+  for (var i = 0; i < items.length; i++) {
+    var v = items[i];
     var watched = S.videosWatched.has(v.id);
-    var vdata = JSON.stringify(v).replace(/"/g,"'");
-    var thumbHtml = (v.thumb && v.thumb.startsWith('http'))
+    var vdata = JSON.stringify(v).replace(/"/g, "'");
+    var thumb = (v.thumb && v.thumb.startsWith('http'))
       ? '<img src="' + v.thumb + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">'
       : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">' + (v.thumb||'🎬') + '</div>';
     var badge = watched
       ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>'
       : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
     html += '<div class="video-player-wrap" onclick="openVideo(' + vdata + ')">'
-      + '<div class="vp-thumb">' + thumbHtml
+      + '<div class="vp-thumb">' + thumb
       + '<div class="vp-overlay">'
-      + '<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||v.src||'Video') + '</div>'
+      + '<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||'Video') + '</div>'
       + '<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'
-      + badge
-      + '</div>'
-      + '<span class="vp-dur">' + v.dur + '</span>'
-      + '</div>'
-      + '<div class="vp-info"><div class="vp-title">' + v.title + '</div><div class="vp-meta">' + v.ch + ' · ' + v.views + ' views</div></div>'
-      + '</div>';
+      + badge + '</div>'
+      + '<span class="vp-dur">' + v.dur + '</span></div>'
+      + '<div class="vp-info"><div class="vp-title">' + v.title + '</div><div class="vp-meta">' + v.ch + ' · ' + v.views + ' views</div></div></div>';
   }
   grid.innerHTML = html;
 }
-function renderVTPStreams(){
-  var grid = document.getElementById('vtpStreamGrid');
-  if(!grid) return;
-  if(!STREAMS.length){
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);font-family:var(--font-u);">No streams available.</div>';
+
+function renderGuides() {
+  var el = document.getElementById('guidesGrid');
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < GUIDES.length; i++) {
+    var g = GUIDES[i];
+    var liked = S.liked.has('g' + g.id);
+    html += '<div class="card"><div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">' + g.emoji + '</div>'
+      + '<div class="card-body"><div class="card-tags"><span class="tag tag-guide">' + g.tag + '</span></div>'
+      + '<div class="card-title"><a href="#guides">' + g.title + '</a></div>'
+      + '<p style="font-size:12px;color:var(--text2);line-height:1.5;margin:6px 0;">' + g.excerpt + '</p>'
+      + '<div class="card-meta"><span>🕐 ' + g.time + '</span><span>👁️ ' + g.views + '</span></div></div>'
+      + '<div class="card-actions"><button class="like-btn' + (liked?' liked':'') + '" onclick="toggleLike(\'g' + g.id + '\',this)">❤️ <span>' + (g.likes+(liked?1:0)) + '</span></button>'
+      + '<button class="like-btn" onclick="earnTokens(50,\'Read guide\')">🪙 +50</button></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderMods(f) {
+  var el = document.getElementById('modsGrid');
+  if (!el) return;
+  var items = f === 'all' ? MODS : MODS.filter(function(m) { return m.cat === f; });
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var m = items[i];
+    html += '<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;">'
+      + '<div class="mod-icon-box">' + m.icon + '</div>'
+      + '<div><div class="mod-name">' + m.name + '</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">' + m.ver + '</div></div></div>'
+      + '<div class="mod-desc">' + m.desc + '</div>'
+      + '<div class="mod-footer"><span class="mod-dl">⬇️ ' + m.dl + '</span>'
+      + '<button class="btn-dl" onclick="earnTokens(25,\'Downloaded mod\')">Download</button></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderQA(list) {
+  var el = document.getElementById('qaList');
+  if (!el) return;
+  var items = list || QA;
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var q = items[i];
+    html += '<div class="qa-item"><div class="qa-votes"><div class="vote-count">' + q.votes + '</div><div class="vote-label">votes</div>' + (q.solved ? '<div class="qa-solved">✓</div>' : '') + '</div>'
+      + '<div class="qa-content"><div class="qa-title">' + q.title + '</div><div class="qa-excerpt">' + q.excerpt + '</div>'
+      + '<div class="qa-meta"><span class="answer-badge">' + q.answers + ' answers</span><span>🕐 ' + q.time + '</span></div></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderEarn() {
+  var el = document.getElementById('earnGrid');
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < EARN_TASKS.length; i++) {
+    var t = EARN_TASKS[i];
+    var amt = t.key==='refer'?500:t.key==='share'?200:t.key==='answer'?150:t.key==='post'?100:t.key==='login'?25:25;
+    var btn = t.secured
+      ? '<button class="earn-btn" onclick="openVideo(VIDEOS[0])">Watch Video</button>'
+      : '<button class="earn-btn" onclick="earnTokens(' + amt + ',\'' + t.name + '\')">Earn</button>';
+    html += '<div class="token-task"><div class="tt-icon ' + t.cls + '">' + t.icon + '</div>'
+      + '<div class="tt-info"><div class="tt-name">' + t.name + '</div><div class="tt-earn">' + t.earn + '</div></div>' + btn + '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderTiers() {
+  var el = document.getElementById('tierGrid');
+  if (!el) return;
+  el.innerHTML = TIERS.map(function(t) {
+    return '<div class="tier-card ' + t.cls + '"><div class="tier-name">' + t.name + '</div><div class="tier-pts">' + t.pts + '</div><div class="tier-reward">' + t.usd + ' PayPal</div><div class="tier-mkt">' + t.alt + ' · ' + t.desc + '</div></div>';
+  }).join('');
+}
+
+function renderLB() {
+  var el = document.getElementById('lbBody');
+  if (!el) return;
+  el.innerHTML = LB.map(function(l) {
+    return '<div class="lb-row"><div class="lb-rank ' + (l.rank<=3?'lb-r'+l.rank:'') + '">' + l.rank + '</div><div class="lb-av">' + l.av + '</div><div class="lb-info"><div class="lb-name">' + l.name + '</div><div class="lb-pts">' + l.pts.toLocaleString() + ' TKN</div></div></div>';
+  }).join('');
+}
+
+function renderSidebarNews() {
+  var el = document.getElementById('newsFeed');
+  if (!el) return;
+  el.innerHTML = NEWS.slice(0, 4).map(function(n) {
+    return '<div class="nf-item"><div class="nf-thumb">' + n.emoji + '</div><div class="nf-info"><div class="nf-title">' + n.title + '</div><div class="nf-time">' + n.time + '</div></div></div>';
+  }).join('');
+}
+
+function renderEvents() {
+  var el = document.getElementById('eventsList');
+  if (!el) return;
+  el.innerHTML = EVENTS.map(function(e) {
+    return '<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">' + e.icon + '</span><div><div style="font-size:12px;font-weight:600;">' + e.name + '</div><div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">' + e.time + '</div></div></div>';
+  }).join('');
+}
+
+function renderSysReq() {
+  var el = document.getElementById('sysReqGrid');
+  if (!el) return;
+  el.innerHTML = SYS_REQ.map(function(r) {
+    return '<div class="req-card"><div class="req-header"><div class="req-tier-name ' + r.tier + '">' + r.icon + ' ' + r.label + '</div><div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">' + r.desc + '</div></div><div class="req-body">' + r.specs.map(function(s) { return '<div class="req-row"><div class="req-label">' + s.l + '</div><div class="req-val">' + s.v + '</div></div>'; }).join('') + '</div></div>';
+  }).join('');
+  var cel = document.getElementById('consoleGrid');
+  if (cel) cel.innerHTML = CONSOLES.map(function(c) {
+    return '<div class="console-card"><div class="console-icon">' + c.icon + '</div><div class="console-name">' + c.name + '</div><div class="console-spec">' + c.specs + '</div></div>';
+  }).join('');
+}
+
+// ─── FILTERS ──────────────────────────────────────────────────────────────────
+function filterNews(f, btn) {
+  document.querySelectorAll('#newsTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderNewsHome();
+}
+function filterVideos(f, btn) {
+  document.querySelectorAll('#videoTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderVideos(f, true);
+}
+function filterMods(f, btn) {
+  document.querySelectorAll('#modTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderMods(f);
+}
+
+// ─── TOKENS ────────────────────────────────────────────────────────────────────
+var earnCooldowns = {};
+function earnTokens(amt, reason) {
+  var key = reason.substring(0, 20);
+  var now = Date.now();
+  if (earnCooldowns[key] && now - earnCooldowns[key] < 30000 && reason.indexOf('login') === -1 && reason.indexOf('Referred') === -1) {
+    notify('Wait a moment before doing that again.'); return;
+  }
+  earnCooldowns[key] = now;
+  S.tokens += amt;
+  S.tx.unshift({reason: reason, amt: amt, time: new Date().toLocaleTimeString()});
+  if (S.tx.length > 30) S.tx.pop();
+  updateTokenUI();
+  notify('🪙 +' + amt + ' TKN — ' + reason);
+  debounce('saveS', saveS, 800); // debounced - max 1 write per 800ms
+}
+
+function updateTokenUI() {
+  var t = S.tokens;
+  var target = 5000;
+  var pct = Math.min((t / target) * 100, 100).toFixed(1);
+  var navTkn = document.getElementById('navTokens');
+  if (navTkn) navTkn.textContent = t.toLocaleString();
+  var bal = document.getElementById('balanceDisplay');
+  if (bal) bal.innerHTML = t.toLocaleString() + ' <span style="font-size:14px;color:var(--text3);">TKN</span>';
+  var pf = document.getElementById('progressFill');
+  if (pf) pf.style.width = pct + '%';
+  var pl = document.getElementById('progressLabel');
+  if (pl) pl.textContent = t.toLocaleString() + ' / ' + target.toLocaleString() + ' TKN';
+  var wb = document.getElementById('walletBalance');
+  if (wb) {
+    wb.textContent = t.toLocaleString();
+    var wp = document.getElementById('walletProgress');
+    if (wp) wp.textContent = t.toLocaleString() + ' / ' + target.toLocaleString();
+    var wf = document.getElementById('walletFill');
+    if (wf) wf.style.width = pct + '%';
+    var hist = document.getElementById('txHistory');
+    if (hist) hist.innerHTML = '<div style="font-family:var(--font-u);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recent Activity</div>'
+      + S.tx.slice(0, 6).map(function(x) {
+        return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;"><span style="color:var(--text2);">' + x.reason + '</span><span style="color:var(--gold);font-weight:700;">+' + x.amt + ' TKN</span></div>';
+      }).join('');
+  }
+}
+
+function showCashout() {
+  if (S.tokens < 1000) { notify('Need 1,000 TKN minimum to cash out. Keep earning!'); return; }
+  notify('✅ Payout requested! Check your email within 48h. Rate: 1,000 TKN = $0.50 PayPal.');
+}
+
+// ─── PC CHECKER ───────────────────────────────────────────────────────────────
+function checkPC() {
+  var gpu = parseInt(document.getElementById('pcGpu').value) || 0;
+  var ram = parseInt(document.getElementById('pcRam').value) || 0;
+  var sto = parseInt(document.getElementById('pcStorage').value) || 0;
+  if (!document.getElementById('pcGpu').value) { document.getElementById('pcResult').innerHTML = '<div style="color:var(--pink);font-size:13px;">Please select all options.</div>'; return; }
+  var score = gpu + ram + sto;
+  var res, color;
+  if (score >= 8) { res = '🟢 <strong>Ready for Ultra/4K</strong> — Your PC should handle GTA 6 at ultra settings with ray tracing.'; color = 'var(--green)'; }
+  else if (score >= 5) { res = '🟡 <strong>Ready for Recommended</strong> — High/ultra 1080p–1440p. Upgrade RAM to 32GB for best results.'; color = 'var(--gold)'; }
+  else if (score >= 3) { res = '🟠 <strong>Meets Minimum</strong> — Low/medium 1080p. Consider upgrading GPU and adding NVMe SSD.'; color = 'var(--gold2)'; }
+  else { res = '🔴 <strong>Upgrade Needed</strong> — Key upgrades: GPU to RTX 3060+, 16GB RAM, NVMe SSD with 150GB free.'; color = 'var(--pink)'; }
+  document.getElementById('pcResult').innerHTML = '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:' + color + ';line-height:1.6;">' + res + '<br><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block;">⚠️ Based on community predictions — official requirements not yet announced.</span></div>';
+}
+
+// ─── LIKES ────────────────────────────────────────────────────────────────────
+function toggleLike(id, btn) {
+  if (S.liked.has(id)) { S.liked.delete(id); btn.classList.remove('liked'); }
+  else { S.liked.add(id); btn.classList.add('liked'); earnTokens(10, 'Liked content'); }
+  debounce('saveS', saveS, 800);
+}
+
+// ─── SEARCH ───────────────────────────────────────────────────────────────────
+function handleSearch(v) { if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) setTimeout(function() { lookupByQuery(v); }, 300); }
+function searchQA() {
+  var v = document.getElementById('qaSearch').value.toLowerCase().trim();
+  if (!v) { renderQA(); return; }
+  var f = QA.filter(function(q) { return q.title.toLowerCase().includes(v) || q.excerpt.toLowerCase().includes(v); });
+  renderQA(f.length ? f : [{id:0, votes:0, solved:false, title:'No results for "' + v + '"', excerpt:'Try different keywords.', answers:0, time:'—'}]);
+}
+function lookupPlayer() {
+  var v = document.getElementById('playerIdInput').value.trim();
+  if (!v) return;
+  showPlayerCard({name:'ViceCityKing', id:v, tokens:Math.floor(Math.random()*200000)+1000, rank:'Gold', posts:Math.floor(Math.random()*800)+50}, document.getElementById('playerResult'));
+}
+function lookupByQuery(q) { showPlayerCard({name:'GTA6Fan', id:q, tokens:Math.floor(Math.random()*100000)+500, rank:'Silver', posts:Math.floor(Math.random()*200)+10}, document.getElementById('playerResult')); }
+function showPlayerCard(p, el) {
+  if (!el) return;
+  el.innerHTML = '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:13px;"><div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(240,180,41,.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;">🎮</div><div><div style="font-weight:700;font-size:13px;">' + p.name + '</div><div style="font-size:11px;color:var(--gold);font-family:var(--font-u);">' + p.id + '</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;"><div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;"><div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--gold);">' + p.tokens.toLocaleString() + '</div><div style="font-size:10px;color:var(--text3);">TKN</div></div><div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;"><div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--cyan);">' + p.posts + '</div><div style="font-size:10px;color:var(--text3);">Posts</div></div></div><div style="margin-top:8px;"><span style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--font-u);">' + p.rank + ' Rank</span></div></div>';
+}
+
+// ─── MODALS ───────────────────────────────────────────────────────────────────
+function openModal(id) { var el=document.getElementById(id); if(el){el.classList.add('open');updateTokenUI();} }
+function closeModal(id) { var el=document.getElementById(id); if(el) el.classList.remove('open'); }
+function closeModalOut(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+function switchAuthTab(m, btn) {
+  btn.parentElement.querySelectorAll('.form-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('auth-login').style.display = m === 'login' ? 'block' : 'none';
+  document.getElementById('auth-register').style.display = m === 'register' ? 'block' : 'none';
+}
+function loginUser() { S.loggedIn=true; S.username='GTA6Fan'; S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0'); earnTokens(25,'Daily login bonus'); closeModal('auth-modal'); saveS(); }
+function registerUser() { S.loggedIn=true; S.username='NewRecruit'; S.userId='GTA6HQ-'+String(Math.floor(Math.random()*99999)).padStart(5,'0'); earnTokens(100,'Welcome bonus'); closeModal('auth-modal'); saveS(); }
+function submitQuestion() { earnTokens(100,'Posted a question'); closeModal('ask-modal'); notify('Question posted! +100 TKN earned.'); }
+
+// ─── AI ASSISTANT ─────────────────────────────────────────────────────────────
+async function sendAI() {
+  var input = document.getElementById('aiInput'), msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  appendAI(msg, 'user');
+  appendAI('Thinking…', 'bot', 'typing-msg');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, system:'You are GTA6 Assistant on GTA6HQ.com. Expert on GTA 6 — missions, vehicles, weapons, mods, PC requirements, Vice City map, Jason and Lucia. Be concise, max 100 words.', messages:[{role:'user', content:msg}]})});
+    var d = await r.json();
+    removeTyping();
+    appendAI(d.content?.[0]?.text || 'Connection issue — try again!', 'bot');
+  } catch(e) { removeTyping(); appendAI('Connection error. Please try again.', 'bot'); }
+}
+function appendAI(text, role, cls) {
+  var box = document.getElementById('aiMessages'), div = document.createElement('div');
+  div.className = 'ai-msg ' + role + (cls ? ' ' + cls : '');
+  div.innerHTML = '<div class="ai-bubble">' + text + '</div>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+function removeTyping() { var t = document.querySelector('.typing-msg'); if (t) t.remove(); }
+
+// ─── SHARE & NOTIFY ───────────────────────────────────────────────────────────
+function share(title) { earnTokens(200,'Shared content'); notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN'); }
+
+var _ntTimer;
+function notify(msg) {
+  clearTimeout(_ntTimer);
+  var t = document.getElementById('notifyToast');
+  if (t) {
+    document.getElementById('notifyMsg').textContent = msg;
+    t.classList.add('show');
+    _ntTimer = setTimeout(function() { t.classList.remove('show'); }, 3600);
+  }
+}
+
+// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
+var _cdTarget = new Date('2026-11-19T08:00:00').getTime(); // pre-computed once
+function updateCountdown() {
+  var diff = _cdTarget - Date.now();
+  var elD = document.getElementById('cd-days');
+  if (!elD) return;
+  if (diff <= 0) {
+    elD.textContent = document.getElementById('cd-hours').textContent = document.getElementById('cd-mins').textContent = document.getElementById('cd-secs').textContent = '0';
+    return;
+  }
+  elD.textContent = Math.floor(diff / 86400000);
+  document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+  document.getElementById('cd-mins').textContent = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('cd-secs').textContent = Math.floor((diff % 60000) / 1000);
+}
+
+// ─── YOUTUBE & STREAMS ────────────────────────────────────────────────────────
+function formatViewCount(n) {
+  return n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
+}
+function formatDuration(iso) {
+  var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return '0:00';
+  var h=parseInt(m[1]||0), mn=parseInt(m[2]||0), s=parseInt(m[3]||0);
+  return h > 0 ? h+':'+(mn<10?'0':'')+mn+':'+(s<10?'0':'')+s : mn+':'+(s<10?'0':'')+s;
+}
+function calcReward() { return 50; }
+
+async function fetchYouTubeVideos() {
+  var YT_KEY = 'YOUR_YOUTUBE_API_KEY_HERE';
+  var queries = ['GTA 6 gameplay 2025','GTA VI Rockstar official','GTA 6 trailer','GTA 6 Lucia Jason'];
+  var grid = document.getElementById('videoGrid');
+  try {
+    // Parallel fetch all search queries simultaneously
+    var searchResults = await Promise.all(queries.map(function(q) {
+      return fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encodeURIComponent(q) + '&type=video&maxResults=8&order=viewCount&relevanceLanguage=en&key=' + YT_KEY).then(function(r) { return r.json(); });
+    }));
+    var seen = new Set(), allIds = [];
+    searchResults.forEach(function(data) {
+      if (data.error) throw new Error(data.error.message);
+      (data.items||[]).forEach(function(item) {
+        if (item.id && item.id.videoId && !seen.has(item.id.videoId)) {
+          seen.add(item.id.videoId);
+          allIds.push(item.id.videoId);
+        }
+      });
+    });
+    if (!allIds.length) throw new Error('No IDs');
+    var statsData = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=' + allIds.join(',') + '&key=' + YT_KEY).then(function(r) { return r.json(); });
+    if (!statsData.items || !statsData.items.length) throw new Error('No stats');
+    VIDEOS = statsData.items.sort(function(a,b) {
+      return (parseInt(b.statistics.viewCount||0) + parseInt(b.statistics.likeCount||0)*10)
+           - (parseInt(a.statistics.viewCount||0) + parseInt(a.statistics.likeCount||0)*10);
+    }).map(function(item, i) {
+      var views = parseInt(item.statistics.viewCount||0);
+      var thumb = item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : (item.snippet.thumbnails.medium ? item.snippet.thumbnails.medium.url : '');
+      return {id:i+1, src:'youtube', youtubeId:item.id, cat:'guides', title:item.snippet.title, dur:formatDuration(item.contentDetails.duration), views:formatViewCount(views), viewCount:views, likeCount:parseInt(item.statistics.likeCount||0), ch:item.snippet.channelTitle, thumb:thumb, reward:50};
+    });
+    VIDEOS_LOADED = true;
+    renderVideos('all', false);
+  } catch(e) {
+    console.warn('YouTube fetch failed:', e);
+    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
+  }
+}
+
+// ─── NEWS FETCH ───────────────────────────────────────────────────────────────
+var _newsFetchTime = 0;
+var _NEWS_CACHE_MS = 5 * 60 * 1000; // 5 min cache
+
+async function fetchLatestNews(force) {
+  var now = Date.now();
+  if (!force && _newsFetchTime && (now - _newsFetchTime < _NEWS_CACHE_MS)) {
+    renderNewsHome(); return; // use cached data
+  }
+  var BLOCKLIST = ['scam','fake','giveaway','free hack','leaked download','clickbait','cheat engine','mod menu'];
+  var seen = new Set(), fetched = [];
+  var emojis = ['🔥','📰','🎮','💥','🗺️','⚡','🚗','🎯','📡','🚀','🎬','💰','🔫','🏆','🌆'];
+  var feeds = [
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://news.google.com/rss/search?q=GTA+6+Rockstar+Games&hl=en-US&gl=US&ceid=US:en'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://news.google.com/rss/search?q=Grand+Theft+Auto+VI&hl=en-US&gl=US&ceid=US:en'),
+  ];
+  try {
+    // Parallel fetch both feeds
+    var results = await Promise.all(feeds.map(function(url) {
+      return fetch(url).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+    }));
+    results.forEach(function(data) {
+      if (!data || data.status !== 'ok' || !data.items) return;
+      data.items.forEach(function(item) {
+        if (fetched.length >= 20) return;
+        var title = (item.title||'').replace(/<[^>]*>/g,'').trim();
+        if (!title) return;
+        var isSpam = BLOCKLIST.some(function(w) { return title.toLowerCase().indexOf(w) !== -1; });
+        if (isSpam) return;
+        var key = title.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,50);
+        if (seen.has(key)) return;
+        seen.add(key);
+        var pubDate = new Date(item.pubDate || now);
+        var diffH = Math.floor((now - pubDate) / 3600000);
+        var timeStr = diffH < 1 ? 'Just now' : diffH < 24 ? diffH + 'h ago' : Math.floor(diffH/24) + 'd ago';
+        var tl = title.toLowerCase();
+        var cat = (tl.indexOf('official')!==-1||tl.indexOf('rockstar')!==-1||tl.indexOf('confirm')!==-1||tl.indexOf('trailer')!==-1||tl.indexOf('release')!==-1) ? 'official'
+                : (tl.indexOf('leak')!==-1||tl.indexOf('rumor')!==-1||tl.indexOf('allegedly')!==-1||tl.indexOf('report')!==-1||tl.indexOf('source')!==-1) ? 'rumor' : 'update';
+        var excerpt = (item.description||item.content||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim().substring(0,180);
+        var srcName = '';
+        try { srcName = new URL(item.link).hostname.replace('www.',''); } catch(e2){}
+        fetched.push({id:'ln'+fetched.length, cat:cat, tag:cat==='official'?'Official':cat==='rumor'?'Rumor':'Update', emoji:emojis[fetched.length%emojis.length], title:title, excerpt:excerpt||'Read the full article for details.', time:timeStr, url:item.link||'#', source:srcName, likes:0});
+      });
+    });
+    if (fetched.length > 0) {
+      NEWS = fetched;
+      _newsFetchTime = now;
+    }
+  } catch(e) { console.warn('News fetch failed:', e); }
+  renderNewsHome();
+  renderSidebarNews();
+  if (document.getElementById('news-tab-page').style.display === 'block') renderNewsTab();
+  // Update tab counts
+  var tabs = document.querySelectorAll('.ntab');
+  if (tabs.length) {
+    var off = NEWS.filter(function(n){return n.cat==='official';}).length;
+    var rum = NEWS.filter(function(n){return n.cat==='rumor';}).length;
+    var upd = NEWS.filter(function(n){return n.cat==='update';}).length;
+    if(tabs[0]) tabs[0].textContent = 'All (' + NEWS.length + ')';
+    if(tabs[1]) tabs[1].textContent = 'Official (' + off + ')';
+    if(tabs[2]) tabs[2].textContent = 'Rumors (' + rum + ')';
+    if(tabs[3]) tabs[3].textContent = 'Updates (' + upd + ')';
+  }
+  if (force) notify('📰 News refreshed!');
+}
+
+// ─── STREAMS ──────────────────────────────────────────────────────────────────
+var STREAMS = [
+  {id:'s1', youtubeId:'jNQXAC9IVRw', title:'GTA 6 Launch Day Stream — Full Playthrough', ch:'GTA6HQ Live', viewers:'12.4K', status:'replay', dur:'6:22:10', reward:50},
+  {id:'s2', youtubeId:'9bZkp7q19f0', title:'GTA 6 First Impressions Stream', ch:'RockstarFan', viewers:'8.1K', status:'replay', dur:'3:45:00', reward:50},
+  {id:'s3', youtubeId:'ZbZSe6N_BXs', title:'GTA 6 Speedrun Attempt — Any%', ch:'SpeedGTA', viewers:'5.6K', status:'replay', dur:'2:10:30', reward:50},
+];
+
+async function fetchStreams() {
+  var YT_KEY = 'YOUR_YOUTUBE_API_KEY_HERE';
+  try {
+    var [liveData, replayData] = await Promise.all([
+      fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=live&maxResults=6&key=' + YT_KEY).then(function(r){return r.json();}),
+      fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=completed&maxResults=6&order=viewCount&key=' + YT_KEY).then(function(r){return r.json();})
+    ]);
+    var live = (!liveData.error && liveData.items) ? liveData.items.map(function(item,i){return {id:'ls'+(i+1),youtubeId:item.id.videoId,title:item.snippet.title,ch:item.snippet.channelTitle,viewers:'Live',status:'live',dur:'',reward:50};}) : [];
+    var replays = (!replayData.error && replayData.items) ? replayData.items.map(function(item,i){return {id:'rs'+(i+1),youtubeId:item.id.videoId,title:item.snippet.title,ch:item.snippet.channelTitle,viewers:'Replay',status:'replay',dur:'',reward:50};}) : [];
+    if (live.length || replays.length) STREAMS = live.concat(replays);
+  } catch(e) { console.warn('Streams fetch failed:', e); }
+}
+
+// ─── VIDEOS TAB PAGE ──────────────────────────────────────────────────────────
+function openVideosTab() {
+  var page = document.getElementById('videos-tab-page');
+  if (!page) return;
+  page.style.display = 'block';
+  page.scrollTop = 0;
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  switchVTab('videos', document.querySelector('.vtab'));
+  renderVTPVideos('all');
+  renderVTPStreams();
+}
+
+function closeVideosTab() {
+  var page = document.getElementById('videos-tab-page');
+  if (page) page.style.display = 'none';
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+}
+
+function switchVTab(tab, btn) {
+  document.querySelectorAll('.vtab').forEach(function(b) {
+    b.classList.remove('active');
+    b.style.borderBottomColor = 'transparent';
+    b.style.color = 'var(--text3)';
+  });
+  if (btn) { btn.classList.add('active'); btn.style.borderBottomColor = 'var(--gold)'; btn.style.color = 'var(--gold)'; }
+  var t = typeof tab === 'string' ? tab : 'videos';
+  document.getElementById('vtp-videos').style.display = t === 'videos' ? 'block' : 'none';
+  document.getElementById('vtp-streams').style.display = t === 'streams' ? 'block' : 'none';
+}
+
+function filterVTP(f, btn) {
+  document.querySelectorAll('.vtf').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderVTPVideos(f);
+}
+
+function renderVTPVideos(f) {
+  var items = f === 'all' ? VIDEOS : VIDEOS.filter(function(v) { return v.src === f || v.cat === f; });
+  var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
+  var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
+  var grid = document.getElementById('vtpVideoGrid');
+  if (!grid) return;
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Add your YouTube API key to load videos.') + '</div></div>';
     return;
   }
   var html = '';
-  for(var i=0;i<STREAMS.length;i++){
-    var s=STREAMS[i];
-    var watched = S.videosWatched.has(s.id);
-    var isLive = s.status === 'live';
-    var vdata = JSON.stringify(s).replace(/"/g,"'");
-    var liveBadge = isLive
-      ? '<div style="background:var(--pink);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse-dot 1.4s infinite;"></span>LIVE</div>'
-      : '<div style="background:rgba(0,0,0,.7);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--text3);">REPLAY</div>';
-    var badge = watched
-      ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>'
-      : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
+  for (var i = 0; i < items.length; i++) {
+    var v = items[i];
+    var watched = S.videosWatched.has(v.id);
+    var vdata = JSON.stringify(v).replace(/"/g,"'");
+    var thumb = (v.thumb && v.thumb.startsWith('http'))
+      ? '<img src="' + v.thumb + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">'
+      : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">' + (v.thumb||'🎬') + '</div>';
+    var badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
     html += '<div class="video-player-wrap" onclick="openVideo(' + vdata + ')">'
-      + '<div class="vp-thumb" style="background:#0a0010;">'
-      + (s.youtubeId ? '<img src="https://img.youtube.com/vi/' + s.youtubeId + '/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">' : '')
-      + '<div class="vp-overlay">' + liveBadge
-      + '<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'
-      + badge + '</div>'
-      + (s.dur ? '<span class="vp-dur">' + s.dur + '</span>' : '')
-      + '</div>'
-      + '<div class="vp-info"><div class="vp-title">' + s.title + '</div><div class="vp-meta">' + s.ch + (isLive ? ' · <span style="color:var(--pink);font-weight:700;">🔴 LIVE</span>' : ' · Stream replay') + '</div></div>'
-      + '</div>';
+      + '<div class="vp-thumb">' + thumb
+      + '<div class="vp-overlay"><div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||'Video') + '</div>'
+      + '<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>' + badge + '</div>'
+      + '<span class="vp-dur">' + v.dur + '</span></div>'
+      + '<div class="vp-info"><div class="vp-title">' + v.title + '</div><div class="vp-meta">' + v.ch + ' · ' + v.views + ' views</div></div></div>';
   }
   grid.innerHTML = html;
 }
-async function fetchStreams(){
-  var YT_KEY = 'YOUR_YOUTUBE_API_KEY_HERE';
-  try{
-    var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=live&maxResults=6&key=' + YT_KEY;
-    var res = await fetch(url);
-    var data = await res.json();
-    if(data.error || !data.items || !data.items.length) throw new Error('no live');
-    var live = data.items.map(function(item,i){ return {id:'ls'+(i+1),youtubeId:item.id.videoId,title:item.snippet.title,ch:item.snippet.channelTitle,viewers:'Live',status:'live',dur:'',reward:50}; });
-    var url2 = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=completed&maxResults=6&order=viewCount&key=' + YT_KEY;
-    var res2 = await fetch(url2);
-    var data2 = await res2.json();
-    var replays = (!data2.error && data2.items) ? data2.items.map(function(item,i){ return {id:'rs'+(i+1),youtubeId:item.id.videoId,title:item.snippet.title,ch:item.snippet.channelTitle,viewers:'Replay',status:'replay',dur:'',reward:50}; }) : [];
-    if(live.length || replays.length) STREAMS = live.concat(replays);
-  }catch(e){ console.warn('Streams fetch failed:', e); }
+
+function renderVTPStreams() {
+  var grid = document.getElementById('vtpStreamGrid');
+  if (!grid) return;
+  if (!STREAMS.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);font-family:var(--font-u);">No streams available.</div>'; return; }
+  var html = '';
+  for (var i = 0; i < STREAMS.length; i++) {
+    var s = STREAMS[i];
+    var watched = S.videosWatched.has(s.id);
+    var isLive = s.status === 'live';
+    var vdata = JSON.stringify(s).replace(/"/g,"'");
+    var liveBadge = isLive ? '<div style="background:var(--pink);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse-dot 1.4s infinite;"></span>LIVE</div>' : '<div style="background:rgba(0,0,0,.7);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--text3);">REPLAY</div>';
+    var badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
+    html += '<div class="video-player-wrap" onclick="openVideo(' + vdata + ')">'
+      + '<div class="vp-thumb" style="background:#0a0010;">'
+      + (s.youtubeId ? '<img src="https://img.youtube.com/vi/' + s.youtubeId + '/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">' : '')
+      + '<div class="vp-overlay">' + liveBadge + '<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>' + badge + '</div>'
+      + (s.dur ? '<span class="vp-dur">' + s.dur + '</span>' : '') + '</div>'
+      + '<div class="vp-info"><div class="vp-title">' + s.title + '</div><div class="vp-meta">' + s.ch + (isLive ? ' · <span style="color:var(--pink);font-weight:700;">🔴 LIVE</span>' : ' · Stream replay') + '</div></div></div>';
+  }
+  grid.innerHTML = html;
 }
 
+// ESC closes any open tab page
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  var vp = document.getElementById('videos-tab-page');
+  var np = document.getElementById('news-tab-page');
+  if (vp && vp.style.display === 'block') { closeVideosTab(); return; }
+  if (np && np.style.display === 'block') { closeNewsTab(); }
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  // Stagger renders to avoid blocking main thread
+  renderNewsHome();
+  renderGuides();
+  renderMods('all');
+  renderQA();
+  renderEarn();
+  renderTiers();
+  renderLB();
+  renderSidebarNews();
+  renderEvents();
+  renderSysReq();
+  updateTokenUI();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  setInterval(renderSidebarNews, 60000); // refresh sidebar news every 60s
+
+  // Defer heavy network calls — don't block first paint
+  setTimeout(function() {
+    fetchLatestNews();
+    fetchYouTubeVideos();
+    fetchStreams();
+  }, 100);
+
+  setTimeout(function() {
+    if (typeof S !== 'undefined' && S && !S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
+  }, 2500);
+})();
 </script>
 
 <!-- Firebase configuration module loads completely outside -->
