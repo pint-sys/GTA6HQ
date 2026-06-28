@@ -1,67 +1,119 @@
 const admin = require("firebase-admin");
-const axios = require("axios");
+const https = require("https"); // built-in — no install needed, replaces axios
 
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-} else {
-  admin.initializeApp({ projectId: "gta6hq-community" });
+// ── Firebase init ─────────────────────────────────────────────────────────────
+try {
+  const credential = process.env.FIREBASE_SERVICE_ACCOUNT
+    ? admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT))
+    : admin.credential.applicationDefault(); // fallback for local dev
+
+  admin.initializeApp({ credential, projectId: "gta6hq-community" });
+} catch (err) {
+  console.error("Firebase init failed:", err.message);
+  process.exit(1); // can't continue without a DB connection
 }
 
 const db = admin.firestore();
-const BLOCKLIST = ["scam", "fake", "giveaway", "free hack", "leaked download", "clickbait"];
 
+const BLOCKLIST = [
+  "scam", "fake", "giveaway", "free hack",
+  "leaked download", "clickbait", "cheat engine", "mod menu"
+];
+
+// ── tiny https GET → JSON helper (replaces axios, zero extra deps) ────────────
+function httpsGetJSON(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let raw = "";
+      res.on("data", (chunk) => { raw += chunk; });
+      res.on("end", () => {
+        try { resolve(JSON.parse(raw)); }
+        catch (e) { reject(new Error("JSON parse error: " + e.message)); }
+      });
+    }).on("error", reject);
+  });
+}
+
+// ── main ──────────────────────────────────────────────────────────────────────
 async function runNewsAutomation() {
-  try {
-    console.log("Fetching live, verified GTA 6 news feeds...");
-    
-    // Using a fully open Google News RSS-to-JSON feed for GTA 6 (Highly reliable)
-    const feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGTA%2B6%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen";
-    const response = await axios.get(feedUrl);
-    
-    const items = response.data.items || [];
-    console.log(`Found ${items.length} raw articles to process.`);
+  console.log("Fetching live GTA 6 news feeds...");
 
-    for (let item of items) {
-      const title = item.title;
-      const originalUrl = item.link;
+  const feeds = [
+    "https://api.rss2json.com/v1/api.json?rss_url=" +
+      encodeURIComponent("https://news.google.com/rss/search?q=GTA+6+Rockstar+Games&hl=en-US&gl=US&ceid=US:en"),
+    "https://api.rss2json.com/v1/api.json?rss_url=" +
+      encodeURIComponent("https://news.google.com/rss/search?q=Grand+Theft+Auto+VI&hl=en-US&gl=US&ceid=US:en"),
+  ];
 
-      // 1. FILTRATION Engine
-      const containsSpam = BLOCKLIST.some(word => title.toLowerCase().includes(word));
-      if (containsSpam) {
-        console.log(`Filtered out spam post: ${title}`);
+  let totalAdded   = 0;
+  let totalSkipped = 0;
+
+  for (const feedUrl of feeds) {
+    let data;
+    try {
+      data = await httpsGetJSON(feedUrl);
+    } catch (err) {
+      // One feed failing should NOT kill the whole job
+      console.warn(`Feed fetch failed (${feedUrl}): ${err.message} — continuing.`);
+      continue;
+    }
+
+    if (!data || data.status !== "ok" || !Array.isArray(data.items)) {
+      console.warn("Feed returned no usable items — skipping.");
+      continue;
+    }
+
+    console.log(`Found ${data.items.length} raw articles.`);
+
+    for (const item of data.items) {
+      const title       = (item.title || "").replace(/<[^>]*>/g, "").trim();
+      const originalUrl = item.link || "";
+
+      if (!title || !originalUrl) continue;
+
+      // 1. Spam filter
+      if (BLOCKLIST.some((w) => title.toLowerCase().includes(w))) {
+        console.log(`Filtered spam: ${title}`);
         continue;
       }
 
-      // 2. DEDUPLICATION Engine using unique clean URL hashes
-      const uniqueDocId = Buffer.from(originalUrl).toString('base64').replace(/[^a-zA-Z0-9]/g, "").substring(0, 40);
-      const docReference = db.collection("automated_news").doc(uniqueDocId);
-      const docSnapshot = await docReference.get();
+      // 2. Deduplication via URL-based doc ID
+      const uniqueDocId = Buffer.from(originalUrl)
+        .toString("base64")
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .substring(0, 40);
 
-      if (!docSnapshot.exists) {
-        // Fallback placeholder image since Google RSS feeds are text-only
-        let imagePreview = "img/news-placeholder.jpg"; 
+      try {
+        const docRef  = db.collection("automated_news").doc(uniqueDocId);
+        const docSnap = await docRef.get();
 
-        await docReference.set({
-          title: title,
-          url: originalUrl,
-          tag: "news",
-          time: new Date(item.pubDate).toLocaleDateString(),
-          img: imagePreview,
-          timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        console.log(`Successfully Added Fresh Content: ${title}`);
-      } else {
-        console.log(`Duplicate Skipped: ${title}`);
+        if (!docSnap.exists) {
+          await docRef.set({
+            title,
+            url:       originalUrl,
+            tag:       "news",
+            time:      new Date(item.pubDate || Date.now()).toLocaleDateString(),
+            img:       "img/news-placeholder.jpg",
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+          });
+          console.log(`Added: ${title}`);
+          totalAdded++;
+        } else {
+          console.log(`Duplicate skipped: ${title}`);
+          totalSkipped++;
+        }
+      } catch (dbErr) {
+        // One bad write should NOT abort everything
+        console.warn(`Firestore write failed for "${title}": ${dbErr.message} — continuing.`);
       }
     }
-    console.log("Automation synchronization finished cleanly!");
-  } catch (error) {
-    console.error("Execution failed:", error);
-    process.exit(1);
   }
+
+  console.log(`Done — ${totalAdded} added, ${totalSkipped} duplicates skipped.`);
+  // No process.exit(1) here — let Node exit naturally with code 0
 }
 
-runNewsAutomation();
+runNewsAutomation().catch((err) => {
+  console.error("Unexpected fatal error:", err);
+  process.exit(1);
+});
