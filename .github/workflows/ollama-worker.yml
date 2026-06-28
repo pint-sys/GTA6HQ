@@ -1,42 +1,44 @@
-  name: Ollama Web Developer Worker
+name: Ollama AI Worker
 
 on:
-  issues:
-    types: [opened, edited]
+  schedule:
+    - cron: '0 */6 * * *'   # Runs every 6 hours
+  workflow_dispatch:          # Manual trigger
 
 jobs:
-  build-website:
+  ollama-task:
     runs-on: ubuntu-latest
-    if: contains(github.event.issue.labels.*.name, 'make-website')
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-        - name: Setup Ollama
+      - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama server
+        run: |
           ollama serve &
-          sleep 5
-          ollama pull qwen2.5-coder:7b
+          sleep 5  # Wait for server to start
 
-      - name: Improve Existing Website Code
-        id: generate
+      - name: Pull a model (e.g. llama3 or mistral)
         run: |
-          PROMPT=\$(echo "{{ github.event.issue.body }}" | sed 's/"/\\"/g')
-          
-          # This tells Ollama to pull your current files into its active window memory
-          ollama run qwen2.5-coder:7b "You are a web developer. Here is the current website code: HTML: \((cat index.html) CSS:\)(cat style.css) JS: \((cat script.js) Improve or update this website based on the user request:\)PROMPT. Provide the updated code. Output ONLY the raw code inside standard markdown blocks. Do not explain anything." > output.md
-          
-          # Overwrite your old local files with the newly optimized code blocks
-          sed -n '/```html/,/```/p' output.md | grep -v '```' > index.html
-          sed -n '/```css/,/```/p' output.md | grep -v '```' > style.css
-          sed -n '/```javascript/,/```/p' output.md | grep -v '```' > script.js
+          ollama pull llama3.2
 
-      - name: Commit and Push Website to GitHub
+      - name: Run AI task
         run: |
-          git config --global user.name "Ollama-Worker-Bot"
-          git config --global user.email "actions@github.com"
-          git add web-site/*
-          git commit -m "Auto-generated website from Issue #${{ github.event.issue.number }}"
+          ollama run llama3.2 "Summarize the latest GTA 6 news in 3 bullet points" > ai-output.txt
+          cat ai-output.txt
+
+      - name: Use output (example: save to file)
+        run: |
+          cp ai-output.txt public/ai-summary.txt
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "ollama-bot"
+          git config user.email "bot@gta6hq.com"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: AI summary update [skip ci]"
           git push
