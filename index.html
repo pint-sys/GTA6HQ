@@ -541,8 +541,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   <!-- NEWS -->
   <section class="section container">
     <div class="section-header">
-      <div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Auto-Updated</span></div>
-      <a class="see-all" href="#news">All news →</a>
+      <div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></div>
+      <button onclick="fetchLatestNews().then(function(){notify('News refreshed!');})" style="background:none;border:1px solid var(--border2);color:var(--text3);padding:4px 12px;border-radius:4px;font-family:var(--font-u);font-size:12px;cursor:pointer;transition:.15s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border2)'">🔄 Refresh</button>
     </div>
     <div class="tabs" id="newsTabs">
       <button class="tab active" onclick="filterNews('all',this)">All</button>
@@ -855,7 +855,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="disc-float" onclick="window.open('#discord','_blank')" title="Join Discord">💬</div>
 
 <!-- VIDEOS TAB PAGE -->
-<div id="videos-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;">
+<div id="videos-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div style="position:sticky;top:0;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10;padding:0 20px;">
     <div style="max-width:1300px;margin:0 auto;display:flex;align-items:center;height:56px;gap:16px;">
       <button onclick="closeVideosTab()" style="background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:6px 14px;font-family:var(--font-u);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">← Back</button>
@@ -1005,14 +1005,72 @@ window.addEventListener('blur',function(){S.tabFocused=false;});
 window.addEventListener('focus',function(){S.tabFocused=true;});
 
 // ─── DATA ───
+// ─── NEWS: fallback static data shown until live fetch completes ───
 var NEWS=[
-  {id:1,cat:'official',tag:'Official',emoji:'🚀',title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled',excerpt:'Rockstar apologized for delays and confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced.',time:'2h ago',views:'184K',likes:1842},
-  {id:2,cat:'official',tag:'Official',emoji:'🎮',title:'Dual Protagonists Jason & Lucia Confirmed — Lucia is Series First Female Lead',excerpt:'Two trailers have now confirmed both characters. Lucia\'s story follows a criminal who finds herself navigating Vice City\'s underworld.',time:'5h ago',views:'97K',likes:934},
-  {id:3,cat:'rumor',tag:'Rumor',emoji:'🗺️',title:'Leaked Map Shows 3x GTA V Scale — Grassrivers, Vice City, Leonida Keys',excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.',time:'8h ago',views:'128K',likes:2120},
-  {id:4,cat:'update',tag:'Update',emoji:'⚡',title:'GTA6HQ Now Auto-Pulls Rockstar Newswire — Updates Within Minutes',excerpt:'We integrated Rockstar\'s feed so every official update hits this page automatically. No more checking multiple sites.',time:'12h ago',views:'22K',likes:480},
-  {id:5,cat:'rumor',tag:'Rumor',emoji:'🚗',title:'RAGE 9 Engine Leak — Real-Time Global Illumination & Ocean Physics Confirmed',excerpt:'The engine behind GTA 6 simulates water physics, dense NPC crowds, and dynamic lighting unlike anything seen in gaming.',time:'1d ago',views:'76K',likes:997},
-  {id:6,cat:'official',tag:'Official',emoji:'💻',title:'PC Version: No Official Date — History Suggests 12–18 Months After Console',excerpt:'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months. PC specs are all predictions.',time:'2d ago',views:'211K',likes:3102},
+  {id:1,cat:'official',tag:'Official',emoji:'🚀',title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled',excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced.',time:'2h ago',views:'184K',likes:1842,url:'#'},
+  {id:2,cat:'official',tag:'Official',emoji:'🎮',title:'Dual Protagonists Jason & Lucia Confirmed — Lucia is Series First Female Lead',excerpt:'Two trailers confirmed both characters. Lucia navigates Vice City\'s underworld as the series\' first female lead.',time:'5h ago',views:'97K',likes:934,url:'#'},
+  {id:3,cat:'rumor',tag:'Rumor',emoji:'🗺️',title:'Leaked Map Shows 3x GTA V Scale — Grassrivers, Vice City, Leonida Keys',excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.',time:'8h ago',views:'128K',likes:2120,url:'#'},
+  {id:4,cat:'update',tag:'Update',emoji:'⚡',title:'GTA 6 Engine: Real-Time Global Illumination & Ocean Physics Confirmed',excerpt:'The RAGE 9 engine simulates water physics, dense NPC crowds, and dynamic lighting unlike anything seen in gaming.',time:'1d ago',views:'76K',likes:997,url:'#'},
+  {id:5,cat:'official',tag:'Official',emoji:'💻',title:'PC Version: No Official Date — History Suggests 12–18 Months After Console',excerpt:'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months.',time:'2d ago',views:'211K',likes:3102,url:'#'},
 ];
+
+// ─── AUTO NEWS FETCH from Google News RSS ───
+async function fetchLatestNews(){
+  var feeds=[
+    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGTA%2B6%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
+    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGrand%2BTheft%2BAuto%2B6%2BRockstar%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
+  ];
+  var BLOCKLIST=['scam','fake','giveaway','free hack','leaked download','clickbait','cheats','generator'];
+  var seen=new Set();
+  var fetched=[];
+  var emojiMap=['🔥','📰','🎮','💥','🗺️','⚡','🚗','🎯','📡','🚀'];
+
+  try{
+    for(var fi=0;fi<feeds.length;fi++){
+      var res=await fetch(feeds[fi]);
+      var data=await res.json();
+      if(!data.items) continue;
+      data.items.forEach(function(item){
+        var title=item.title||'';
+        var isSpam=BLOCKLIST.some(function(w){return title.toLowerCase().includes(w);});
+        if(isSpam) return;
+        var key=title.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
+        if(seen.has(key)) return;
+        seen.add(key);
+        var pubDate=new Date(item.pubDate||Date.now());
+        var now=new Date();
+        var diffMs=now-pubDate;
+        var diffH=Math.floor(diffMs/3600000);
+        var timeStr=diffH<1?'Just now':diffH<24?diffH+'h ago':Math.floor(diffH/24)+'d ago';
+        // Auto-categorize
+        var tl=title.toLowerCase();
+        var cat=tl.includes('official')||tl.includes('rockstar')||tl.includes('confirm')||tl.includes('trailer')?'official'
+               :tl.includes('leak')||tl.includes('rumor')||tl.includes('allegedly')||tl.includes('report')?'rumor':'update';
+        var tag=cat==='official'?'Official':cat==='rumor'?'Rumor':'Update';
+        var emoji=emojiMap[fetched.length%emojiMap.length];
+        fetched.push({
+          id:'n'+fetched.length,
+          cat:cat, tag:tag, emoji:emoji,
+          title:title,
+          excerpt:(item.description||'').replace(/<[^>]*>/g,'').substring(0,160)+'…',
+          time:timeStr,
+          views:Math.floor(Math.random()*180+10)+'K',
+          likes:Math.floor(Math.random()*2000+100),
+          url:item.link||'#'
+        });
+        if(fetched.length>=20) return;
+      });
+      if(fetched.length>=20) break;
+    }
+    if(fetched.length>0){
+      NEWS=fetched;
+      renderNews('all');
+      console.log('Live news loaded:',fetched.length,'articles');
+    }
+  }catch(e){
+    console.warn('News fetch failed, using static fallback:',e);
+  }
+}
 
 var VIDEOS=[];
 var VIDEOS_LOADED=false;
@@ -1036,7 +1094,7 @@ function calcReward(views,likes){
 }
 
 async function fetchYouTubeVideos(){
-  var YT_KEY='AIzaSyDmc92n8MrWjpdvTdO9AYF80lINCdsrw1k';
+  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
   var queries=['GTA 6 gameplay','GTA VI official','GTA 6 trailer','GTA 6 news 2025','GTA 6 Lucia'];
   var allIds=[];
   var grid=document.getElementById('videoGrid');
@@ -1248,7 +1306,9 @@ function renderNews(f){
   var items=f==='all'?NEWS:NEWS.filter(function(n){return n.cat===f;});
   document.getElementById('newsGrid').innerHTML=items.map(function(n){
     var liked=S.liked.has('n'+n.id);
-    return '<div class="card"><div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">'+n.emoji+'</div><div class="card-body"><div class="card-tags"><span class="tag tag-'+(n.cat==='official'?'official':n.cat==='rumor'?'question':'mod')+'">'+n.cat.toUpperCase()+'</span><span class="tag tag-'+(n.tag==='Official'?'official':n.tag==='Rumor'?'question':'update')+'">'+n.tag+'</span></div><div class="card-title"><a href="#news">'+n.title+'</a></div><div class="card-meta"><span>🕐 '+n.time+'</span><span>👁️ '+n.views+'</span></div></div><div class="card-actions"><button class="like-btn'+(liked?' liked':'')+'" onclick="toggleLike(\'n'+n.id+'\',this)">❤️ <span>'+(n.likes+(liked?1:0))+'</span></button><button class="like-btn" onclick="share(\''+n.title.replace(/'/g,'')+'\')">🔗 Share</button></div></div>';
+    var articleUrl=n.url&&n.url!=='#'?n.url:'#';
+    var linkTarget=articleUrl!=='#'?' target="_blank" rel="noopener"':'';
+    return '<div class="card"><div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">'+n.emoji+'</div><div class="card-body"><div class="card-tags"><span class="tag tag-'+(n.cat==='official'?'official':n.cat==='rumor'?'question':'mod')+'">'+n.cat.toUpperCase()+'</span><span class="tag tag-'+(n.tag==='Official'?'official':n.tag==='Rumor'?'question':'update')+'">'+n.tag+'</span></div><div class="card-title"><a href="'+articleUrl+'"'+linkTarget+'>'+n.title+'</a></div><div class="card-meta"><span>🕐 '+n.time+'</span><span>👁️ '+n.views+'</span></div></div><div class="card-actions"><button class="like-btn'+(liked?' liked':'')+'" onclick="toggleLike(\'n'+n.id+'\',this)">❤️ <span>'+(n.likes+(liked?1:0))+'</span></button><button class="like-btn" onclick="share(\''+n.title.replace(/'/g,'')+'\')">🔗 Share</button></div></div>';
   }).join('');
 }
 
@@ -1515,7 +1575,7 @@ function updateCountdown(){
 }
 // ─── INIT ───
 (function init(){
-  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();fetchStreams();
+  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();fetchStreams();fetchLatestNews();
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
   
@@ -1547,16 +1607,32 @@ var STREAMS = [
 
 // ─── VIDEOS TAB PAGE FUNCTIONS ───
 function openVideosTab(){
-  document.getElementById('videos-tab-page').style.display='block';
+  var page = document.getElementById('videos-tab-page');
+  page.style.display='block';
+  page.scrollTop=0;
+  document.documentElement.style.overflow='hidden';
   document.body.style.overflow='hidden';
+  // reset to videos tab
+  document.querySelectorAll('.vtab').forEach(function(b,i){
+    b.style.borderBottomColor = i===0?'var(--gold)':'transparent';
+    b.style.color = i===0?'var(--gold)':'var(--text3)';
+  });
+  document.getElementById('vtp-videos').style.display='block';
+  document.getElementById('vtp-streams').style.display='none';
   renderVTPVideos('all');
   renderVTPStreams();
 }
 
 function closeVideosTab(){
   document.getElementById('videos-tab-page').style.display='none';
+  document.documentElement.style.overflow='';
   document.body.style.overflow='';
 }
+
+// ESC key closes the tab
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape' && document.getElementById('videos-tab-page').style.display==='block') closeVideosTab();
+});
 
 function switchVTab(tab, btn){
   document.querySelectorAll('.vtab').forEach(function(b){
@@ -1629,7 +1705,7 @@ function renderVTPStreams(){
 
 async function fetchStreams(){
   // Fetch live/upcoming GTA 6 streams from YouTube
-  var YT_KEY='AIzaSyDmc92n8MrWjpdvTdO9AYF80lINCdsrw1k';
+  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
   try{
     var url='https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=live&maxResults=6&key='+YT_KEY;
     var res=await fetch(url);
