@@ -33,7 +33,31 @@ function httpsGetJSON(url) {
     }).on("error", reject);
   });
 }
-
+function askOllama(title) {
+  return new Promise((resolve) => {
+    const body = JSON.stringify({
+      model: "llama3.2",
+      prompt: `One sentence summary of this GTA 6 news: "${title}"`,
+      stream: false,
+    });
+    const req = https.request(
+      { hostname:"localhost", port:11434,
+        path:"/api/generate", method:"POST",
+        headers:{"Content-Type":"application/json"} },
+      (res) => {
+        let raw = "";
+        res.on("data", c => raw += c);
+        res.on("end", () => {
+          try { resolve(JSON.parse(raw).response || ""); }
+          catch { resolve(""); }
+        });
+      }
+    );
+    req.on("error", () => resolve(""));
+    req.write(body);
+    req.end();
+  });
+}
 // ── main ──────────────────────────────────────────────────────────────────────
 async function runNewsAutomation() {
   console.log("Fetching live GTA 6 news feeds...");
@@ -87,15 +111,19 @@ async function runNewsAutomation() {
         const docRef  = db.collection("automated_news").doc(uniqueDocId);
         const docSnap = await docRef.get();
 
-        if (!docSnap.exists) {
-          await docRef.set({
-            title,
-            url:       originalUrl,
-            tag:       "news",
-            time:      new Date(item.pubDate || Date.now()).toLocaleDateString(),
-            img:       "img/news-placeholder.jpg",
-            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-          });
+       if (!docSnap.exists) {
+  const aiSummary = await askOllama(title); // NEW
+
+  await docRef.set({
+    title,
+    url:       originalUrl,
+    tag:       "news",
+    time:      new Date(item.pubDate || Date.now())
+                 .toLocaleDateString(),
+    img:       "img/news-placeholder.jpg",
+    summary:   aiSummary,                   // NEW
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  });
           console.log(`Added: ${title}`);
           totalAdded++;
         } else {
