@@ -1,0 +1,22 @@
+name: Ollama PR Reviewer
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  review:
+    runs-on: self-hosted # Requires a runner with Ollama installed
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Ollama Review
+        run: |
+          # Get the git diff of the PR
+          git diff origin/${{ github.base_ref }}...HEAD > diff.txt
+          # Send diff to local Ollama instance
+          curl -X POST http://localhost:11434/api/generate -d '{
+            "model": "codellama",
+            "prompt": "Review this git diff for bugs and style issues:\n\n'$(cat diff.txt)'",
+            "stream": false
+          }' > review.json
