@@ -243,6 +243,12 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .t-diamond .tier-name{color:var(--purple);}
 
 /* SECURITY BADGE */
+.vtab{transition:.15s;}
+.vtab.active{color:var(--gold)!important;border-bottom-color:var(--gold)!important;}
+.vtab:hover{color:var(--text)!important;}
+.vtf{background:var(--bg3);border:1px solid var(--border);color:var(--text3);padding:5px 14px;border-radius:20px;font-family:var(--font-u);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;}
+.vtf:hover{border-color:var(--gold);color:var(--gold);}
+.vtf.active{background:rgba(240,180,41,.12);border-color:var(--gold);color:var(--gold);}
 .sec-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:4px;padding:4px 10px;font-family:var(--font-u);font-size:11px;color:var(--green);font-weight:600;}
 .sec-badge .dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse-dot 1.4s infinite;}
 
@@ -555,20 +561,16 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       <section class="section" id="videos">
         <div class="section-header">
           <div class="section-title">🎬 Video Hub <span class="sec-badge" style="margin-left:8px;font-size:10px;"><span class="dot"></span>Watch-to-Earn Verified</span></div>
-          <a class="see-all" href="#videos">Browse all →</a>
+          <button class="see-all" onclick="openVideosTab()" style="background:none;border:none;cursor:pointer;font-family:var(--font-u);font-size:13px;color:var(--gold);">Browse all →</button>
         </div>
         <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
           <span style="font-size:16px;">🔒</span>
-          <span><strong style="color:var(--green);">Secure token system:</strong> You must watch at least <strong>80% of each video</strong> before the token reward unlocks. Skipping or closing early forfeits the reward. Anti-cheat runs in the background.</span>
-        </div>
-        <div class="tabs" id="videoTabs">
-          <button class="tab active" onclick="filterVideos('all',this)">All</button>
-          <button class="tab" onclick="filterVideos('youtube',this)">YouTube</button>
-          <button class="tab" onclick="filterVideos('discord',this)">Discord</button>
-          <button class="tab" onclick="filterVideos('instagram',this)">Instagram</button>
-          <button class="tab" onclick="filterVideos('guides',this)">Job Guides</button>
+          <span><strong style="color:var(--green);">Secure token system:</strong> Watch <strong>80%+</strong> to earn <strong>🪙 50 TKN</strong> per video. Anti-cheat active.</span>
         </div>
         <div class="video-grid" id="videoGrid"></div>
+        <div style="text-align:center;margin-top:18px;">
+          <button onclick="openVideosTab()" style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:10px 28px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;transition:.15s;" onmouseover="this.style.background='rgba(240,180,41,.2)'" onmouseout="this.style.background='rgba(240,180,41,.1)'">🎬 Browse All Videos & Streams →</button>
+        </div>
       </section>
 
       <!-- GUIDES -->
@@ -852,6 +854,43 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- FLOATING DISCORD -->
 <div class="disc-float" onclick="window.open('#discord','_blank')" title="Join Discord">💬</div>
 
+<!-- VIDEOS TAB PAGE -->
+<div id="videos-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;">
+  <div style="position:sticky;top:0;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10;padding:0 20px;">
+    <div style="max-width:1300px;margin:0 auto;display:flex;align-items:center;height:56px;gap:16px;">
+      <button onclick="closeVideosTab()" style="background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:6px 14px;font-family:var(--font-u);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">← Back</button>
+      <div style="font-family:var(--font-d);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);">🎬 All Videos & Streams</div>
+      <div style="margin-left:auto;font-family:var(--font-u);font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse-dot 1.4s infinite;display:inline-block;"></span>Watch to earn 🪙 50 TKN per video</div>
+    </div>
+    <!-- Sub tabs -->
+    <div style="max-width:1300px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding-bottom:0;">
+      <button class="vtab active" onclick="switchVTab('videos',this)" style="background:none;border:none;border-bottom:2px solid var(--gold);color:var(--gold);padding:10px 18px;font-family:var(--font-u);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">📹 Videos</button>
+      <button class="vtab" onclick="switchVTab('streams',this)" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);padding:10px 18px;font-family:var(--font-u);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">🔴 Streams</button>
+    </div>
+  </div>
+
+  <!-- Videos panel -->
+  <div id="vtp-videos" style="max-width:1300px;margin:0 auto;padding:24px 20px;">
+    <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
+      <span>🔒</span><span><strong style="color:var(--green);">Secure token system:</strong> Watch 80%+ to earn <strong>🪙 50 TKN</strong>. Anti-cheat active. One reward per video.</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="vtpFilterBtns">
+      <button class="vtf active" onclick="filterVTP('all',this)">All</button>
+      <button class="vtf" onclick="filterVTP('youtube',this)">YouTube</button>
+      <button class="vtf" onclick="filterVTP('guides',this)">Job Guides</button>
+    </div>
+    <div class="video-grid" id="vtpVideoGrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));"></div>
+  </div>
+
+  <!-- Streams panel -->
+  <div id="vtp-streams" style="display:none;max-width:1300px;margin:0 auto;padding:24px 20px;">
+    <div style="background:rgba(255,60,110,.06);border:1px solid rgba(255,60,110,.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
+      <span>🔴</span><span><strong style="color:var(--pink);">Live & Replay Streams</strong> — Watch 80%+ to earn <strong>🪙 50 TKN</strong> per stream.</span>
+    </div>
+    <div class="video-grid" id="vtpStreamGrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));"></div>
+  </div>
+</div>
+
 <!-- NOTIFY -->
 <div class="notify" id="notifyToast"><span id="notifyMsg"></span></div>
 
@@ -993,16 +1032,11 @@ function formatDuration(iso){
 }
 
 function calcReward(views,likes){
-  var score=(views/1000)+(likes*2);
-  if(score>500000) return 300;
-  if(score>100000) return 200;
-  if(score>50000)  return 150;
-  if(score>10000)  return 100;
-  return 50;
+  return 50; // hard token system: all videos give exactly 50 TKN
 }
 
 async function fetchYouTubeVideos(){
-  var YT_KEY='AIzaSyDmc92n8MrWjpdvTdO9AYF80lINCdsrw1k';
+  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
   var queries=['GTA 6 gameplay','GTA VI official','GTA 6 trailer','GTA 6 news 2025','GTA 6 Lucia'];
   var allIds=[];
   var grid=document.getElementById('videoGrid');
@@ -1052,7 +1086,7 @@ async function fetchYouTubeVideos(){
       };
     });
     VIDEOS_LOADED=true;
-    renderVideos('all');
+    renderVideos('all',false);
   }catch(e){
     console.warn('YouTube fetch failed:',e);
     if(grid) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);"><div style="font-size:32px;margin-bottom:12px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
@@ -1218,11 +1252,14 @@ function renderNews(f){
   }).join('');
 }
 
-function renderVideos(f){
-  var items=f==='all'?VIDEOS:VIDEOS.filter(function(v){return f==='guides'?v.cat==='guides':v.src===f;});
+function renderVideos(f,showAll){
+  var all=f==='all'?VIDEOS:VIDEOS.filter(function(v){return f==='guides'?v.cat==='guides':v.src===f;});
+  var items=showAll?all:all.slice(0,3);
   var srcLabel={youtube:'YouTube',discord:'Discord',instagram:'Instagram'};
   var srcColor={youtube:'#ff0000',discord:'#5865F2',instagram:'#e1306c'};
-  document.getElementById('videoGrid').innerHTML=items.map(function(v){
+  var grid=document.getElementById('videoGrid');
+  if(!grid) return;
+  grid.innerHTML=items.map(function(v){
     var watched=S.videosWatched.has(v.id);
     return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(v).replace(/"/g,"'")+')" data-vid-id="'+v.id+'">'
       +'<div class="vp-thumb">'
@@ -1308,7 +1345,7 @@ function filterNews(f,btn){
 }
 function filterVideos(f,btn){
   document.querySelectorAll('#videoTabs .tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');renderVideos(f);
+  btn.classList.add('active');renderVideos(f,true); // all tab shows all videos
 }
 function filterMods(f,btn){
   document.querySelectorAll('#modTabs .tab').forEach(function(t){t.classList.remove('active');});
@@ -1478,7 +1515,7 @@ function updateCountdown(){
 }
 // ─── INIT ───
 (function init(){
-  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();
+  renderNews('all');renderGuides();renderMods('all');fetchYouTubeVideos();fetchStreams();
   renderQA();renderEarn();renderTiers();renderLB();renderSidebarNews();renderEvents();renderSysReq();
   updateTokenUI();
   
@@ -1499,7 +1536,144 @@ function updateCountdown(){
 </script>
 
 <!-- Firebase configuration module loads completely outside -->
-<script type="module" src="firebase-config.js"></script>
+<script type="module" src="firebase-config.js">
+// ─── STREAMS DATA ───
+var STREAMS = [
+  {id:'s1', youtubeId:'jNQXAC9IVRw', title:'GTA 6 Launch Day Stream — Full Playthrough', ch:'GTA6HQ Live', viewers:'12.4K', status:'replay', dur:'6:22:10', reward:50},
+  {id:'s2', youtubeId:'dQw4w9WgXcQ', title:'GTA 6 Beta Access Stream — First Impressions', ch:'RockstarFan', viewers:'8.1K', status:'replay', dur:'3:45:00', reward:50},
+  {id:'s3', youtubeId:'9bZkp7q19f0', title:'GTA 6 Speedrun Attempt — Any%', ch:'SpeedGTA', viewers:'5.6K', status:'replay', dur:'2:10:30', reward:50},
+];
+
+// ─── VIDEOS TAB PAGE FUNCTIONS ───
+function openVideosTab(){
+  document.getElementById('videos-tab-page').style.display='block';
+  document.body.style.overflow='hidden';
+  renderVTPVideos('all');
+  renderVTPStreams();
+}
+
+function closeVideosTab(){
+  document.getElementById('videos-tab-page').style.display='none';
+  document.body.style.overflow='';
+}
+
+function switchVTab(tab, btn){
+  document.querySelectorAll('.vtab').forEach(function(b){
+    b.style.borderBottomColor='transparent';
+    b.style.color='var(--text3)';
+    b.classList.remove('active');
+  });
+  btn.style.borderBottomColor='var(--gold)';
+  btn.style.color='var(--gold)';
+  btn.classList.add('active');
+  document.getElementById('vtp-videos').style.display = tab==='videos'?'block':'none';
+  document.getElementById('vtp-streams').style.display = tab==='streams'?'block':'none';
+}
+
+function filterVTP(f, btn){
+  document.querySelectorAll('.vtf').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderVTPVideos(f);
+}
+
+function renderVTPVideos(f){
+  var items = f==='all' ? VIDEOS : VIDEOS.filter(function(v){ return f==='guides'?v.cat==='guides':v.src===f; });
+  var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
+  var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
+  var grid = document.getElementById('vtpVideoGrid');
+  if(!grid) return;
+  if(!items.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-family:var(--font-u);font-size:13px;">Loading videos...</div>';
+    return;
+  }
+  grid.innerHTML = items.map(function(v){
+    var watched = S.videosWatched.has(v.id);
+    return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(v).replace(/"/g,"'")+')">'\
+      +'<div class="vp-thumb">'\
+      +(v.thumb&&v.thumb.startsWith('http')\
+        ?'<img src="'+v.thumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display=\'none\'">'\
+        :'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">'+v.thumb+'</div>')\
+      +'<div class="vp-overlay">'\
+      +'<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:'+(srcColor[v.src]||'#666')+';flex-shrink:0;"></span>'+(srcLabel[v.src]||v.src)+'</div>'\
+      +'<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'\
+      +(watched?'<span style="background:rgba(0,230,118,.8);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>':'<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>')\
+      +'</div>'\
+      +'<span class="vp-dur">'+v.dur+'</span>'\
+      +'</div>'\
+      +'<div class="vp-info"><div class="vp-title">'+v.title+'</div><div class="vp-meta">'+v.ch+' · '+v.views+' views</div></div>'\
+      +'</div>';
+  }).join('');
+}
+
+function renderVTPStreams(){
+  var grid = document.getElementById('vtpStreamGrid');
+  if(!grid) return;
+  grid.innerHTML = STREAMS.map(function(s){
+    var watched = S.videosWatched.has(s.id);
+    var isLive = s.status === 'live';
+    return '<div class="video-player-wrap" onclick="openVideo('+JSON.stringify(s).replace(/"/g,"'")+')">'\
+      +'<div class="vp-thumb" style="background:#0a0010;">'\
+      +(s.youtubeId?'<img src="https://img.youtube.com/vi/'+s.youtubeId+'/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">':'')\
+      +'<div class="vp-overlay">'\
+      +(isLive?'<div style="background:var(--pink);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse-dot 1.4s infinite;"></span>LIVE · '+s.viewers+'</div>':'<div style="background:rgba(0,0,0,.7);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--text3);">REPLAY · '+s.viewers+' peak</div>')\
+      +'<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>'\
+      +(watched?'<span style="background:rgba(0,230,118,.8);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>':'<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>')\
+      +'</div>'\
+      +(s.dur?'<span class="vp-dur">'+s.dur+'</span>':'')\
+      +'</div>'\
+      +'<div class="vp-info"><div class="vp-title">'+s.title+'</div><div class="vp-meta">'+s.ch+(isLive?' · <span style="color:var(--pink);font-weight:700;">🔴 LIVE</span>':' · Stream replay')+'</div></div>'\
+      +'</div>';
+  }).join('');
+}
+
+async function fetchStreams(){
+  // Fetch live/upcoming GTA 6 streams from YouTube
+  var YT_KEY='YOUR_YOUTUBE_API_KEY_HERE';
+  try{
+    var url='https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream&type=video&eventType=live&maxResults=6&key='+YT_KEY;
+    var res=await fetch(url);
+    var data=await res.json();
+    if(data.error||!data.items||!data.items.length) throw new Error('no live streams');
+    var liveStreams=data.items.map(function(item,i){
+      return {
+        id:'ls'+(i+1),
+        youtubeId:item.id.videoId,
+        title:item.snippet.title,
+        ch:item.snippet.channelTitle,
+        viewers:'Live',
+        status:'live',
+        dur:'',
+        reward:50
+      };
+    });
+    // Also get replays
+    var url2='https://www.googleapis.com/youtube/v3/search?part=snippet&q=GTA+6+stream+replay&type=video&eventType=completed&maxResults=6&order=viewCount&key='+YT_KEY;
+    var res2=await fetch(url2);
+    var data2=await res2.json();
+    var replays=[];
+    if(!data2.error&&data2.items){
+      replays=data2.items.map(function(item,i){
+        return {
+          id:'rs'+(i+1),
+          youtubeId:item.id.videoId,
+          title:item.snippet.title,
+          ch:item.snippet.channelTitle,
+          viewers:'Replay',
+          status:'replay',
+          dur:'',
+          reward:50
+        };
+      });
+    }
+    if(liveStreams.length||replays.length){
+      STREAMS=[].concat(liveStreams,replays);
+    }
+  }catch(e){
+    console.warn('Streams fetch failed, using defaults:',e);
+  }
+}
+
+</script>
 
 </body>
 </html>
