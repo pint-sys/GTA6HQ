@@ -1,0 +1,41 @@
+name: Ollama Web Developer Worker
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  build-website:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'make-website')
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Ollama
+        run: |
+          curl -fsSL https://ollama.com | sh
+          ollama serve &
+          sleep 5
+          ollama pull qwen2.5-coder:7b
+
+      - name: Generate Website Code
+        id: generate
+        run: |
+          PROMPT=(echo "{{ github.event.issue.body }}" | sed 's/"/\\"/g')
+          
+          ollama run qwen2.5-coder:7b "You are a web developer worker. Create a complete, production-ready single-page website based on this request: \$PROMPT. Provide the full code. Output ONLY the raw code inside standard markdown blocks. Do not explain anything." > output.md
+          
+          mkdir -p web-site
+          sed -n '/```html/,/```/p' output.md | grep -v '```' > web-site/index.html
+          sed -n '/```css/,/```/p' output.md | grep -v '```' > web-site/style.css
+          sed -n '/```javascript/,/```/p' output.md | grep -v '```' > web-site/script.js
+
+      - name: Commit and Push Website to GitHub
+        run: |
+          git config --global user.name "Ollama-Worker-Bot"
+          git config --global user.email "actions@github.com"
+          git add web-site/*
+          git commit -m "Auto-generated website from Issue #${{ github.event.issue.number }}"
+          git push
