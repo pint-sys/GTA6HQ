@@ -815,10 +815,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         <div class="sidebar-header">📲 Connect</div>
         <div class="sidebar-body">
           <div class="social-links">
-            <a class="social-btn discord" href="#discord"><span class="sdot sd-dc"></span>Discord</a>
-            <a class="social-btn instagram" href="#instagram" id="instagram"><span class="sdot sd-ig"></span>Instagram</a>
-            <a class="social-btn youtube" href="#videos"><span class="sdot sd-yt"></span>YouTube</a>
-            <a class="social-btn twitter" href="#twitter"><span class="sdot sd-tw"></span>Twitter/X</a>
+            <a class="social-btn discord" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener"><span class="sdot sd-dc"></span>Discord</a>
+            <a class="social-btn instagram" href="https://instagram.com/gta6hq" target="_blank" rel="noopener" id="instagram"><span class="sdot sd-ig"></span>Instagram</a>
+            <a class="social-btn youtube" href="https://youtube.com/@gta6hq" target="_blank" rel="noopener"><span class="sdot sd-yt"></span>YouTube</a>
+            <a class="social-btn twitter" href="https://x.com/gta6hq" target="_blank" rel="noopener"><span class="sdot sd-tw"></span>Twitter/X</a>
           </div>
           <div style="margin-top:12px;padding:10px;background:rgba(225,48,108,.06);border:1px solid rgba(225,48,108,.15);border-radius:var(--radius);font-size:11px;color:var(--text2);">
             📸 Tag <strong style="color:#e1306c;">#GTA6HQ</strong> on Instagram to get featured. Auto-scan pulls GTA 6 creator content daily. Earn <strong style="color:var(--gold);">+200 TKN</strong> per verified share.
@@ -895,7 +895,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="disc-float" onclick="window.open('#discord','_blank')" title="Join Discord">💬</div>
 
 <!-- NEWS TAB PAGE -->
-<div id="news-tab-page">
+<div id="news-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div class="tab-page-hdr">
     <div class="tab-page-hdr-inner">
       <button class="tab-page-back" onclick="closeNewsTab()">← Back</button>
@@ -1056,8 +1056,9 @@ var S = {
   tx:[], liked:new Set(), videosWatched:new Set(),
   watchCooldowns:{}, tabFocused:true
 };
-try{var saved=JSON.parse(sessionStorage.getItem('gta6hq2')||'{}');Object.assign(S,saved);if(!(S.liked instanceof Set))S.liked=new Set(S.liked||[]);if(!(S.videosWatched instanceof Set))S.videosWatched=new Set(S.videosWatched||[]);}catch(e){}
-function saveS(){try{sessionStorage.setItem('gta6hq2',JSON.stringify({...S,liked:[...S.liked],videosWatched:[...S.videosWatched],tx:S.tx.slice(0,20)}));}catch(e){}}
+// FIX: use localStorage so tokens survive tab/browser close
+try{var saved=JSON.parse(localStorage.getItem('gta6hq2')||'{}');Object.assign(S,saved);if(!(S.liked instanceof Set))S.liked=new Set(S.liked||[]);if(!(S.videosWatched instanceof Set))S.videosWatched=new Set(S.videosWatched||[]);}catch(e){}
+function saveS(){try{localStorage.setItem('gta6hq2',JSON.stringify({...S,liked:[...S.liked],videosWatched:[...S.videosWatched],tx:S.tx.slice(0,20)}));}catch(e){}}
 
 // Track tab focus for anti-cheat
 document.addEventListener('visibilitychange',function(){S.tabFocused=!document.hidden;});
@@ -1074,62 +1075,36 @@ var NEWS=[
   {id:5,cat:'official',tag:'Official',emoji:'💻',title:'PC Version: No Official Date — History Suggests 12–18 Months After Console',excerpt:'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months.',time:'2d ago',views:'211K',likes:3102,url:'#'},
 ];
 
-// ─── AUTO NEWS FETCH from Google News RSS ───
+// ─── AUTO NEWS FETCH — loads from news-data.json written by GitHub Action ───
 async function fetchLatestNews(){
-  var feeds=[
-    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGTA%2B6%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
-    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DGrand%2BTheft%2BAuto%2B6%2BRockstar%26hl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
-  ];
-  var BLOCKLIST=['scam','fake','giveaway','free hack','leaked download','clickbait','cheats','generator'];
-  var seen=new Set();
-  var fetched=[];
-  var emojiMap=['🔥','📰','🎮','💥','🗺️','⚡','🚗','🎯','📡','🚀'];
-
-  try{
-    for(var fi=0;fi<feeds.length;fi++){
-      var res=await fetch(feeds[fi]);
-      var data=await res.json();
-      if(!data.items) continue;
-      data.items.forEach(function(item){
-        var title=item.title||'';
-        var isSpam=BLOCKLIST.some(function(w){return title.toLowerCase().includes(w);});
-        if(isSpam) return;
-        var key=title.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
-        if(seen.has(key)) return;
-        seen.add(key);
-        var pubDate=new Date(item.pubDate||Date.now());
-        var now=new Date();
-        var diffMs=now-pubDate;
-        var diffH=Math.floor(diffMs/3600000);
-        var timeStr=diffH<1?'Just now':diffH<24?diffH+'h ago':Math.floor(diffH/24)+'d ago';
-        // Auto-categorize
-        var tl=title.toLowerCase();
-        var cat=tl.includes('official')||tl.includes('rockstar')||tl.includes('confirm')||tl.includes('trailer')?'official'
-               :tl.includes('leak')||tl.includes('rumor')||tl.includes('allegedly')||tl.includes('report')?'rumor':'update';
-        var tag=cat==='official'?'Official':cat==='rumor'?'Rumor':'Update';
-        var emoji=emojiMap[fetched.length%emojiMap.length];
-        fetched.push({
-          id:'n'+fetched.length,
-          cat:cat, tag:tag, emoji:emoji,
-          title:title,
-          excerpt:(item.description||'').replace(/<[^>]*>/g,'').substring(0,160)+'…',
-          time:timeStr,
-          views:Math.floor(Math.random()*180+10)+'K',
-          likes:Math.floor(Math.random()*2000+100),
-          url:item.link||'#'
-        });
-        if(fetched.length>=20) return;
-      });
-      if(fetched.length>=20) break;
-    }
-    if(fetched.length>0){
-      NEWS=fetched;
-      renderNews('all');
-      console.log('Live news loaded:',fetched.length,'articles');
-    }
-  }catch(e){
-    console.warn('News fetch failed, using static fallback:',e);
+  var now = Date.now();
+  if (!force && _newsFetchTime && (now - _newsFetchTime < _NEWS_CACHE_MS)) {
+    renderNewsHome(); return;
   }
+  try {
+    var res = await fetch('news-data.json');
+    if (res.ok) {
+      var data = await res.json();
+      if (data.news && data.news.length) {
+        NEWS = data.news;
+        _newsFetchTime = now;
+      }
+    }
+  } catch(e) { console.warn('news-data.json not found, using static fallback'); }
+  renderNewsHome();
+  renderSidebarNews();
+  if (document.getElementById('news-tab-page').style.display === 'block') renderNewsTab();
+  var tabs = document.querySelectorAll('.ntab');
+  if (tabs.length) {
+    var off = NEWS.filter(function(n){return n.cat==='official';}).length;
+    var rum = NEWS.filter(function(n){return n.cat==='rumor';}).length;
+    var upd = NEWS.filter(function(n){return n.cat==='update';}).length;
+    if(tabs[0]) tabs[0].textContent = 'All (' + NEWS.length + ')';
+    if(tabs[1]) tabs[1].textContent = 'Official (' + off + ')';
+    if(tabs[2]) tabs[2].textContent = 'Rumors (' + rum + ')';
+    if(tabs[3]) tabs[3].textContent = 'Updates (' + upd + ')';
+  }
+  if (force) notify('📰 News refreshed!');
 }
 
 var VIDEOS=[];
@@ -1364,6 +1339,14 @@ function closeWatchModal(){
 
 // ─── RENDER ─────────────────────────────────────────────────────────────────
 
+// Safe video open: store loaded videos in _VP_DATA, pass index only in onclick
+var _VP_DATA = [];
+
+function openVideoByIndex(idx) {
+  var vid = _VP_DATA[idx];
+  if (vid) openVideo(vid);
+}
+
 // Debounce helper — prevents rapid re-saves hammering localStorage
 var _debouncers = {};
 function debounce(key, fn, ms) {
@@ -1464,26 +1447,27 @@ function closeNewsTab() {
 function renderVideos(f, showAll) {
   var all = VIDEOS;
   var items = all.slice(0, 3);
+  _VP_DATA = items; // store for safe index-based access
   var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
   var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
   var grid = document.getElementById('videoGrid');
   if (!grid) return;
   if (!items.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos loading… run the GitHub Action to populate videos.</div></div>';
     return;
   }
   var html = '';
   for (var i = 0; i < items.length; i++) {
     var v = items[i];
     var watched = S.videosWatched.has(v.id);
-    var vdata = JSON.stringify(v).replace(/"/g, "'");
     var thumb = (v.thumb && v.thumb.startsWith('http'))
       ? '<img src="' + v.thumb + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">'
       : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">' + (v.thumb||'🎬') + '</div>';
     var badge = watched
       ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>'
       : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
-    html += '<div class="video-player-wrap" onclick="openVideo(' + vdata + ')">'
+    // FIX: use index instead of raw JSON in onclick — safe against apostrophes in titles
+    html += '<div class="video-player-wrap" onclick="openVideoByIndex(' + i + ')">'
       + '<div class="vp-thumb">' + thumb
       + '<div class="vp-overlay">'
       + '<div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||'Video') + '</div>'
@@ -1726,18 +1710,31 @@ function registerUser() { S.loggedIn=true; S.username='NewRecruit'; S.userId='GT
 function submitQuestion() { earnTokens(100,'Posted a question'); closeModal('ask-modal'); notify('Question posted! +100 TKN earned.'); }
 
 // ─── AI ASSISTANT ─────────────────────────────────────────────────────────────
+// SECURITY: Never call the Anthropic API directly from the browser —
+// your API key would be visible to anyone in DevTools.
+// Route through a serverless proxy (Netlify/Vercel function) and set your key there.
+// Until you have a proxy, the AI box shows a friendly offline message.
 async function sendAI() {
   var input = document.getElementById('aiInput'), msg = input.value.trim();
   if (!msg) return;
   input.value = '';
   appendAI(msg, 'user');
-  appendAI('Thinking…', 'bot', 'typing-msg');
+  // TODO: replace '/api/ask' with your actual Netlify/Vercel serverless function URL
+  var PROXY_URL = '/api/ask'; // set up a backend proxy — never put the API key here
   try {
-    var r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, system:'You are GTA6 Assistant on GTA6HQ.com. Expert on GTA 6 — missions, vehicles, weapons, mods, PC requirements, Vice City map, Jason and Lucia. Be concise, max 100 words.', messages:[{role:'user', content:msg}]})});
+    var r = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: msg})
+    });
+    if (!r.ok) throw new Error('Proxy returned ' + r.status);
     var d = await r.json();
     removeTyping();
-    appendAI(d.content?.[0]?.text || 'Connection issue — try again!', 'bot');
-  } catch(e) { removeTyping(); appendAI('Connection error. Please try again.', 'bot'); }
+    appendAI(d.reply || 'No response received.', 'bot');
+  } catch(e) {
+    removeTyping();
+    appendAI('AI assistant is offline. Set up a backend proxy at /api/ask to enable it.', 'bot');
+  }
 }
 function appendAI(text, role, cls) {
   var box = document.getElementById('aiMessages'), div = document.createElement('div');
@@ -1779,53 +1776,26 @@ function updateCountdown() {
 }
 
 // ─── YOUTUBE & STREAMS ────────────────────────────────────────────────────────
-function formatViewCount(n) {
-  return n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
-}
-function formatDuration(iso) {
-  var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!m) return '0:00';
-  var h=parseInt(m[1]||0), mn=parseInt(m[2]||0), s=parseInt(m[3]||0);
-  return h > 0 ? h+':'+(mn<10?'0':'')+mn+':'+(s<10?'0':'')+s : mn+':'+(s<10?'0':'')+s;
-}
+// (formatViewCount and formatDuration defined earlier — no duplicates)
 function calcReward() { return 50; }
 
 async function fetchYouTubeVideos() {
-  var YT_KEY = 'YOUR_YOUTUBE_API_KEY_HERE';
-  var queries = ['GTA 6 gameplay 2025','GTA VI Rockstar official','GTA 6 trailer','GTA 6 Lucia Jason'];
+  // Load videos from news-data.json written by GitHub Action (no key exposed in HTML)
   var grid = document.getElementById('videoGrid');
   try {
-    // Parallel fetch all search queries simultaneously
-    var searchResults = await Promise.all(queries.map(function(q) {
-      return fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encodeURIComponent(q) + '&type=video&maxResults=8&order=viewCount&relevanceLanguage=en&key=' + YT_KEY).then(function(r) { return r.json(); });
-    }));
-    var seen = new Set(), allIds = [];
-    searchResults.forEach(function(data) {
-      if (data.error) throw new Error(data.error.message);
-      (data.items||[]).forEach(function(item) {
-        if (item.id && item.id.videoId && !seen.has(item.id.videoId)) {
-          seen.add(item.id.videoId);
-          allIds.push(item.id.videoId);
-        }
-      });
-    });
-    if (!allIds.length) throw new Error('No IDs');
-    var statsData = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=' + allIds.join(',') + '&key=' + YT_KEY).then(function(r) { return r.json(); });
-    if (!statsData.items || !statsData.items.length) throw new Error('No stats');
-    VIDEOS = statsData.items.sort(function(a,b) {
-      return (parseInt(b.statistics.viewCount||0) + parseInt(b.statistics.likeCount||0)*10)
-           - (parseInt(a.statistics.viewCount||0) + parseInt(a.statistics.likeCount||0)*10);
-    }).map(function(item, i) {
-      var views = parseInt(item.statistics.viewCount||0);
-      var thumb = item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : (item.snippet.thumbnails.medium ? item.snippet.thumbnails.medium.url : '');
-      return {id:i+1, src:'youtube', youtubeId:item.id, cat:'guides', title:item.snippet.title, dur:formatDuration(item.contentDetails.duration), views:formatViewCount(views), viewCount:views, likeCount:parseInt(item.statistics.likeCount||0), ch:item.snippet.channelTitle, thumb:thumb, reward:50};
-    });
-    VIDEOS_LOADED = true;
-    renderVideos('all', false);
+    var res = await fetch('news-data.json');
+    if (!res.ok) throw new Error('news-data.json not found');
+    var data = await res.json();
+    if (data.videos && data.videos.length) {
+      VIDEOS = data.videos;
+      VIDEOS_LOADED = true;
+      renderVideos('all', false);
+      return;
+    }
   } catch(e) {
-    console.warn('YouTube fetch failed:', e);
-    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos unavailable. Add a valid YouTube API key in fetchYouTubeVideos().</div></div>';
+    // news-data.json not present (local dev) — show placeholder
   }
+  if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">⚠️</div><div style="font-family:var(--font-u);font-size:13px;color:var(--text3);">Videos loading… run the GitHub Action to populate videos.</div></div>';
 }
 
 // ─── NEWS FETCH ───────────────────────────────────────────────────────────────
@@ -1954,24 +1924,25 @@ function filterVTP(f, btn) {
 
 function renderVTPVideos(f) {
   var items = f === 'all' ? VIDEOS : VIDEOS.filter(function(v) { return v.src === f || v.cat === f; });
+  _VP_DATA = VIDEOS; // keep full array for index lookup
   var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
   var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
   var grid = document.getElementById('vtpVideoGrid');
   if (!grid) return;
   if (!items.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Add your YouTube API key to load videos.') + '</div></div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Run the GitHub Action to load videos.') + '</div></div>';
     return;
   }
   var html = '';
   for (var i = 0; i < items.length; i++) {
     var v = items[i];
+    var globalIdx = VIDEOS.indexOf(v);
     var watched = S.videosWatched.has(v.id);
-    var vdata = JSON.stringify(v).replace(/"/g,"'");
     var thumb = (v.thumb && v.thumb.startsWith('http'))
       ? '<img src="' + v.thumb + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">'
       : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">' + (v.thumb||'🎬') + '</div>';
     var badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
-    html += '<div class="video-player-wrap" onclick="openVideo(' + vdata + ')">'
+    html += '<div class="video-player-wrap" onclick="openVideoByIndex(' + globalIdx + ')">'
       + '<div class="vp-thumb">' + thumb
       + '<div class="vp-overlay"><div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||'Video') + '</div>'
       + '<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>' + badge + '</div>'
