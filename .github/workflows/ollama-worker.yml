@@ -17,28 +17,13 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
 
-      - name: Start Ollama server
+      - name: Start Ollama and pull model
         run: |
           ollama serve &
-          sleep 5  # Wait for server to start
-
-      - name: Pull a model (e.g. llama3 or mistral)
-        run: |
+          sleep 8
           ollama pull llama3.2
 
-      - name: Run AI task
-        run: |
-          ollama run llama3.2 "Summarize the latest GTA 6 news in 3 bullet points" > ai-output.txt
-          cat ai-output.txt
-
-      - name: Use output (example: save to file)
-        run: |
-          cp ai-output.txt public/ai-summary.txt
-
-      - name: Commit and push changes
-        run: |
-          git config user.name "ollama-bot"
-          git config user.email "bot@gta6hq.com"
-          git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "chore: AI summary update [skip ci]"
-          git push
+      - name: Run fetch-news
+        run: node fetch-news.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
