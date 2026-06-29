@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community. Auto news, videos, mods, guides, jobs & secure token rewards. Release date Nov 19 2026."/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; frame-src https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com; img-src 'self' https: data:; connect-src 'self' https: wss:;"/>
+<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community. Auto news, videos, mods, guides, jobs &amp; secure token rewards. Release date Nov 19 2026."/>
 <meta name="keywords" content="GTA 6, Grand Theft Auto 6, GTA VI, mods, guides, news, community, system requirements, token rewards, Vice City, Rockstar"/>
 <meta property="og:title" content="GTA6HQ — The #1 GTA 6 Community"/>
 <meta property="og:description" content="Latest GTA 6 news, mods, video guides, job tips & verified token cash rewards."/>
@@ -1206,9 +1207,10 @@ var FALLBACK_VIDEOS = [
   {id:2,src:'youtube',youtubeId:'9JETXBi0SYs',cat:'trailer',title:'Grand Theft Auto VI Trailer 2',dur:'2:01',views:'90M',ch:'Rockstar Games',thumb:'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg',reward:50},
   {id:3,src:'youtube',youtubeId:'PPbLqRa7EZA',cat:'guides',title:'GTA 6 Everything We Know — Full Breakdown',dur:'18:42',views:'4.2M',ch:'MrBossFTW',thumb:'https://img.youtube.com/vi/PPbLqRa7EZA/hqdefault.jpg',reward:50},
   {id:4,src:'youtube',youtubeId:'r4UAxDOJ59w',cat:'guides',title:'GTA 6 Map Analysis — State of Leonida Explored',dur:'22:15',views:'3.1M',ch:'GTA Series Videos',thumb:'https://img.youtube.com/vi/r4UAxDOJ59w/hqdefault.jpg',reward:50},
-  {id:5,src:'youtube',youtubeId:'9JETXBi0SYs',cat:'guides',title:'GTA 6 Jason & Lucia — Full Character Analysis',dur:'14:08',views:'2.8M',ch:'DarkViperAU',thumb:'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg',reward:50},
-  {id:6,src:'youtube',youtubeId:'QkkoHAzjnUs',cat:'guides',title:'GTA 6 Gameplay Features Confirmed So Far',dur:'16:55',views:'2.3M',ch:'Typical Gamer',thumb:'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg',reward:50},
+  {id:5,src:'youtube',youtubeId:'T4M8LTYUI4c',cat:'guides',title:'GTA 6 Jason & Lucia — Full Character Analysis',dur:'14:08',views:'2.8M',ch:'DarkViperAU',thumb:'https://img.youtube.com/vi/T4M8LTYUI4c/hqdefault.jpg',reward:50},
+  {id:6,src:'youtube',youtubeId:'0Sf9sNhV1vQ',cat:'guides',title:'GTA 6 Gameplay Features Confirmed So Far',dur:'16:55',views:'2.3M',ch:'Typical Gamer',thumb:'https://img.youtube.com/vi/0Sf9sNhV1vQ/hqdefault.jpg',reward:50},
 ];
+
 async function fetchYouTubeVideos() {
   // ── Try news-data.json written by GitHub Action first ──
   try {
@@ -1330,7 +1332,7 @@ function openVideo(vid){
   document.getElementById('watchTitle').textContent=vid.title;
   var area=document.getElementById('watchVideoArea');
   if(vid.youtubeId){
-    area.innerHTML='<iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube.com/embed/'+vid.youtubeId+'?autoplay=1&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" style="display:block;"></iframe>';
+    area.innerHTML='<iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/'+vid.youtubeId+'?autoplay=1&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="display:block;position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>';
   } else {
     area.innerHTML='<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">'+vid.thumb+' — '+vid.title+'</p></div>';
   }
@@ -1388,7 +1390,8 @@ function closeWatchModal(){
 var _VP_DATA = [];
 
 function openVideoByIndex(idx) {
-  var vid = _VP_DATA[idx];
+  // Try _VP_DATA first (home page), fall back to VIDEOS (tab page)
+  var vid = _VP_DATA[idx] || VIDEOS[idx];
   if (vid) openVideo(vid);
 }
 
