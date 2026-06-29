@@ -374,4 +374,7 @@ window.GTA6HQ = {
   setTimeout(() => {
     if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
   }, 2500);
+         // Make openVideoById available immediately on window
+window.openVideoById = openVideoById;
+window.openFirstVideo = openFirstVideo;
 })();
