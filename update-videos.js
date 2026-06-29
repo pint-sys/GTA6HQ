@@ -4,10 +4,11 @@ const fs = require('fs');
 // Multiple GTA 6 focused channels
 const CHANNELS = [
   'UCVber8x0HRmj-RvMOBLwyOQ', // Rockstar Games
-  'UCId9g4zlQ4oB-AlNQzRDAOg', // GTA Series Videos  
+  'UCId9g4zlQ4oB-AlNQzRDAOg', // GTA Series Videos
   'UCNo7ZLWM8WouKtKMxaLkADg', // MrBossFTW
+  'UCBMR4mTB7YkPeQGMBmMGMKg', // Typical Gamer
+  'UC2wDMjMEvLJP9TmT3bMKylA', // DarkViperAU
 ];
-
 const GTA6_KEYWORDS = ['gta 6', 'gta vi', 'grand theft auto 6', 'grand theft auto vi', 'rockstar'];
 
 function fetchURL(url) {
