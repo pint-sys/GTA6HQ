@@ -2,8 +2,8 @@ name: Ollama AI Worker
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # Runs every 6 hours
-  workflow_dispatch:          # Manual trigger
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   ollama-task:
@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Install Node dependencies
+        run: npm install
 
       - name: Install Ollama
         run: |
