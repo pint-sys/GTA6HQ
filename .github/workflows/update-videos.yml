@@ -1,0 +1,29 @@
+name: Update Videos
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Update videos
+        run: |
+          node update-videos.js
+          
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add news-data.json
+          git diff --staged --quiet || git commit -m "chore: auto-update GTA 6 videos [skip ci]"
+          git push
