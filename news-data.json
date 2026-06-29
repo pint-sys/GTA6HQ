@@ -1,0 +1,30 @@
+{
+  "videos": [
+    {
+      "id": "vid1",
+      "src": "youtube",
+      "youtubeId": "QkkoHAzjnUs",
+      "cat": "trailer",
+      "title": "Grand Theft Auto VI Trailer 1",
+      "dur": "1:31",
+      "views": "200M",
+      "ch": "Rockstar Games",
+      "thumb": "https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg",
+      "reward": 50
+    },
+    {
+      "id": "vid2",
+      "src": "youtube",
+      "youtubeId": "jctfX_SKkzQ",
+      "cat": "trailer",
+      "title": "Grand Theft Auto VI Trailer 2",
+      "dur": "2:01",
+      "views": "90M",
+      "ch": "Rockstar Games",
+      "thumb": "https://img.youtube.com/vi/jctfX_SKkzQ/hqdefault.jpg",
+      "reward": 50
+    }
+  ],
+  "news": [],
+  "updated": "2026-06-29T21:39:41.763Z"
+}
