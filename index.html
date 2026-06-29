@@ -1181,6 +1181,7 @@ function _updateNewsTabs() {
 
 var VIDEOS=[];
 var VIDEOS_LOADED=false;
+var _VP_DATA = []; // Add this line
 
 function formatViewCount(n){
   if(n>=1000000) return (n/1000000).toFixed(1)+'M';
@@ -1212,18 +1213,45 @@ var FALLBACK_VIDEOS = [
 ];
 
 async function fetchYouTubeVideos() {
-  // ── Try news-data.json written by GitHub Action first ──
+  var now = Date.now();
+  
+  // Try to fetch from news-data.json (GitHub Action output)
   try {
-    var res = await fetch('news-data.json?t=' + Date.now());
+    console.log('Fetching videos from news-data.json...');
+    var res = await fetch('news-data.json?t=' + now);
     if (res.ok) {
       var data = await res.json();
       if (data.videos && data.videos.length) {
         VIDEOS = data.videos;
         VIDEOS_LOADED = true;
+        _VP_DATA = VIDEOS;
+        console.log('Loaded ' + VIDEOS.length + ' videos from news-data.json');
         renderVideos('all', false);
+        renderVTPVideos('all');
         return;
       }
     }
+  } catch(e) {
+    console.warn('news-data.json not available:', e.message);
+  }
+
+  // ── Fallback: use real hardcoded GTA 6 YouTube IDs ──
+  console.log('Using fallback videos with real YouTube IDs.');
+  var fallback = [
+    {id:'vid1',src:'youtube',youtubeId:'QkkoHAzjnUs',cat:'trailer',title:'Grand Theft Auto VI Trailer 1',dur:'1:31',views:'200M',ch:'Rockstar Games',thumb:'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg',reward:50},
+    {id:'vid2',src:'youtube',youtubeId:'9JETXBi0SYs',cat:'trailer',title:'Grand Theft Auto VI Trailer 2',dur:'2:01',views:'90M',ch:'Rockstar Games',thumb:'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg',reward:50},
+    {id:'vid3',src:'youtube',youtubeId:'KpMXPU1zAAs',cat:'guides',title:'GTA 6 Everything We Know — Full Breakdown',dur:'18:42',views:'4.2M',ch:'MrBossFTW',thumb:'https://img.youtube.com/vi/KpMXPU1zAAs/hqdefault.jpg',reward:50},
+    {id:'vid4',src:'youtube',youtubeId:'rEXCNbsNVQ0',cat:'guides',title:'GTA 6 Map Analysis — State of Leonida Explored',dur:'22:15',views:'3.1M',ch:'GTA Series Videos',thumb:'https://img.youtube.com/vi/rEXCNbsNVQ0/hqdefault.jpg',reward:50},
+    {id:'vid5',src:'youtube',youtubeId:'odFm6hfDea8',cat:'guides',title:'GTA 6 Jason & Lucia — Full Character Analysis',dur:'14:08',views:'2.8M',ch:'DarkViperAU',thumb:'https://img.youtube.com/vi/odFm6hfDea8/hqdefault.jpg',reward:50},
+    {id:'vid6',src:'youtube',youtubeId:'T3PkATlHi_E',cat:'guides',title:'GTA 6 Gameplay Features Confirmed So Far',dur:'16:55',views:'2.3M',ch:'Typical Gamer',thumb:'https://img.youtube.com/vi/T3PkATlHi_E/hqdefault.jpg',reward:50},
+  ];
+  
+  VIDEOS = fallback;
+  VIDEOS_LOADED = true;
+  _VP_DATA = VIDEOS;
+  renderVideos('all', false);
+  renderVTPVideos('all');
+}
   } catch(e) { /* not available yet */ }
 
   // ── Fallback: use real hardcoded GTA 6 YouTube IDs so videos always show ──
@@ -1326,22 +1354,40 @@ var CONSOLES=[
 // ─── WATCH SYSTEM (SECURE) ───
 var watchState={active:false,videoId:null,progress:0,interval:null,reward:0,tabSwitches:0,claimed:false,title:''};
 
-function openVideo(vid){
-  if(S.videosWatched.has(vid.id)&&!confirm('You already earned tokens for this video. Watch again for free (no extra tokens)?')) return;
-  watchState={active:true,videoId:vid.id,progress:0,interval:null,reward:vid.reward,tabSwitches:0,claimed:false,title:vid.title};
-  document.getElementById('watchTitle').textContent=vid.title;
-  var area=document.getElementById('watchVideoArea');
-  if(vid.youtubeId){
-    area.innerHTML='<iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/'+vid.youtubeId+'?autoplay=1&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="display:block;position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>';
-  } else {
-    area.innerHTML='<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">'+vid.thumb+' — '+vid.title+'</p></div>';
+function openVideo(vid) {
+  if (!vid || !vid.youtubeId) {
+    notify('⚠️ This video does not have a YouTube ID.');
+    return;
   }
+  
+  if(S.videosWatched.has(vid.id)&&!confirm('You already earned tokens for this video. Watch again for free (no extra tokens)?')) return;
+  
+  watchState={active:true,videoId:vid.id,progress:0,interval:null,reward:vid.reward||50,tabSwitches:0,claimed:false,title:vid.title};
+  
+  document.getElementById('watchTitle').textContent=vid.title;
+  
+  var area=document.getElementById('watchVideoArea');
+  // Create iframe with YouTube embed
+  area.innerHTML='<iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube.com/embed/'+vid.youtubeId+'?autoplay=1&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block;"></iframe>';
+  
   document.getElementById('watchPct').textContent='0%';
   document.getElementById('watchProgFill').style.width='0%';
   document.getElementById('watchEarnBtn').className='wm-earn-btn';
-  document.getElementById('watchRewardAmt').textContent=vid.reward+' TKN';
+  document.getElementById('watchRewardAmt').textContent=(vid.reward||50)+' TKN';
   document.getElementById('watch-modal').classList.add('open');
-  startWatchTimer(vid);
+  
+  // Reset and start timer
+  if (watchState.interval) clearInterval(watchState.interval);
+  watchState.interval = setInterval(function(){
+    if(!watchState.active) return clearInterval(watchState.interval);
+    if(!S.tabFocused){watchState.tabSwitches++;if(watchState.tabSwitches>3){clearInterval(watchState.interval); document.getElementById('watchVideoMsg').textContent='⚠️ Too many tab switches detected. Watch session cancelled.'; watchState.active=false; document.getElementById('watchEarnBtn').className='wm-earn-btn'; return;}}
+    watchState.progress=Math.min(watchState.progress+(S.tabFocused?1.4:0.1),100);
+    var pct=Math.round(watchState.progress);
+    document.getElementById('watchPct').textContent=pct+'%';
+    document.getElementById('watchProgFill').style.width=pct+'%';
+    if(pct>=80&&!watchState.claimed){document.getElementById('watchEarnBtn').className='wm-earn-btn ready';}
+    if(pct>=100){clearInterval(watchState.interval);}
+  },500);
 }
 
 function startWatchTimer(vid){
@@ -1364,7 +1410,7 @@ function claimVideoToken(){
   if(watchState.claimed){notify('Tokens already claimed for this video.');return;}
   watchState.claimed=true;
   S.videosWatched.add(watchState.videoId);
-  earnTokens(watchState.reward,'Watched: '+watchState.title.substring(0,30));
+  earnTokens(watchState.reward||50,'Watched: '+watchState.title.substring(0,30));
   document.getElementById('watchEarnBtn').textContent='✅ Tokens Claimed!';
   document.getElementById('watchEarnBtn').style.background='var(--text3)';
   clearInterval(watchState.interval);
@@ -1377,12 +1423,10 @@ function closeWatchModal(){
   }
   clearInterval(watchState.interval);
   watchState.active=false;
-  // destroy iframe so video stops playing in background
   var area=document.getElementById('watchVideoArea');
   area.innerHTML='<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">Video playing… watch to 80% to unlock tokens</p></div>';
   document.getElementById('watch-modal').classList.remove('open');
 }
-
 
 // ─── RENDER ─────────────────────────────────────────────────────────────────
 
@@ -1883,25 +1927,33 @@ function filterVTP(f, btn) {
 }
 
 function renderVTPVideos(f) {
-  var items = f === 'all' ? VIDEOS : VIDEOS.filter(function(v) { return v.src === f || v.cat === f; });
-  _VP_DATA = VIDEOS; // keep full array for index lookup
+  var allVideos = VIDEOS || [];
+  var items = f === 'all' ? allVideos : allVideos.filter(function(v) { return v.src === f || v.cat === f; });
+  _VP_DATA = allVideos; // keep full array for index lookup
+  
   var srcColor = {youtube:'#ff0000', discord:'#5865F2', instagram:'#e1306c'};
   var srcLabel = {youtube:'YouTube', discord:'Discord', instagram:'Instagram'};
   var grid = document.getElementById('vtpVideoGrid');
   if (!grid) return;
+  
   if (!items.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Run the GitHub Action to load videos.') + '</div></div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">' + (VIDEOS_LOADED ? 'No videos in this category.' : 'Videos loading…') + '</div></div>';
     return;
   }
+  
   var html = '';
   for (var i = 0; i < items.length; i++) {
     var v = items[i];
+    // Find actual index in full VIDEOS array for openVideoByIndex
     var globalIdx = VIDEOS.indexOf(v);
+    if (globalIdx === -1) globalIdx = i;
+    
     var watched = S.videosWatched.has(v.id);
     var thumb = (v.thumb && v.thumb.startsWith('http'))
       ? '<img src="' + v.thumb + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">'
       : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">' + (v.thumb||'🎬') + '</div>';
     var badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);color:var(--gold);">🪙 +50 TKN</span>';
+    
     html += '<div class="video-player-wrap" onclick="openVideoByIndex(' + globalIdx + ')">'
       + '<div class="vp-thumb">' + thumb
       + '<div class="vp-overlay"><div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:' + (srcColor[v.src]||'#888') + ';flex-shrink:0;"></span>' + (srcLabel[v.src]||'Video') + '</div>'
