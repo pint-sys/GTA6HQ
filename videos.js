@@ -39,7 +39,6 @@ import { notify }          from './ui.js';
 
 // ─── Canonical fallback video list (ONE definition) ──────────────────────────
 export const FALLBACK_VIDEOS = [
- export const FALLBACK_VIDEOS = [
   { id: 'vid1', src: 'youtube', youtubeId: 'QkkoHAzjnUs', cat: 'trailer',
     title: 'Grand Theft Auto VI Trailer 1', dur: '1:31', views: '200M',
     ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50 },
