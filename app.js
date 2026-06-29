@@ -13,27 +13,26 @@
  * of reaching into global state.
  */
 
-import { S, persistState }             from './modules/state.js';
+import { S, persistState }             from './state.js';
 import { updateTokenUI, earnTokens,
-         showCashout }                  from './modules/tokens.js';
+         showCashout }                  from './tokens.js';
 import { fetchLatestNews, renderNewsHome,
          renderNewsTab, renderSidebarNews,
-         filterNewsTab, updateNewsTabs } from './modules/news.js';
+         filterNewsTab, updateNewsTabs } from './news.js';
 import { loadVideos, renderVideos,
          renderVTPVideos, renderVTPStreams,
          openVideoById, openFirstVideo,
-         claimVideoToken, closeWatchModal } from './modules/videos.js';
+         claimVideoToken, closeWatchModal } from './videos.js';
 import { notify, openModal, closeModal,
          closeModalOnOverlay, switchAuthTab,
          loginUser, registerUser, submitQuestion,
          updateCountdown, openVideosTab,
          closeVideosTab, switchVTab, filterVTP,
-         openNewsTab, closeNewsTab }     from './modules/ui.js';
-import { sendAI }                       from './modules/ai.js';
+         openNewsTab, closeNewsTab }     from './ui.js';
+import { sendAI }                       from './ai.js';
 import { GUIDES, MODS, QA, EARN_TASKS,
          EARN_AMOUNTS, TIERS, LEADERBOARD,
-         EVENTS, SYS_REQ, CONSOLES }    from './data/static.js';
-
+         EVENTS, SYS_REQ, CONSOLES }    from './static.js';
 // ─── Render: static sections ─────────────────────────────────────────────────
 
 function renderGuides() {
