@@ -1049,38 +1049,38 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     </div>
   </div>
 </div>
-<script>
-window.openModal        = (...a) => GTA6HQ.openModal(...a);
-window.closeModal       = (...a) => GTA6HQ.closeModal(...a);
-window.closeModalOut    = (...a) => GTA6HQ.closeModalOnOverlay(...a);
-window.loginUser        = ()     => GTA6HQ.loginUser();
-window.registerUser     = ()     => GTA6HQ.registerUser();
-window.submitQuestion   = ()     => GTA6HQ.submitQuestion();
-window.sendAI           = ()     => GTA6HQ.sendAI();
-window.closeWatchModal  = ()     => GTA6HQ.closeWatchModal();
-window.claimVideoToken  = ()     => GTA6HQ.claimVideoToken();
-window.openVideosTab    = ()     => GTA6HQ.openVideosTab();
-window.closeVideosTab   = ()     => GTA6HQ.closeVideosTab();
-window.openNewsTab      = ()     => GTA6HQ.openNewsTab();
-window.closeNewsTab     = ()     => GTA6HQ.closeNewsTab();
-window.switchAuthTab    = (...a) => GTA6HQ.switchAuthTab(...a);
-window.filterMods       = (...a) => GTA6HQ.filterMods(...a);
-window.filterNewsTab    = (...a) => GTA6HQ.filterNewsTab(...a);
-window.filterVTP        = (...a) => GTA6HQ.filterVTP(...a);
-window.switchVTab       = (...a) => GTA6HQ.switchVTab(...a);
-window.searchQA         = ()     => GTA6HQ.searchQA();
-window.lookupPlayer     = ()     => GTA6HQ.lookupPlayer();
-window.checkPC          = ()     => GTA6HQ.checkPC();
-window.handleSearch     = (...a) => GTA6HQ.handleSearch(...a);
-window.share            = (...a) => GTA6HQ.share(...a);
-window.showCashout      = ()     => GTA6HQ.showCashout();
-window.earnTokens       = (...a) => GTA6HQ.earn(...a);
-window.toggleLike       = (...a) => GTA6HQ.toggleLike(...a);
-  window.openVideoById  = (...a) => GTA6HQ.openVideoById(...a);
-window.openFirstVideo = ()     => GTA6HQ.openFirstVideo();
-</script>
-
 <script type="module" src="./app.js"></script>
 <script type="module" src="./firebase-config.js"></script>
+ 
+  <script type="module">
+  // Shim runs after modules load
+window.openModal       = (...a) => GTA6HQ.openModal(...a);
+window.closeModal      = (...a) => GTA6HQ.closeModal(...a);
+window.closeWatchModal = ()     => GTA6HQ.closeWatchModal();
+window.claimVideoToken = ()     => GTA6HQ.claimVideoToken();
+window.openVideoById   = (...a) => GTA6HQ.openVideoById(...a);
+window.openFirstVideo  = ()     => GTA6HQ.openFirstVideo();
+window.loginUser       = ()     => GTA6HQ.loginUser();
+window.registerUser    = ()     => GTA6HQ.registerUser();
+window.submitQuestion  = ()     => GTA6HQ.submitQuestion();
+window.sendAI          = ()     => GTA6HQ.sendAI();
+window.closeVideosTab  = ()     => GTA6HQ.closeVideosTab();
+window.closeNewsTab    = ()     => GTA6HQ.closeNewsTab();
+window.openVideosTab   = ()     => GTA6HQ.openVideosTab();
+window.openNewsTab     = ()     => GTA6HQ.openNewsTab();
+window.switchAuthTab   = (...a) => GTA6HQ.switchAuthTab(...a);
+window.filterMods      = (...a) => GTA6HQ.filterMods(...a);
+window.filterNewsTab   = (...a) => GTA6HQ.filterNewsTab(...a);
+window.filterVTP       = (...a) => GTA6HQ.filterVTP(...a);
+window.switchVTab      = (...a) => GTA6HQ.switchVTab(...a);
+window.searchQA        = ()     => GTA6HQ.searchQA();
+window.lookupPlayer    = ()     => GTA6HQ.lookupPlayer();
+window.checkPC         = ()     => GTA6HQ.checkPC();
+window.handleSearch    = (...a) => GTA6HQ.handleSearch(...a);
+window.share           = (...a) => GTA6HQ.share(...a);
+window.showCashout     = ()     => GTA6HQ.showCashout();
+window.earnTokens      = (...a) => GTA6HQ.earn(...a);
+window.toggleLike      = (...a) => GTA6HQ.toggleLike(...a);
+</script>
 </body>
 </html>
