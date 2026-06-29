@@ -27,7 +27,7 @@ import { getFirestore, collection, getDocs,
          query, orderBy, limit }             from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey:        'YOUR_FIREBASE_WEB_API_KEY', // ← Required. Get from Firebase console.
+  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
   authDomain:    'gta6hq-befa7.firebaseapp.com',
   projectId:     'gta6hq-befa7',
   storageBucket: 'gta6hq-befa7.appspot.com',
