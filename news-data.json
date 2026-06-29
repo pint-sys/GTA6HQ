@@ -11,20 +11,8 @@
       "ch": "Rockstar Games",
       "thumb": "https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg",
       "reward": 50
-    },
-    {
-      "id": "vid2",
-      "src": "youtube",
-      "youtubeId": "jctfX_SKkzQ",
-      "cat": "trailer",
-      "title": "Grand Theft Auto VI Trailer 2",
-      "dur": "2:01",
-      "views": "90M",
-      "ch": "Rockstar Games",
-      "thumb": "https://img.youtube.com/vi/jctfX_SKkzQ/hqdefault.jpg",
-      "reward": 50
     }
   ],
   "news": [],
-  "updated": "2026-06-29T21:45:30.033Z"
+  "updated": "2026-06-29T21:56:16.847Z"
 }
