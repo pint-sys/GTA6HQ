@@ -6,9 +6,10 @@ export const FALLBACK_VIDEOS = [
   { id: 'vid1', src: 'youtube', youtubeId: 'QkkoHAzjnUs', cat: 'trailer',
     title: 'Grand Theft Auto VI Trailer 1', dur: '1:31', views: '200M',
     ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50 },
-  { id: 'vid2', src: 'youtube', youtubeId: 'jctfX_SKkzQ', cat: 'trailer',
-    title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M',
-    ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/jctfX_SKkzQ/hqdefault.jpg', reward: 50 },
+ // Remove jctfX_SKkzQ entirely, use this instead:
+{ id: 'vid2', src: 'youtube', youtubeId: '9JETXBi0SYs', cat: 'trailer',
+  title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M',
+  ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50 },
   { id: 'vid3', src: 'youtube', youtubeId: 'KpMXPU1zAAs', cat: 'guides',
     title: 'GTA 6 Everything We Know — Full Breakdown', dur: '18:42', views: '4.2M',
     ch: 'MrBossFTW', thumb: 'https://img.youtube.com/vi/KpMXPU1zAAs/hqdefault.jpg', reward: 50 },
