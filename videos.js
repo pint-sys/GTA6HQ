@@ -95,7 +95,7 @@ export function renderVTPStreams() {
     const badge = watched
       ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
       : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-    return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${s.id}','stream')">
+    return `<div class="video-player-wrap" onclick="(GTA6HQ||window).openVideoById('${s.id}','stream')"
       <div class="vp-thumb" style="background:#0a0010;">
         ${s.youtubeId ? `<img src="https://img.youtube.com/vi/${s.youtubeId}/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">` : ''}
         <div class="vp-overlay">${liveBadge}
@@ -222,7 +222,7 @@ function _videoCard(v) {
   const badge = watched
     ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
     : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-  return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')">
+  return `<div class="video-player-wrap" onclick="window.openVideoById && window.openVideoById('${v.id}') || setTimeout(()=>window.openVideoById('${v.id}'),500)"
     <div class="vp-thumb">${thumb}
       <div class="vp-overlay">
         <div class="vp-src-badge">
