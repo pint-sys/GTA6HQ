@@ -13,7 +13,7 @@
 import { S, persistState } from './state.js';
 import { notify } from './ui.js';
 
-const PAYOUT_THRESHOLD = 1000;
+const PAYOUT_THRESHOLD = 3000;
 const SILVER_TARGET    = 5000;
 
 // Per-action cooldown in ms (reason key → last-earned timestamp)
@@ -93,7 +93,7 @@ export function showCashout() {
     return;
   }
   // TODO: POST to /api/cashout with user session token
-  notify('✅ Payout requested! Check your email within 48h. Rate: 1,000 TKN = $0.50 PayPal.');
+  notify('✅ Payout requested! Check your email within 48h. Rate: 3,000 TKN = $0.50 PayPal.');
 }
 
 // ─── Private DOM helpers ─────────────────────────────────────────────────────
