@@ -115,8 +115,18 @@ export function renderVTPStreams() {
 
 export function openVideoById(videoId, source = 'video') {
   const pool = source === 'stream' ? STREAMS : [...VIDEOS, ...STREAMS];
-  const vid  = pool.find(v => v.id === videoId);
-  if (!vid) { notify('⚠️ Video not found.'); return; }
+  
+  // FIX: Search by youtubeId if ID starts with 'vid_' (from news-data.json)
+  // Otherwise search by id (fallback/hardcoded)
+  const vid = videoId.startsWith('vid_')
+    ? pool.find(v => v.youtubeId === videoId.replace('vid_', ''))
+    : pool.find(v => v.id === videoId);
+    
+  if (!vid) { 
+    console.warn(`[videos] Video not found: ${videoId}`);
+    notify('⚠️ Video not found.'); 
+    return; 
+  }
   _openWatchModal(vid);
 }
 
