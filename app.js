@@ -1,18 +1,3 @@
-/**
- * app.js — Application entry point.
- *
- * Wires all modules together and exposes a minimal global GTA6HQ namespace
- * so HTML onclick attributes can call functions without polluting window.
- *
- * FIX BUG-01: fetchLatestNews is now called AFTER firebase-config.js has
- * had time to define window.fetchLiveNews. We defer it 200ms (same idea
- * as the original setTimeout(100ms)) but news.js's fetchLatestNews now
- * checks for window.fetchLiveNews before falling through to RSS.
- *
- * FIX: All render calls now go through explicit module imports instead
- * of reaching into global state.
- */
-
 import { S, persistState }             from './state.js';
 import { updateTokenUI, earnTokens,
          showCashout }                  from './tokens.js';
@@ -33,7 +18,6 @@ import { sendAI }                       from './ai.js';
 import { GUIDES, MODS, QA, EARN_TASKS,
          EARN_AMOUNTS, TIERS, LEADERBOARD,
          EVENTS, SYS_REQ, CONSOLES }    from './static.js';
-// ─── Render: static sections ─────────────────────────────────────────────────
 
 function renderGuides() {
   const el = document.getElementById('guidesGrid');
@@ -105,8 +89,6 @@ function renderEarn() {
   if (!el) return;
   el.innerHTML = EARN_TASKS.map(t => {
     const amt = EARN_AMOUNTS[t.key] || 25;
-    // FIX BUG-11: was openVideo(VIDEOS[0]) evaluated at build time.
-    // Now calls openFirstVideo() at click time.
     const btn = t.secured
       ? `<button class="earn-btn" onclick="GTA6HQ.openFirstVideo()">Watch Video</button>`
       : `<button class="earn-btn" onclick="GTA6HQ.earn(${amt},'${t.name}')">Earn</button>`;
@@ -187,8 +169,6 @@ function renderSysReq() {
     ).join('');
   }
 }
-
-// ─── Interactive features ─────────────────────────────────────────────────────
 
 function toggleLike(id, btn) {
   if (S.liked.has(id)) {
@@ -287,29 +267,19 @@ function share() {
   notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN');
 }
 
-// ─── Global namespace (replaces bare window.* functions) ─────────────────────
-// HTML onclick attributes call GTA6HQ.method() instead of bare globals.
-// This keeps the window object clean and makes the call sites traceable.
 window.GTA6HQ = {
-  // videos
   openVideoById,
   openFirstVideo,
   claimVideoToken,
   closeWatchModal,
   renderVTPVideos,
   renderVTPStreams,
-
-  // news
   fetchLatestNews: (force) => fetchLatestNews(force),
   filterNewsTab,
   openNewsTab,
   closeNewsTab,
-
-  // tokens
   earn: (amt, reason) => earnTokens(amt, reason),
   showCashout,
-
-  // ui
   openModal,
   closeModal,
   closeModalOnOverlay,
@@ -321,11 +291,7 @@ window.GTA6HQ = {
   closeVideosTab,
   switchVTab,
   filterVTP,
-
-  // ai
   sendAI,
-
-  // misc
   toggleLike,
   filterMods,
   filterVideos: (f, btn) => {
@@ -340,9 +306,7 @@ window.GTA6HQ = {
   share,
 };
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
 (function init() {
-  // Synchronous renders (static data, no network)
   renderNewsHome();
   renderGuides();
   renderMods('all');
@@ -359,10 +323,6 @@ window.GTA6HQ = {
   setInterval(updateCountdown, 1_000);
   setInterval(renderSidebarNews, 60_000);
 
-  // Defer network calls so they don't block first paint.
-  // 200ms gives firebase-config.js (type="module", deferred) time to load
-  // and define window.fetchLiveNews before fetchLatestNews checks for it.
-  // FIX BUG-01: was 100ms and fetchLatestNews never checked fetchLiveNews.
   setTimeout(() => {
     fetchLatestNews();
     loadVideos().then(() => {
@@ -374,5 +334,11 @@ window.GTA6HQ = {
   setTimeout(() => {
     if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!');
   }, 2500);
-         // Make openVideoById available immediately on window
+
+  // FIX BUG 3: Expose critical functions directly on window
+  // so onclick attributes work regardless of module load order
+  window.openVideoById  = openVideoById;
+  window.openFirstVideo = openFirstVideo;
+  window.closeWatchModal = closeWatchModal;
+  window.claimVideoToken = claimVideoToken;
 })();
