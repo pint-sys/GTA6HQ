@@ -22,7 +22,7 @@ const FALLBACK = [
     reward: 50
   },
   {
-    id: 'vid2',
+    id: 'vid1',
     src: 'youtube',
     youtubeId: 'a7dB_6MvVv4',
     cat: 'trailer',
