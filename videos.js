@@ -6,10 +6,9 @@ export const FALLBACK_VIDEOS = [
   { id: 'vid1', src: 'youtube', youtubeId: 'QkkoHAzjnUs', cat: 'trailer',
     title: 'Grand Theft Auto VI Trailer 1', dur: '1:31', views: '200M',
     ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50 },
- // Remove jctfX_SKkzQ entirely, use this instead:
-{ id: 'vid2', src: 'youtube', youtubeId: '9JETXBi0SYs', cat: 'trailer',
-  title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M',
-  ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50 },
+  { id: 'vid2', src: 'youtube', youtubeId: '9JETXBi0SYs', cat: 'trailer',
+    title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M',
+    ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50 },
   { id: 'vid3', src: 'youtube', youtubeId: 'KpMXPU1zAAs', cat: 'guides',
     title: 'GTA 6 Everything We Know — Full Breakdown', dur: '18:42', views: '4.2M',
     ch: 'MrBossFTW', thumb: 'https://img.youtube.com/vi/KpMXPU1zAAs/hqdefault.jpg', reward: 50 },
@@ -24,9 +23,10 @@ export const FALLBACK_VIDEOS = [
     ch: 'Typical Gamer', thumb: 'https://img.youtube.com/vi/T3PkATlHi_E/hqdefault.jpg', reward: 50 },
 ];
 
+// FIX: s2 was jctfX_SKkzQ (dead ID) — replaced with correct ID
 export const STREAMS = [
   { id: 's1', youtubeId: 'QkkoHAzjnUs', title: 'GTA VI — Official Trailer 1', ch: 'Rockstar Games', viewers: '200M', status: 'replay', dur: '1:31',  reward: 50 },
-  { id: 's2',youtubeId: '9JETXBi0SYs', title: 'GTA VI — Official Trailer 2', ch: 'Rockstar Games', viewers: '90M',  status: 'replay', dur: '2:01',  reward: 50 },
+  { id: 's2', youtubeId: '9JETXBi0SYs', title: 'GTA VI — Official Trailer 2', ch: 'Rockstar Games', viewers: '90M',  status: 'replay', dur: '2:01',  reward: 50 },
   { id: 's3', youtubeId: 'KpMXPU1zAAs', title: 'GTA 6 Everything We Know',   ch: 'MrBossFTW',     viewers: '4.2M', status: 'replay', dur: '18:42', reward: 50 },
 ];
 
@@ -95,7 +95,8 @@ export function renderVTPStreams() {
     const badge = watched
       ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
       : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-    return `<div class="video-player-wrap" onclick="(GTA6HQ||window).openVideoById('${s.id}','stream')"
+    // FIX BUG 1: was missing > after the onclick attribute — div never closed properly
+    return `<div class="video-player-wrap" onclick="openVideoById('${s.id}','stream')">
       <div class="vp-thumb" style="background:#0a0010;">
         ${s.youtubeId ? `<img src="https://img.youtube.com/vi/${s.youtubeId}/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy">` : ''}
         <div class="vp-overlay">${liveBadge}
@@ -222,7 +223,8 @@ function _videoCard(v) {
   const badge = watched
     ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
     : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-return `<div class="video-player-wrap" onclick="(GTA6HQ||window).openVideoById('${v.id}')">
+  // FIX: use plain openVideoById() — set directly on window by app.js
+  return `<div class="video-player-wrap" onclick="openVideoById('${v.id}')">
     <div class="vp-thumb">${thumb}
       <div class="vp-overlay">
         <div class="vp-src-badge">
