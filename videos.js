@@ -26,7 +26,7 @@ export const FALLBACK_VIDEOS = [
 
 export const STREAMS = [
   { id: 's1', youtubeId: 'QkkoHAzjnUs', title: 'GTA VI — Official Trailer 1', ch: 'Rockstar Games', viewers: '200M', status: 'replay', dur: '1:31',  reward: 50 },
-  { id: 's2', youtubeId: 'jctfX_SKkzQ', title: 'GTA VI — Official Trailer 2', ch: 'Rockstar Games', viewers: '90M',  status: 'replay', dur: '2:01',  reward: 50 },
+  { id: 's2',youtubeId: '9JETXBi0SYs', title: 'GTA VI — Official Trailer 2', ch: 'Rockstar Games', viewers: '90M',  status: 'replay', dur: '2:01',  reward: 50 },
   { id: 's3', youtubeId: 'KpMXPU1zAAs', title: 'GTA 6 Everything We Know',   ch: 'MrBossFTW',     viewers: '4.2M', status: 'replay', dur: '18:42', reward: 50 },
 ];
 
