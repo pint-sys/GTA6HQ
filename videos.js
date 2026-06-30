@@ -3,54 +3,6 @@ import { earnTokens }      from './tokens.js';
 import { notify }          from './ui.js';
 
 export const FALLBACK_VIDEOS = [
-  { id: 'vid1', src: 'youtube', youtubeId: 'QkkoHAzjnUs', cat: 'trailer',
-    title: 'Grand Theft Auto VI Trailer 1', dur: '1:31', views: '200M',
-    ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50 },
-  { id: 'vid2', src: 'youtube', youtubeId: '9JETXBi0SYs', cat: 'trailer',
-    title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M',
-    ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50 },
-  { id: 'vid3', src: 'youtube', youtubeId: 'KpMXPU1zAAs', cat: 'guides',
-    title: 'GTA 6 Everything We Know — Full Breakdown', dur: '18:42', views: '4.2M',
-    ch: 'MrBossFTW', thumb: 'https://img.youtube.com/vi/KpMXPU1zAAs/hqdefault.jpg', reward: 50 },
-  { id: 'vid4', src: 'youtube', youtubeId: 'rEXCNbsNVQ0', cat: 'guides',
-    title: 'GTA 6 Map Analysis — State of Leonida', dur: '22:15', views: '3.1M',
-    ch: 'GTA Series Videos', thumb: 'https://img.youtube.com/vi/rEXCNbsNVQ0/hqdefault.jpg', reward: 50 },
-  { id: 'vid5', src: 'youtube', youtubeId: 'odFm6hfDea8', cat: 'guides',
-    title: 'GTA 6 Jason & Lucia — Full Character Analysis', dur: '14:08', views: '2.8M',
-    ch: 'DarkViperAU', thumb: 'https://img.youtube.com/vi/odFm6hfDea8/hqdefault.jpg', reward: 50 },
-  { id: 'vid6', src: 'youtube', youtubeId: 'T3PkATlHi_E', cat: 'guides',
-    title: 'GTA 6 Gameplay Features Confirmed So Far', dur: '16:55', views: '2.3M',
-    ch: 'Typical Gamer', thumb: 'https://img.youtube.com/vi/T3PkATlHi_E/hqdefault.jpg', reward: 50 },
-];
-
-// FIX: s2 was jctfX_SKkzQ (dead ID) — replaced with correct ID
-export const STREAMS = [
-  { id: 's1', youtubeId: 'QkkoHAzjnUs', title: 'GTA VI — Official Trailer 1', ch: 'Rockstar Games', viewers: '200M', status: 'replay', dur: '1:31',  reward: 50 },
-  { id: 's2', youtubeId: '9JETXBi0SYs', title: 'GTA VI — Official Trailer 2', ch: 'Rockstar Games', viewers: '90M',  status: 'replay', dur: '2:01',  reward: 50 },
-  { id: 's3', youtubeId: 'KpMXPU1zAAs', title: 'GTA 6 Everything We Know',   ch: 'MrBossFTW',     viewers: '4.2M', status: 'replay', dur: '18:42', reward: 50 },
-];
-
-export let VIDEOS = [];
-export let VIDEOS_LOADED = false;
-
-export async function loadVideos() {
-  try {
-    const res = await fetch(`news-data.json?t=${Date.now()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (Array.isArray(data.videos) && data.videos.length > 0) {
-      VIDEOS = data.videos;
-      VIDEOS_LOADED = true;
-      console.log(`[videos] Loaded ${VIDEOS.length} videos from news-data.json`);
-      return;
-    }
-    throw new Error('news-data.json has no videos');
-  } catch (e) {
-    console.warn('[videos] Falling back to static list:', e.message);
-    VIDEOS = FALLBACK_VIDEOS;
-    VIDEOS_LOADED = true;
-  }
-}
 
 function calcReward() { return 50; }
 
