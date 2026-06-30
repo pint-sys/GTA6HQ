@@ -59,19 +59,25 @@ async function fetchChannelVideos(channel) {
         console.log(`  ⚠️  Skipping unavailable: ${titleClean}`);
         continue;
       }
+if (!available) {
+      console.log(`  ⚠️  Skipping unavailable: ${titleClean}`);
+      continue;
+    }
 
-      videos.push({
-        id: `vid${videos.length + 1}`,
-        src:       'youtube',
-        youtubeId: videoId,
-        cat:       titleClean.toLowerCase().includes('trailer') ? 'trailer' : 'guides',
-        title:     titleClean,
-        dur:       '—',
-        views:     '—',
-        ch:        channel.name,
-        thumb:     `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-        reward:    50,
-      });
+    videos.push({
+      id:        `vid${videos.length + 1}`,
+      src:       'youtube',
+      youtubeId: videoId,
+      cat:       titleClean.toLowerCase().includes('trailer') ? 'trailer' : 'guides',
+      title:     titleClean,
+      dur:       '—',
+      views:     '—',
+      ch:        channel.name,
+      thumb:     `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      reward:    50,
+    });
+
+    if (videos.length >= 3) break;});
 
       if (videos.length >= 3) break;
     }
