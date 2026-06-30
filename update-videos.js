@@ -61,7 +61,7 @@ async function fetchChannelVideos(channel) {
       }
 
       videos.push({
-        id:        `vid${i+1}`,
+        id: `vid${videos.length + 1}`,
         src:       'youtube',
         youtubeId: videoId,
         cat:       titleClean.toLowerCase().includes('trailer') ? 'trailer' : 'guides',
