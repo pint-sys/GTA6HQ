@@ -3,10 +3,7 @@ const fs = require('fs');
 
 const CHANNELS = [
   { id: 'UCVber8x0HRmj-RvMOBLwyOQ', name: 'Rockstar Games' },
-  { id: 'UCId9g4zlQ4oB-AlNQzRDAOg', name: 'GTA Series Videos' },
-  { id: 'UCNo7ZLWM8WouKtKMxaLkADg', name: 'MrBossFTW' },
-  { id: 'UCBMR4mTB7YkPeQGMBmMGMKg', name: 'Typical Gamer' },
-  { id: 'UC2wDMjMEvLJP9TmT3bMKylA', name: 'DarkViperAU' },
+  
 ];
 
 const GTA6_KEYWORDS = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi'];
