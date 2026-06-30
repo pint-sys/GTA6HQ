@@ -9,7 +9,6 @@ const CHANNELS = [
 const GTA6_KEYWORDS = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi'];
 
 const FALLBACK = [
-  const FALLBACK = [
   {
     id: 'vid1',
     src: 'youtube',
@@ -88,10 +87,6 @@ async function fetchChannelVideos(channel) {
         console.log(`  ⚠️  Skipping unavailable: ${titleClean}`);
         continue;
       }
-if (!available) {
-      console.log(`  ⚠️  Skipping unavailable: ${titleClean}`);
-      continue;
-    }
 
     videos.push({
       id:        `vid${videos.length + 1}`,
@@ -105,8 +100,6 @@ if (!available) {
       thumb:     `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
       reward:    50,
     });
-
-    if (videos.length >= 3) break;});
 
       if (videos.length >= 3) break;
     }
