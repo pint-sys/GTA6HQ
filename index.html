@@ -2208,36 +2208,186 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     /* ---------------------------------------------------------
      Job guide
   --------------------------------------------------------- */
-const guides = [
+ // ==========================================
+  // GTA 6 JOBS DATABASE (You can add more here)
+  // ==========================================
+  const gta6Jobs = [
     {
-      title: "Security Officer",
-      description: "Rules, duties, and responsibilities.",
-      link: "jobs/security-officer.html"
+      id: 'job_1',
+      title: 'Vice City Bank Heist',
+      type: 'Heist',
+      difficulty: 'Hard',
+      reward: '$2,500,000 + 500 TKN',
+      steps: [
+        'Meet Jason at the safehouse in Vice City Beach.',
+        'Steal the getaway vehicle (Sparrow helicopter) from the airport.',
+        'Enter the bank through the roof vents.',
+        'Hack the security system (Mini-game: Match the wires).',
+        'Escape through the back alleys and lose the 5-star wanted level.'
+      ]
     },
     {
-      title: "Police Officer",
-      description: "Full job guide and regulations.",
-      link: "jobs/police-officer.html"
+      id: 'job_2',
+      title: 'Grassrivers Boat Delivery',
+      type: 'Side Hustle',
+      difficulty: 'Medium',
+      reward: '$15,000 + 100 TKN',
+      steps: [
+        'Go to the Grassrivers marina.',
+        'Board the speedboat and follow the GPS waypoint.',
+        'Avoid the shallow reefs to prevent damage.',
+        'Deliver the package to the dock in the Florida Keys area.',
+        'Collect payment from the contact.'
+      ]
     },
     {
-      title: "EMS / Medic",
-      description: "Medical procedures and job rules.",
-      link: "jobs/ems.html"
+      id: 'job_3',
+      title: 'Lucia\'s Prison Break',
+      type: 'Story Mission',
+      difficulty: 'Very Hard',
+      reward: 'Unlocks Lucia as playable + 1000 TKN',
+      steps: [
+        'Start the mission at the Leonida State Penitentiary.',
+        'Switch to Jason and create a distraction at the main gate.',
+        'Switch back to Lucia and sneak through the laundry facility.',
+        'Pick the lock on the cell door using a bent spoon.',
+        'Steal the guard tower vehicle and crash through the gates.'
+      ]
+    },
+    {
+      id: 'job_4',
+      title: 'Ocean Drive Taxi Run',
+      type: 'Side Hustle',
+      difficulty: 'Easy',
+      reward: '$5,000 + 50 TKN',
+      steps: [
+        'Find a taxi or hijack one on Ocean Drive.',
+        'Pick up the VIP client at the Vice City Mall.',
+        'Drive safely to the airport (no crashes allowed).',
+        'Drop off the client and collect the fare.'
+      ]
+    },
+    {
+      id: 'job_5',
+      title: 'Drug Running in the Everglades',
+      type: 'Heist',
+      difficulty: 'Hard',
+      reward: '$800,000 + 300 TKN',
+      steps: [
+        'Meet the contact in the swamp area of Grassrivers.',
+        'Navigate the airboat through the narrow, gator-infested channels.',
+        'Load the cargo at the hidden stash house.',
+        'Defend the airboat from rival gang ambushes.',
+        'Return to the drop-off point before the timer runs out.'
+      ]
     }
   ];
 
-  const guidesGrid = document.getElementById("guidesGrid");
+  // Load user's completed jobs from browser localStorage
+  let completedJobs = JSON.parse(localStorage.getItem('gta6hq_completed_jobs')) || [];
 
-  guides.forEach(guide => {
-    const card = document.createElement("div");
-    card.className = "news-card";
-    card.innerHTML = `
-      <h3>${guide.title}</h3>
-      <p>${guide.description}</p>
-      <a class="open-guide" href="${guide.link}">Open Guide →</a>
-    `;
-    guidesGrid.appendChild(card);
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    populateJobTypes();
+    renderJobCards();
   });
+
+  // 1. Automatically fetch and populate Job Types into the dropdown
+  function populateJobTypes() {
+    const filterSelect = document.getElementById('job-type-filter');
+    // Extract unique types from the database
+    const types = [...new Set(gta6Jobs.map(job => job.type))];
+    
+    types.forEach(type => {
+      const option = document.createElement('option');
+      option.value = type;
+      option.textContent = type;
+      filterSelect.appendChild(option);
+    });
+  }
+
+  // 2. Render Job Cards based on selected filter
+  function renderJobCards() {
+    const container = document.getElementById('job-guides-container');
+    const filterType = document.getElementById('job-type-filter').value;
+    
+    const filteredJobs = filterType === 'all' 
+      ? gta6Jobs 
+      : gta6Jobs.filter(job => job.type === filterType);
+
+    container.innerHTML = '';
+
+    filteredJobs.forEach(job => {
+      const isCompleted = completedJobs.includes(job.id);
+      const card = document.createElement('div');
+      card.className = `job-card ${isCompleted ? 'completed' : ''}`;
+      card.onclick = () => openJobDetail(job.id);
+      
+      card.innerHTML = `
+        <span class="job-type-badge">${job.type}</span>
+        <h3>${job.title}</h3>
+        <p class="job-difficulty">Difficulty: ${job.difficulty}</p>
+        <p class="job-difficulty">Reward: ${job.reward}</p>
+      `;
+      container.appendChild(card);
+    });
+
+    updateProgressSummary();
+  }
+
+  // 3. Open Modal with detailed steps
+  function openJobDetail(jobId) {
+    const job = gta6Jobs.find(j => j.id === jobId);
+    if (!job) return;
+
+    const isCompleted = completedJobs.includes(jobId);
+    const modalBody = document.getElementById('modal-body');
+    
+    modalBody.innerHTML = `
+      <span class="job-type-badge">${job.type}</span>
+      <h2>${job.title}</h2>
+      <p><strong>Difficulty:</strong> ${job.difficulty}</p>
+      <p><strong>Reward:</strong> ${job.reward}</p>
+      <h3>How to Complete:</h3>
+      <ul class="steps-list">
+        ${job.steps.map((step, index) => `<li><strong>Step ${index + 1}:</strong> ${step}</li>`).join('')}
+      </ul>
+      <button class="btn-complete ${isCompleted ? 'is-completed' : ''}" onclick="toggleCompletion('${jobId}')">
+        ${isCompleted ? '✔ Completed (Click to Undo)' : 'Mark as Completed'}
+      </button>
+    `;
+
+    document.getElementById('job-detail-modal').classList.add('active');
+  }
+
+  // 4. Close Modal
+  function closeModal(event) {
+    if (!event || event.target.id === 'job-detail-modal' || event.target.className === 'modal-close') {
+      document.getElementById('job-detail-modal').classList.remove('active');
+    }
+  }
+
+  // 5. Toggle Completion & Save to LocalStorage
+  function toggleCompletion(jobId) {
+    if (completedJobs.includes(jobId)) {
+      completedJobs = completedJobs.filter(id => id !== jobId);
+    } else {
+      completedJobs.push(jobId);
+    }
+    
+    // Save to browser memory
+    localStorage.setItem('gta6hq_completed_jobs', JSON.stringify(completedJobs));
+    
+    // Refresh UI
+    renderJobCards();
+    openJobDetail(jobId); // Re-render modal to update button state
+  }
+
+  // 6. Update Progress Text
+  function updateProgressSummary() {
+    const summary = document.getElementById('progress-summary');
+    summary.textContent = `Completed: ${completedJobs.length} / ${gta6Jobs.length}`;
+  }
   /* ---------------------------------------------------------
      INIT — runs once, every step wrapped so one failure
      cannot freeze the rest of the page
