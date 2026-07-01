@@ -274,8 +274,9 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .lb-info{flex:1;}
 .lb-name{font-size:12px;font-weight:600;}
 .lb-pts{font-size:11px;color:var(--gold);font-family:var(--font-u);}
-.nf-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);}
+.nf-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
 .nf-item:last-child{border-bottom:none;}
+.nf-item:hover{background:rgba(255,255,255,.03);}
 .nf-thumb{width:56px;height:40px;border-radius:5px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;}
 .nf-thumb img{width:100%;height:100%;object-fit:cover;}
 .nf-info{flex:1;}
@@ -1380,15 +1381,20 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         return;
       }
       el.innerHTML = items.map(n => {
-        const url    = n.url && n.url !== '#' ? n.url : '#';
-        const target = url !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+        const hasUrl = n.url && n.url !== '#';
+        const url    = hasUrl ? n.url : '#';
+        const target = hasUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
+        // Rows with real URLs open the article; seed rows open the news tab overlay
+        const rowClick = hasUrl
+          ? `onclick="window.open('${url.replace(/'/g,"\\'")}','_blank','noopener')"`
+          : `onclick="GTA6HQ.openNewsTab()"`;
         const thumb  = n.image
           ? `<img class="nl-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
           : '';
-        return `<div class="nl-item">
+        return `<div class="nl-item" ${rowClick} style="cursor:pointer;">
           ${thumb}
           ${_catTag(n.cat)}
-          <div class="nl-title"><a href="${url}"${target}>${_esc(n.title)}</a></div>
+          <div class="nl-title"><a href="${url}"${target} onclick="event.stopPropagation()">${_esc(n.title)}</a></div>
           <span class="nl-meta">${_esc(n.time)}</span>
           ${n.source ? `<span class="nl-src">${_esc(n.source)}</span>` : ''}
         </div>`;
@@ -1407,15 +1413,15 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         return;
       }
       el.innerHTML = items.map(n => {
-        const url    = n.url && n.url !== '#' ? n.url : '#';
-        const target = url !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+        const dest = (n.url && n.url !== '#') ? n.url
+          : 'https://news.google.com/search?q=' + encodeURIComponent(n.title + ' GTA 6');
         const thumb  = n.image
           ? `<img class="ntp-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
           : `<div class="ntp-emoji">${n.emoji || '📰'}</div>`;
-        return `<div class="ntp-item">
+        return `<div class="ntp-item" onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}" style="cursor:pointer;">
           ${thumb}
           <div class="ntp-body">
-            <div class="ntp-title">${_catTag(n.cat)} <a href="${url}"${target}>${_esc(n.title)}</a></div>
+            <div class="ntp-title">${_catTag(n.cat)} <a href="${_esc(dest)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${_esc(n.title)}</a></div>
             ${n.excerpt ? `<div class="ntp-excerpt">${_esc(n.excerpt)}</div>` : ''}
             <div class="ntp-meta">
               <span>${_esc(n.time)}</span>
@@ -1432,10 +1438,12 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       const el = document.getElementById('newsFeed');
       if (!el) return;
       el.innerHTML = NEWS.slice(0, 4).map(n => {
+        const dest = (n.url && n.url !== '#') ? n.url
+          : 'https://news.google.com/search?q=' + encodeURIComponent(n.title + ' GTA 6');
         const thumb = n.image
           ? `<img src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)" style="width:100%;height:100%;object-fit:cover;">`
           : (n.emoji || '📰');
-        return `<div class="nf-item">
+        return `<div class="nf-item" onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}" style="cursor:pointer;">
           <div class="nf-thumb">${thumb}</div>
           <div class="nf-info">
             <div class="nf-title">${_esc(n.title)}</div>
