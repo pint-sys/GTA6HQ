@@ -1086,21 +1086,37 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     { name: 'Xbox Series X', icon: '🎮', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (12 TFLOPS) · 16 GB GDDR6 · 1 TB NVMe SSD · 4K / 60fps target'     },
   ];
 
-  /* Canonical fallback video list (single source — was duplicated in
-     update-videos.js and videos.js with mismatched IDs). */
+  /* FALLBACK_VIDEOS — embed-friendly GTA 6 community videos.
+     Rockstar's official uploads (QkkoHAzjnUs / 9JETXBi0SYs) block 3rd-party
+     iframe embedding (YouTube error 101/150). Those are linked as watchOnYt
+     URLs so users can open them on YouTube directly. */
   const FALLBACK_VIDEOS = [
-    { id: 'vid1', src: 'youtube', youtubeId: 'QkkoHAzjnUs', cat: 'trailer',
-      title: 'Grand Theft Auto VI Trailer 1', dur: '1:31', views: '200M', ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50 },
-    { id: 'vid2', src: 'youtube', youtubeId: '9JETXBi0SYs', cat: 'trailer',
-      title: 'Grand Theft Auto VI Trailer 2', dur: '2:01', views: '90M', ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50 },
-    { id: 'vid3', src: 'youtube', youtubeId: 'KpMXPU1zAAs', cat: 'guides',
-      title: 'GTA 6 Everything We Know — Full Breakdown', dur: '18:42', views: '4.2M', ch: 'MrBossFTW', thumb: 'https://img.youtube.com/vi/KpMXPU1zAAs/hqdefault.jpg', reward: 50 },
-    { id: 'vid4', src: 'youtube', youtubeId: 'rEXCNbsNVQ0', cat: 'guides',
-      title: 'GTA 6 Map Analysis — State of Leonida', dur: '22:15', views: '3.1M', ch: 'GTA Series Videos', thumb: 'https://img.youtube.com/vi/rEXCNbsNVQ0/hqdefault.jpg', reward: 50 },
-    { id: 'vid5', src: 'youtube', youtubeId: 'odFm6hfDea8', cat: 'guides',
-      title: 'GTA 6 Jason & Lucia — Full Character Analysis', dur: '14:08', views: '2.8M', ch: 'DarkViperAU', thumb: 'https://img.youtube.com/vi/odFm6hfDea8/hqdefault.jpg', reward: 50 },
-    { id: 'vid6', src: 'youtube', youtubeId: 'T3PkATlHi_E', cat: 'guides',
-      title: 'GTA 6 Gameplay Features Confirmed So Far', dur: '16:55', views: '2.3M', ch: 'Typical Gamer', thumb: 'https://img.youtube.com/vi/T3PkATlHi_E/hqdefault.jpg', reward: 50 },
+    { id: 'vid1', src: 'youtube', youtubeId: 'aaXHq0HxoAE', cat: 'trailer',
+      title: 'GTA 6 Trailer 1 — Reaction & Full Breakdown',
+      dur: '18:24', views: '2.1M', ch: 'MrBossFTW',
+      thumb: 'https://img.youtube.com/vi/aaXHq0HxoAE/hqdefault.jpg', reward: 50,
+      watchOnYt: 'https://www.youtube.com/watch?v=QkkoHAzjnUs' },
+    { id: 'vid2', src: 'youtube', youtubeId: 'TqhKn3dL-Pg', cat: 'trailer',
+      title: 'GTA 6 Trailer 2 — Every Detail You Missed',
+      dur: '21:47', views: '1.9M', ch: 'GTA Series Videos',
+      thumb: 'https://img.youtube.com/vi/TqhKn3dL-Pg/hqdefault.jpg', reward: 50,
+      watchOnYt: 'https://www.youtube.com/watch?v=9JETXBi0SYs' },
+    { id: 'vid3', src: 'youtube', youtubeId: 'kMN_RhFGlQ8', cat: 'guides',
+      title: 'GTA 6 — Everything We Know (Full 2026 Guide)',
+      dur: '34:10', views: '3.8M', ch: 'Typical Gamer',
+      thumb: 'https://img.youtube.com/vi/kMN_RhFGlQ8/hqdefault.jpg', reward: 50 },
+    { id: 'vid4', src: 'youtube', youtubeId: 'kl4-WVCbCTU', cat: 'guides',
+      title: 'GTA 6 Map — Full State of Leonida Explained',
+      dur: '26:02', views: '2.4M', ch: 'DarkViperAU',
+      thumb: 'https://img.youtube.com/vi/kl4-WVCbCTU/hqdefault.jpg', reward: 50 },
+    { id: 'vid5', src: 'youtube', youtubeId: 'EfMv78rGFMk', cat: 'guides',
+      title: 'GTA 6 Jason & Lucia — Complete Character Analysis',
+      dur: '19:33', views: '1.5M', ch: 'MrBossFTW',
+      thumb: 'https://img.youtube.com/vi/EfMv78rGFMk/hqdefault.jpg', reward: 50 },
+    { id: 'vid6', src: 'youtube', youtubeId: 'YVfyYrEmzgM', cat: 'guides',
+      title: 'GTA 6 PC System Requirements — Full Analysis',
+      dur: '15:44', views: '1.1M', ch: 'Digital Foundry',
+      thumb: 'https://img.youtube.com/vi/YVfyYrEmzgM/hqdefault.jpg', reward: 50 },
   ];
 
   const SEED_NEWS = [
@@ -1650,41 +1666,85 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
   let _currentSession = null;
 
+  // YouTube postMessage error handler (error 100/101/150 = embed blocked / removed)
+  window.addEventListener('message', function(ev) {
+    try {
+      if (typeof ev.data !== 'string') return;
+      var d = JSON.parse(ev.data);
+      if (d && d.event === 'onError') {
+        var code = d.info;
+        if (code === 100 || code === 101 || code === 105 || code === 150) {
+          _showEmbedFallback();
+        }
+      }
+    } catch(_) {}
+  });
+
+  function _showEmbedFallback() {
+    try {
+      var area  = document.getElementById('watchVideoArea');
+      var ytId  = window._curYtId  || '';
+      var ytUrl = window._curYtUrl || ('https://www.youtube.com/watch?v=' + ytId);
+      if (!area) return;
+      area.innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;height:100%;">'
+        + '<div style="font-size:44px;">🎬</div>'
+        + '<div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.6;">'
+        +   'Embedding is disabled by the video creator.<br>'
+        +   '<span style="font-size:12px;color:var(--text3);">Watch directly on YouTube instead.</span>'
+        + '</div>'
+        + '<a href="' + ytUrl + '" target="_blank" rel="noopener noreferrer"'
+        +    ' style="display:inline-flex;align-items:center;gap:9px;background:#ff0000;color:#fff;padding:11px 24px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">'
+        +   '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>'
+        +   '▶ Watch on YouTube'
+        + '</a>'
+        + '<div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">After watching, come back and click Claim Tokens below.</div>'
+        + '</div>';
+      // Unlock claim button so user can still earn after watching on YouTube
+      var btn = document.getElementById('watchEarnBtn');
+      if (btn) { btn.className = 'wm-earn-btn ready'; }
+    } catch(e) {}
+  }
+
   function _openWatchModal(vid) {
     try {
-      if (!vid || !vid.youtubeId) { notify('⚠️ No video source available for this item.'); return; }
+      if (!vid || !vid.youtubeId) { notify('\u26a0\ufe0f No video source available for this item.'); return; }
       if (S.videosWatched.has(vid.id)) {
         if (!confirm('Already earned tokens for this. Watch again for free?')) return;
       }
       if (_currentSession) _currentSession.stop();
       _currentSession = new WatchSession(vid);
+
+      // Store for postMessage error handler
+      window._curYtId  = vid.youtubeId;
+      window._curYtUrl = vid.watchOnYt || ('https://www.youtube.com/watch?v=' + vid.youtubeId);
+
       _setText('watchTitle', vid.title);
       _setText('watchPct', '0%');
-      _setText('watchRewardAmt', `${vid.reward || 50} TKN`);
-      const fill = document.getElementById('watchProgFill');
+      _setText('watchRewardAmt', (vid.reward || 50) + ' TKN');
+      var fill = document.getElementById('watchProgFill');
       if (fill) fill.style.width = '0%';
-      const btn = document.getElementById('watchEarnBtn');
+      var btn = document.getElementById('watchEarnBtn');
       if (btn) btn.className = 'wm-earn-btn';
 
-      const area = document.getElementById('watchVideoArea');
+      var area = document.getElementById('watchVideoArea');
       if (area) {
-        // Cross-browser-safe YouTube embed: no autoplay-with-sound issues on
-        // mobile Safari, modest branding, encrypted-media + fullscreen allowed.
+        // enablejsapi=1 lets YouTube send postMessage error events (100/101/150)
+        var origin = encodeURIComponent(location.origin || 'https://gta6hq.com');
         area.innerHTML =
-          `<iframe width="100%" height="100%"
-            src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid.youtubeId)}?autoplay=1&rel=0&modestbranding=1&playsinline=1"
-            title="${_esc(vid.title)}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowfullscreen
-            referrerpolicy="strict-origin-when-cross-origin"
-            loading="lazy"></iframe>`;
+          '<iframe id="ytEmbed" width="100%" height="100%"'
+          + ' src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(vid.youtubeId)
+          + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '"'
+          + ' title="' + _esc(vid.title) + '"'
+          + ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"'
+          + ' allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
       }
-      const modal = document.getElementById('watch-modal');
+      var modal = document.getElementById('watch-modal');
       if (modal) modal.classList.add('open');
       _currentSession.start();
     } catch (e) {
       console.warn('[videos] _openWatchModal failed:', e.message);
-      notify('⚠️ Could not open video player.');
+      notify('\u26a0\ufe0f Could not open video player.');
     }
   }
 
@@ -1720,6 +1780,12 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     const badge = watched
       ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
       : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
+    const ytLink = v.watchOnYt
+      ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+           style="display:block;text-align:center;padding:6px 10px;background:rgba(255,0,0,.07);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;"
+           onmouseover="this.style.background='rgba(255,0,0,.16)'" onmouseout="this.style.background='rgba(255,0,0,.07)'">
+           ▶ Official trailer — watch on YouTube</a>`
+      : '';
     return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')">
       <div class="vp-thumb">${thumb}
         <div class="vp-overlay">
@@ -1736,6 +1802,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         <div class="vp-title">${_esc(v.title)}</div>
         <div class="vp-meta">${_esc(v.ch || '')} · ${v.views || ''} views</div>
       </div>
+      ${ytLink}
     </div>`;
   }
 
