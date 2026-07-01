@@ -2205,7 +2205,39 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     toggleLike, filterMods, filterVideos, searchQA, lookupPlayer,
     checkPC, handleSearch, share,
   };
+    /* ---------------------------------------------------------
+     Job guide
+  --------------------------------------------------------- */
+const guides = [
+    {
+      title: "Security Officer",
+      description: "Rules, duties, and responsibilities.",
+      link: "jobs/security-officer.html"
+    },
+    {
+      title: "Police Officer",
+      description: "Full job guide and regulations.",
+      link: "jobs/police-officer.html"
+    },
+    {
+      title: "EMS / Medic",
+      description: "Medical procedures and job rules.",
+      link: "jobs/ems.html"
+    }
+  ];
 
+  const guidesGrid = document.getElementById("guidesGrid");
+
+  guides.forEach(guide => {
+    const card = document.createElement("div");
+    card.className = "news-card";
+    card.innerHTML = `
+      <h3>${guide.title}</h3>
+      <p>${guide.description}</p>
+      <a class="open-guide" href="${guide.link}">Open Guide →</a>
+    `;
+    guidesGrid.appendChild(card);
+  });
   /* ---------------------------------------------------------
      INIT — runs once, every step wrapped so one failure
      cannot freeze the rest of the page
