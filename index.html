@@ -1685,35 +1685,16 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       var area  = document.getElementById('watchVideoArea');
       var ytUrl = window._curYtUrl || ('https://www.youtube.com/watch?v=' + (window._curYtId || ''));
       if (!area) return;
-      area.innerHTML =
-        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;'
-        + 'gap:14px;padding:28px;text-align:center;height:100%;box-sizing:border-box;">'
-        + '<div style="font-size:44px;">📺</div>'
-        + '<div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">'
-        +   'This video cannot be embedded on third-party sites.<br>'
-        +   '<span style="font-size:12px;color:var(--text3);">The creator has disabled external playback — open on YouTube, then return here to claim your tokens.</span>'
-        + '</div>'
-        + '<a href="' + ytUrl + '" target="_blank" rel="noopener noreferrer"'
-        +    ' style="display:inline-flex;align-items:center;gap:9px;background:#ff0000;color:#fff;'
-        +    'padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;'
-        +    'text-decoration:none;transition:.15s;"'
-        +    ' onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">'
-        +   '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">'
-        +     '<path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2'
-        +     'C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1'
-        +     'C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/>'
-        +   '</svg>'
-        +   '▶ Watch on YouTube'
-        + '</a>'
-        + '<div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">'
-        +   'After watching on YouTube, click <strong style="color:var(--gold);">Claim Tokens</strong> below to earn your reward.'
-        + '</div>'
-        + '</div>';
-      // Stop the ticker session and fast-advance progress to 80 so claim works
-      if (_currentSession) {
-        _currentSession.stop();
-        _currentSession.progress = 80;
-      }
+      var html = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center;height:100%;box-sizing:border-box;">';
+      html += '<div style="font-size:44px;">📺</div>';
+      html += '<div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">This video cannot be embedded on third-party sites.<br><span style="font-size:12px;color:var(--text3);">The creator has disabled external playback — open on YouTube, then return here to claim your tokens.</span></div>';
+      html += '<a href="' + ytUrl + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#ff0000;color:#fff;padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">';
+      html += '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>';
+      html += ' ▶ Watch on YouTube</a>';
+      html += '<div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">After watching on YouTube, click <strong style="color:var(--gold);">Claim Tokens</strong> below to earn your reward.</div>';
+      html += '</div>';
+      area.innerHTML = html;
+      if (_currentSession) { _currentSession.stop(); _currentSession.progress = 80; }
       var btn = document.getElementById('watchEarnBtn');
       if (btn) { btn.className = 'wm-earn-btn ready'; }
       _setText('watchPct', '80%');
