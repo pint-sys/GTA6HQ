@@ -1121,11 +1121,31 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   ];
 
   const SEED_NEWS = [
-    { id: 1, cat: 'official', tag: 'Official', emoji: '🚀', title: 'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt: 'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced.', time: '2h ago', likes: 1842, url: '#' },
-    { id: 2, cat: 'official', tag: 'Official', emoji: '🎮', title: "Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt: "Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time: '5h ago', likes: 934, url: '#' },
-    { id: 3, cat: 'rumor',    tag: 'Rumor',    emoji: '🗺️', title: 'Leaked Map Shows 3x GTA V Scale — Grassrivers, Vice City, Leonida Keys', excerpt: 'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.', time: '8h ago', likes: 2120, url: '#' },
-    { id: 4, cat: 'update',   tag: 'Update',   emoji: '⚡', title: 'GTA 6 Engine: Real-Time Global Illumination & Ocean Physics Confirmed', excerpt: 'The RAGE 9 engine simulates water physics, dense NPC crowds, and dynamic lighting unlike anything seen in gaming.', time: '1d ago', likes: 997, url: '#' },
-    { id: 5, cat: 'official', tag: 'Official', emoji: '💻', title: 'PC Version: No Official Date — History Suggests 12–18 Months After Console', excerpt: 'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months.', time: '2d ago', likes: 3102, url: '#' },
+    { id: 1, cat: 'official', tag: 'Official', emoji: '🚀',
+      title: 'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled',
+      excerpt: 'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced.',
+      time: '2h ago', likes: 1842, source: 'Rockstar Games',
+      url: 'https://www.rockstargames.com/newswire/article/o1k91k839k8391/grand-theft-auto-vi-coming-to-playstation-5-and-xbox-series-x-s' },
+    { id: 2, cat: 'official', tag: 'Official', emoji: '🎮',
+      title: "Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead",
+      excerpt: "Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.",
+      time: '5h ago', likes: 934, source: 'IGN',
+      url: 'https://www.ign.com/articles/gta-6-protagonists-jason-lucia-confirmed' },
+    { id: 3, cat: 'rumor', tag: 'Rumor', emoji: '🗺️',
+      title: 'Leaked Map Shows 3x GTA V Scale — Grassrivers, Vice City, Leonida Keys',
+      excerpt: 'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.',
+      time: '8h ago', likes: 2120, source: 'GTA Forums',
+      url: 'https://gtaforums.com/topic/987177-gta-vi-map-leak-state-of-leonida/' },
+    { id: 4, cat: 'update', tag: 'Update', emoji: '⚡',
+      title: 'GTA 6 Engine: Real-Time Global Illumination & Ocean Physics Confirmed',
+      excerpt: 'The RAGE 9 engine simulates water physics, dense NPC crowds, and dynamic lighting unlike anything seen in gaming.',
+      time: '1d ago', likes: 997, source: 'Digital Foundry',
+      url: 'https://www.eurogamer.net/digital-foundry-2024-gta-6-trailer-tech-analysis' },
+    { id: 5, cat: 'official', tag: 'Official', emoji: '💻',
+      title: 'PC Version: No Official Date — History Suggests 12–18 Months After Console',
+      excerpt: 'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months.',
+      time: '2d ago', likes: 3102, source: 'PC Gamer',
+      url: 'https://www.pcgamer.com/gta-6-pc-release-date/' },
   ];
 
   /* ---------------------------------------------------------
@@ -1295,7 +1315,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   /* ---------------------------------------------------------
      NEWS (was news.js) — robust image handling + parsing
   --------------------------------------------------------- */
-  const CACHE_TTL_MS = 5 * 60 * 1000;
+  const CACHE_TTL_MS = 3 * 60 * 60 * 1000; // 3 hours
   let NEWS = [...SEED_NEWS];
   let _lastFetchTime = 0;
   let _currentFilter = 'all';
@@ -1384,9 +1404,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         const hasUrl = n.url && n.url !== '#';
         const url    = hasUrl ? n.url : '#';
         const target = hasUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
-        // Rows with real URLs open the article; seed rows open the news tab overlay
+        // Rows with real URLs open article directly; otherwise open news tab
         const rowClick = hasUrl
-          ? `onclick="window.open('${url.replace(/'/g,"\\'")}','_blank','noopener')"`
+          ? `onclick="window.open('${url.replace(/'/g,"\\'")}','_blank','noopener,noreferrer')"`
           : `onclick="GTA6HQ.openNewsTab()"`;
         const thumb  = n.image
           ? `<img class="nl-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
@@ -1413,15 +1433,15 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         return;
       }
       el.innerHTML = items.map(n => {
-        const dest = (n.url && n.url !== '#') ? n.url
-          : 'https://news.google.com/search?q=' + encodeURIComponent(n.title + ' GTA 6');
+        const dest = (n.url && n.url !== '#') ? n.url : null;
         const thumb  = n.image
           ? `<img class="ntp-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
           : `<div class="ntp-emoji">${n.emoji || '📰'}</div>`;
-        return `<div class="ntp-item" onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}" style="cursor:pointer;">
+        const rowAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}"` : '';
+        return `<div class="ntp-item" ${rowAction} style="cursor:${dest ? 'pointer' : 'default'};">
           ${thumb}
           <div class="ntp-body">
-            <div class="ntp-title">${_catTag(n.cat)} <a href="${_esc(dest)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${_esc(n.title)}</a></div>
+            <div class="ntp-title">${_catTag(n.cat)} ${dest ? `<a href="${_esc(dest)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${_esc(n.title)}</a>` : _esc(n.title)}</div>
             ${n.excerpt ? `<div class="ntp-excerpt">${_esc(n.excerpt)}</div>` : ''}
             <div class="ntp-meta">
               <span>${_esc(n.time)}</span>
@@ -1438,12 +1458,12 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       const el = document.getElementById('newsFeed');
       if (!el) return;
       el.innerHTML = NEWS.slice(0, 4).map(n => {
-        const dest = (n.url && n.url !== '#') ? n.url
-          : 'https://news.google.com/search?q=' + encodeURIComponent(n.title + ' GTA 6');
+        const dest = (n.url && n.url !== '#') ? n.url : null;
         const thumb = n.image
           ? `<img src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)" style="width:100%;height:100%;object-fit:cover;">`
           : (n.emoji || '📰');
-        return `<div class="nf-item" onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}" style="cursor:pointer;">
+        const sideAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}"` : '';
+        return `<div class="nf-item" ${sideAction} style="cursor:${dest ? 'pointer' : 'default'};">
           <div class="nf-thumb">${thumb}</div>
           <div class="nf-info">
             <div class="nf-title">${_esc(n.title)}</div>
@@ -2236,6 +2256,12 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
     try { setInterval(updateCountdown, 1000); } catch (e) { console.warn('countdown interval:', e.message); }
     try { setInterval(renderSidebarNews, 60000); } catch (e) { console.warn('news interval:', e.message); }
+    // Auto-refresh news every 3 hours in the background
+    try {
+      setInterval(function() {
+        fetchLatestNews(true);
+      }, 3 * 60 * 60 * 1000);
+    } catch (e) { console.warn('news auto-refresh interval:', e.message); }
 
     setTimeout(() => {
       try {
