@@ -526,7 +526,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- VIDEOS -->
 <section class="section" id="videos">
 <div class="section-header">
-<div class="section-title">🎬 Video Hub <span class="sec-badge" style="margin-left:8px;font-size:10px;"><span class="dot"></span>Watch-to-Earn Verified</span></div>
+<div class="section-title">🎬 Video Hub <span class="sec-badge" style="margin-left:8px;font-size:10px;"><span class="dot"></span>Watch-to-Earn Verified</span> <span class="auto-badge" style="margin-left:8px;" id="videoRefreshBadge">⚡ Auto-refresh 12h</span></div>
+<button onclick="GTA6HQ.refreshVideos()" style="background:none;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--radius);font-family:var(--font-u);font-size:12px;cursor:pointer;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border)'">🔄 Refresh</button>
 </div>
 <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
 <span style="font-size:16px;">🔒</span>
@@ -1915,27 +1916,50 @@ out.push(v);
 }
 return out;
 }
-async function loadVideos() {
-try {
-let loaded = null;
-try {
-const res = await fetch(`news-data.json?t=${Date.now()}`, { cache: 'no-store' });
-if (res.ok) {
-const data = await res.json();
-if (data && Array.isArray(data.videos) && data.videos.length > 0) loaded = data.videos;
-}
-} catch (e) {
-console.warn('[videos] news-data.json fetch failed, using fallback:', e.message);
-}
-VIDEOS  = _dedupeVideos(loaded && loaded.length ? loaded : FALLBACK_VIDEOS);
-STREAMS = [];
-VIDEOS_LOADED = true;
-} catch (e) {
-console.warn('[videos] loadVideos failed entirely, using fallback:', e.message);
-VIDEOS = _dedupeVideos(FALLBACK_VIDEOS);
-STREAMS = [];
-VIDEOS_LOADED = true;
-}
+const VIDEO_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
+let _lastVideoFetchTime = 0;
+
+async function loadVideos(force) {
+  force = force || false;
+  try {
+    const now = Date.now();
+    // Skip refetch if cache is still fresh (unless forced)
+    if (!force && _lastVideoFetchTime && (now - _lastVideoFetchTime < VIDEO_CACHE_TTL) && VIDEOS.length > 0) {
+      return;
+    }
+
+    let loaded = null;
+    try {
+      const res = await fetch(`news-data.json?t=${now}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.videos) && data.videos.length > 0) loaded = data.videos;
+      }
+    } catch (e) {
+      console.warn('[videos] news-data.json fetch failed, using fallback:', e.message);
+    }
+
+    const newVideos = _dedupeVideos(loaded && loaded.length ? loaded : FALLBACK_VIDEOS);
+    
+    // Only update if content actually changed
+    if (newVideos.length !== VIDEOS.length || JSON.stringify(newVideos.map(v => v.id)) !== JSON.stringify(VIDEOS.map(v => v.id))) {
+      VIDEOS = newVideos;
+      STREAMS = [];
+      VIDEOS_LOADED = true;
+      _lastVideoFetchTime = now;
+      // Re-render all video grids
+      try { renderVideos(); renderVTPVideos('all'); } catch (e) {}
+      if (force) notify('🎬 Videos refreshed! New content loaded.');
+    } else {
+      _lastVideoFetchTime = now;
+      if (force) notify('🎬 Videos are already up to date.');
+    }
+  } catch (e) {
+    console.warn('[videos] loadVideos failed entirely, using fallback:', e.message);
+    VIDEOS = _dedupeVideos(FALLBACK_VIDEOS);
+    STREAMS = [];
+    VIDEOS_LOADED = true;
+  }
 }
 function renderVideos() {
 try {
