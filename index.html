@@ -1600,12 +1600,22 @@ if (force) notify('🎬 Videos refreshed! New content loaded.');
 } catch (e) { VIDEOS = _dedupeVideos(FALLBACK_VIDEOS); STREAMS = []; VIDEOS_LOADED = true; }
 }
 function refreshVideos() {
-try {
-notify('🔄 Refreshing videos...');
-const badge = document.getElementById('videoRefreshBadge');
-if (badge) { badge.textContent = '⏳ Refreshing...'; badge.style.color = 'var(--gold)'; }
-loadVideos(true).then(() => { if (badge) { badge.textContent = '⚡ Auto-refresh 12h'; badge.style.color = ''; } });
-} catch (e) {}
+  try {
+    notify('🔄 Refreshing videos...');
+    const badge = document.getElementById('videoRefreshBadge');
+    if (badge) {
+      badge.textContent = '⏳ Refreshing...';
+      badge.style.color = 'var(--gold)';
+    }
+    loadVideos(true).then(() => {
+      if (badge) {
+        badge.textContent = '⚡ Auto-refresh 12h';
+        badge.style.color = '';
+      }
+    });
+  } catch (e) {
+    console.warn('[videos] refreshVideos failed:', e.message);
+  }
 }
 function renderVideos() {
 try {
@@ -1682,39 +1692,57 @@ persistState(); return true;
 let _currentSession = null;
 
 function _openWatchModal(vid) {
-try {
-if (!vid || (!vid.youtubeId && !vid.platform)) { notify('⚠️ No video source available for this item.'); return; }
-if (S.videosWatched.has(vid.id)) { if (!confirm('Already earned tokens for this. Watch again for free?')) return; }
-if (_currentSession) _currentSession.stop();
-_currentSession = new WatchSession(vid);
-_setText('watchTitle', vid.title);
-_setText('watchPct', '0%');
-_setText('watchRewardAmt', (vid.reward || 50) + ' TKN');
-var fill = document.getElementById('watchProgFill');
-if (fill) fill.style.width = '0%';
-var btn = document.getElementById('watchEarnBtn');
-if (btn) btn.className = 'wm-earn-btn';
-var area = document.getElementById('watchVideoArea');
-if (area) {
-var platform = vid.platform || 'youtube';
-if (platform === 'youtube') {
-var origin = encodeURIComponent(location.origin || 'https://gta6hq.com');
-var ytId = vid.youtubeId || vid.videoId;
-window._curYtId = ytId;
-window._curYtUrl = vid.watchOnYt || ('https://www.youtube.com/watch?v=' + ytId);
-area.innerHTML = '<iframe id="videoEmbed" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '" title="' + _esc(vid.title) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
-} else if (platform === 'tiktok') {
-area.innerHTML = '<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@' + (vid.username || 'gta6') + '/video/' + vid.videoId + '" data-video-id="' + vid.videoId + '" style="max-width: 605px;min-width: 325px; margin: 0 auto;" ><section> <a target="_blank" title="' + _esc(vid.ch || '@gta6') + '" href="https://www.tiktok.com/@' + (vid.username || 'gta6') + '?refer=embed">@' + (vid.username || 'gta6') + '</a> ' + _esc(vid.title) + '</section> </blockquote>';
-if (!document.querySelector('script[src*="tiktok.com/embed.js"]')) { var s = document.createElement('script'); s.async = true; s.src = 'https://www.tiktok.com/embed.js'; document.body.appendChild(s); }
-} else if (platform === 'instagram') {
-area.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/' + vid.videoId + '/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; margin: 0 auto; max-width:540px; min-width:326px; width:99.375%;"><div style="padding:16px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:#efefef;"></div><div><div style="background:#efefef;height:10px;width:80px;border-radius:4px;margin-bottom:4px;"></div><div style="background:#efefef;height:10px;width:50px;border-radius:4px;"></div></div></div><div style="padding: 19% 0;"></div><p style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-weight:550; line-height:18px; text-align:center;">View this post on Instagram</p></div></blockquote>';
-if (!document.querySelector('script[src*="instagram.com/embed.js"]')) { var s2 = document.createElement('script'); s2.async = true; s2.src = '//www.instagram.com/embed.js'; document.body.appendChild(s2); }
-}
-}
-var modal = document.getElementById('watch-modal');
-if (modal) modal.classList.add('open');
-_currentSession.start();
-} catch (e) { notify('⚠️ Could not open video player.'); }
+  try {
+    if (!vid || (!vid.youtubeId && !vid.platform)) {
+      notify('⚠️ No video source available for this item.');
+      return;
+    }
+    if (S.videosWatched.has(vid.id)) {
+      if (!confirm('Already earned tokens for this. Watch again for free?')) return;
+    }
+    if (_currentSession) _currentSession.stop();
+    _currentSession = new WatchSession(vid);
+    _setText('watchTitle', vid.title);
+    _setText('watchPct', '0%');
+    _setText('watchRewardAmt', (vid.reward || 50) + ' TKN');
+    var fill = document.getElementById('watchProgFill');
+    if (fill) fill.style.width = '0%';
+    var btn = document.getElementById('watchEarnBtn');
+    if (btn) btn.className = 'wm-earn-btn';
+    var area = document.getElementById('watchVideoArea');
+    if (area) {
+      var platform = vid.platform || 'youtube';
+      if (platform === 'youtube') {
+        var origin = encodeURIComponent(location.origin || 'https://gta6hq.com');
+        var ytId = vid.youtubeId || vid.videoId;
+        window._curYtId = ytId;
+        window._curYtUrl = vid.watchOnYt || ('https://www.youtube.com/watch?v=' + ytId);
+        area.innerHTML = '<iframe id="videoEmbed" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '" title="' + _esc(vid.title) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
+      } else if (platform === 'tiktok') {
+        area.innerHTML = '<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@' + (vid.username || 'gta6') + '/video/' + vid.videoId + '" data-video-id="' + vid.videoId + '" style="max-width: 605px;min-width: 325px; margin: 0 auto;" ><section> <a target="_blank" title="' + _esc(vid.ch || '@gta6') + '" href="https://www.tiktok.com/@' + (vid.username || 'gta6') + '?refer=embed">@' + (vid.username || 'gta6') + '</a> ' + _esc(vid.title) + '</section> </blockquote>';
+        if (!document.querySelector('script[src*="tiktok.com/embed.js"]')) {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.tiktok.com/embed.js';
+          document.body.appendChild(s);
+        }
+      } else if (platform === 'instagram') {
+        area.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/' + vid.videoId + '/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; margin: 0 auto; max-width:540px; min-width:326px; width:99.375%;"><div style="padding:16px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:#efefef;"></div><div><div style="background:#efefef;height:10px;width:80px;border-radius:4px;margin-bottom:4px;"></div><div style="background:#efefef;height:10px;width:50px;border-radius:4px;"></div></div></div><div style="padding: 19% 0;"></div><p style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-weight:550; line-height:18px; text-align:center;">View this post on Instagram</p></div></blockquote>';
+        if (!document.querySelector('script[src*="instagram.com/embed.js"]')) {
+          var s2 = document.createElement('script');
+          s2.async = true;
+          s2.src = '//www.instagram.com/embed.js';
+          document.body.appendChild(s2);
+        }
+      }
+    }
+    var modal = document.getElementById('watch-modal');
+    if (modal) modal.classList.add('open');
+    _currentSession.start();
+  } catch (e) {
+    console.warn('[videos] _openWatchModal failed:', e.message);
+    notify('⚠️ Could not open video player.');
+  }
 }
 function claimVideoToken() { try { if (_currentSession) _currentSession.claim(); } catch (e) {} }
 function closeWatchModal() {
@@ -1729,12 +1757,35 @@ if (modal) modal.classList.remove('open');
 } catch (e) {}
 }
 function _videoCard(v) {
-const watched = S.videosWatched.has(v.id);
-const thumb = (v.thumb && v.thumb.startsWith('http')) ? `<img src="${v.thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">🎬</div>`;
-const badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-const platform = v.platform || 'youtube';
-const ytLink = (platform === 'youtube' && v.watchOnYt) ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;padding:6px 10px;background:rgba(255,0,0,.07);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;" onmouseover="this.style.background='rgba(255,0,0,.16)'" onmouseout="this.style.background='rgba(255,0,0,.07)'">▶ Official trailer — watch on YouTube</a>` : '';
-return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')"><div class="vp-thumb">${thumb}<div class="vp-overlay"><div class="vp-src-badge"><span style="width:8px;height:8px;border-radius:50%;background:${SRC_COLOR[platform]||'#888'};flex-shrink:0;"></span>${SRC_LABEL[platform]||'Video'}</div><div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>${badge}</div><span class="vp-dur">${v.dur || ''}</span></div><div class="vp-info"><div class="vp-title">${_esc(v.title)}</div><div class="vp-meta">${_esc(v.ch || '')} · ${v.views || ''} views</div></div>${ytLink}</div>`;
+  const watched = S.videosWatched.has(v.id);
+  const thumb = (v.thumb && v.thumb.startsWith('http')) 
+    ? `<img src="${v.thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';">`
+    : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">🎬</div>`;
+  const badge = watched
+    ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
+    : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
+  const platform = v.platform || 'youtube';
+  const ytLink = (platform === 'youtube' && v.watchOnYt)
+    ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;padding:6px 10px;background:rgba(255,0,0,.07);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;" onmouseover="this.style.background='rgba(255,0,0,.16)'" onmouseout="this.style.background='rgba(255,0,0,.07)'">▶ Official trailer — watch on YouTube</a>`
+    : '';
+  return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')">
+    <div class="vp-thumb">${thumb}
+      <div class="vp-overlay">
+        <div class="vp-src-badge">
+          <span style="width:8px;height:8px;border-radius:50%;background:${SRC_COLOR[platform]||'#888'};flex-shrink:0;"></span>
+          ${SRC_LABEL[platform]||'Video'}
+        </div>
+        <div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>
+        ${badge}
+      </div>
+      <span class="vp-dur">${v.dur || ''}</span>
+    </div>
+    <div class="vp-info">
+      <div class="vp-title">${_esc(v.title)}</div>
+      <div class="vp-meta">${_esc(v.ch || '')} · ${v.views || ''} views</div>
+    </div>
+    ${ytLink}
+  </div>`;
 }
 function _emptyMessage(msg) { return `<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">${msg}</div></div>`; }
 
@@ -1846,18 +1897,18 @@ function _setHTML(id, html) { const el = document.getElementById(id); if (el) el
 function _setStyle(id, prop, val) { const el = document.getElementById(id); if (el) el.style[prop] = val; }
 
 window.GTA6HQ = {
-openVideoById, openFirstVideo, claimVideoToken, closeWatchModal,
-renderVTPVideos, renderVTPStreams, refreshVideos,
-fetchLatestNews: (force) => fetchLatestNews(force),
-filterNewsTab, openNewsTab, closeNewsTab,
-earn: (amt, reason) => earnTokens(amt, reason),
-showCashout, openModal, closeModal, closeModalOnOverlay,
-switchAuthTab, loginUser, registerUser, submitQuestion,
-openVideosTab, closeVideosTab, switchVTab, filterVTP,
-toggleLike, filterMods, filterVideos, searchQA, lookupPlayer,
-checkPC, handleSearch, share,
-filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
-toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
+  openVideoById, openFirstVideo, claimVideoToken, closeWatchModal,
+  renderVTPVideos, renderVTPStreams, refreshVideos,
+  fetchLatestNews: (force) => fetchLatestNews(force),
+  filterNewsTab, openNewsTab, closeNewsTab,
+  earn: (amt, reason) => earnTokens(amt, reason),
+  showCashout, openModal, closeModal, closeModalOnOverlay,
+  switchAuthTab, loginUser, registerUser, submitQuestion,
+  openVideosTab, closeVideosTab, switchVTab, filterVTP,
+  toggleLike, filterMods, filterVideos, searchQA, lookupPlayer,
+  checkPC, handleSearch, share,
+  filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
+  toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
 };
 
 function init() {
@@ -1876,7 +1927,7 @@ try { updateCountdown(); } catch (e) {}
 try { setInterval(updateCountdown, 1000); } catch (e) {}
 try { setInterval(renderSidebarNews, 60000); } catch (e) {}
 try { setInterval(function() { fetchLatestNews(true); }, 3 * 60 * 60 * 1000); } catch (e) {}
-try { setInterval(function() { loadVideos(true); }, 12 * 60 * 60 * 1000); } catch (e) {}
+try { setInterval(function() { loadVideos(true); }, 12 * 60 * 60 * 1000); } catch (e) { console.warn('videos auto-refresh interval:', e.message); }
 setTimeout(() => {
 try {
 fetchLatestNews();
