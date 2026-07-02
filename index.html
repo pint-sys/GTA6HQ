@@ -455,7 +455,6 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <p class="hero-sub">Auto-updated news, secure video rewards, mods, job guides, Q&amp;A, and real cash payouts — all in one place.</p>
 <div class="hero-actions">
 <button class="btn-hero btn-hg" onclick="GTA6HQ.openModal('auth-modal')">Join the Crew — Free</button>
-<button class="btn-hero btn-hp" onclick="document.getElementById('videos').scrollIntoView({behavior:'smooth'})">Watch &amp; Earn</button>
 </div>
 <div class="hero-stats">
 <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
@@ -1835,15 +1834,12 @@ function _setHTML(id, html) { const el = document.getElementById(id); if (el) el
 function _setStyle(id, prop, val) { const el = document.getElementById(id); if (el) el.style[prop] = val; }
 
 window.GTA6HQ = {
-  openVideoById, openFirstVideo, claimVideoToken, closeWatchModal,
-  renderVTPVideos, renderVTPStreams, refreshVideos,
   fetchLatestNews: (force) => fetchLatestNews(force),
   filterNewsTab, openNewsTab, closeNewsTab,
   earn: (amt, reason) => earnTokens(amt, reason),
   showCashout, openModal, closeModal, closeModalOnOverlay,
   switchAuthTab, loginUser, registerUser, submitQuestion,
-  openVideosTab, closeVideosTab, switchVTab, filterVTP,
-  toggleLike, filterMods, filterVideos, searchQA, lookupPlayer,
+  toggleLike, filterMods, searchQA, lookupPlayer,
   checkPC, handleSearch, share,
   filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
   toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
@@ -1865,13 +1861,10 @@ try { updateCountdown(); } catch (e) {}
 try { setInterval(updateCountdown, 1000); } catch (e) {}
 try { setInterval(renderSidebarNews, 60000); } catch (e) {}
 try { setInterval(function() { fetchLatestNews(true); }, 3 * 60 * 60 * 1000); } catch (e) {}
-try { setInterval(function() { loadVideos(true); }, 12 * 60 * 60 * 1000); } catch (e) { console.warn('videos auto-refresh interval:', e.message); }
+
 setTimeout(() => {
 try {
 fetchLatestNews();
-loadVideos().then(() => { try { renderVideos(); renderVTPVideos('all'); } catch (e) {} }).catch(e => {});
-} catch (e) {}
-}, 200);
 setTimeout(() => { try { if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!'); } catch (e) {} }, 2500);
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
