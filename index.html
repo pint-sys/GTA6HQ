@@ -305,6 +305,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#news">News</a>
 <a href="#sysreq">PC Requirements</a>
 <a href="#policy">Rules</a>
+<a href="#characters">Characters</a>
 </div>
 </div>
 <nav>
@@ -313,6 +314,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="nav-links">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
+  <a href="#characters">Characters</a>
 <a href="#mods">Mods</a>
 <a href="#guides">Guides</a>
 <a href="#qa">Q&amp;A</a>
@@ -332,6 +334,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="page-tabs-inner">
 <a class="ptl active" href="#home">🏠 Home</a>
 <a class="ptl" href="#news">📰 News</a>
+<a class="ptl" href="#characters">👥 Characters</a>
 <a class="ptl" href="#mods">🔧 Mods</a>
 <a class="ptl" href="#guides">📖 Guides</a>
 <a class="ptl" href="#qa">❓ Q&amp;A</a>
@@ -403,6 +406,14 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </section>
 <div class="page-grid">
 <div>
+  <!-- CHARACTERS -->
+<section class="section" id="characters">
+<div class="section-header">
+<div class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></div>
+<a class="see-all" href="#characters">View all →</a>
+</div>
+<div class="news-grid" id="charactersGrid"></div>
+</section>
 <section class="section" id="guides">
 <div class="section-header">
 <div class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
@@ -751,6 +762,97 @@ localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...S, liked: [...S.liked], tx
 document.addEventListener('visibilitychange', () => {});
 window.addEventListener('blur', () => {});
 window.addEventListener('focus', () => {});
+
+  /* ---------------------------------------------------------
+CHARACTERS DATA AND RENDERING
+--------------------------------------------------------- */
+const CHARACTERS = [
+{
+id: 'lucia',
+name: 'Lucia',
+role: 'Protagonist',
+emoji: '👩',
+image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop',
+description: 'The first female protagonist in the Grand Theft Auto series. Lucia is a Latina woman involved in criminal activities in the state of Leonida. She is one half of the Bonnie and Clyde-inspired duo.',
+traits: ['Criminal', 'Survivor', 'Strategic'],
+status: 'Playable'
+},
+{
+id: 'jason',
+name: 'Jason',
+role: 'Protagonist',
+emoji: '👨',
+image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop',
+description: 'The male protagonist and partner to Lucia. Jason is involved in a series of criminal heists and activities across the state of Leonida. His relationship with Lucia is central to the story.',
+traits: ['Criminal', 'Loyal', 'Tactical'],
+status: 'Playable'
+},
+{
+id: 'rossi',
+name: 'Rossi',
+role: 'Antagonist',
+emoji: '👤',
+image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop',
+description: 'A powerful crime boss operating in Leonida. Rossi is one of the main antagonists that Lucia and Jason must navigate around or confront during their criminal endeavors.',
+traits: ['Crime Boss', 'Influential', 'Dangerous'],
+status: 'NPC'
+},
+{
+id: 'alicia',
+name: 'Alicia',
+role: 'Supporting Character',
+emoji: '👩💼',
+image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop',
+description: 'A key supporting character in the GTA 6 story. Alicia appears to be connected to the criminal underworld and plays an important role in certain missions.',
+traits: ['Connected', 'Mysterious', 'Resourceful'],
+status: 'NPC'
+},
+{
+id: 'duo',
+name: 'The Duo',
+role: 'Partners in Crime',
+emoji: '👥',
+image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop',
+description: 'Lucia and Jason work together as a criminal duo, inspired by the infamous Bonnie and Clyde. Their partnership is central to the GTA 6 narrative as they navigate the criminal underworld of Leonida.',
+traits: ['Partners', 'Heist Crew', 'Outlaws'],
+status: 'Playable'
+},
+{
+id: 'sheriff',
+name: 'Leonida Sheriff',
+role: 'Law Enforcement',
+emoji: '👮',
+image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop',
+description: 'Law enforcement in the state of Leonida. The sheriff and police force are tasked with maintaining order and pursuing criminals like Lucia and Jason throughout the game.',
+traits: ['Authority', 'Pursuer', 'Law'],
+status: 'NPC'
+}
+];
+
+function renderCharacters() {
+try {
+const el = document.getElementById('charactersGrid');
+if (!el) return;
+
+el.innerHTML = CHARACTERS.map(c => `
+<div class="card" style="overflow:hidden;">
+<div class="card-thumb-ph" style="background:var(--bg2);">
+<img src="${c.image}" alt="${_esc(c.name)}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.ph-icon').style.display='flex';">
+<span class="ph-icon" style="display:none;font-size:60px;">${c.emoji}</span>
+<div style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.8);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;color:var(--gold);">${c.status}</div>
+</div>
+<div class="card-body">
+<div class="card-tags">
+<span class="tag tag-guide">${c.role}</span>
+${c.traits.map(t => `<span class="tag tag-question">${t}</span>`).join('')}
+</div>
+<div class="card-title" style="font-size:16px;margin-bottom:8px;">${c.emoji} ${_esc(c.name)}</div>
+<p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;">${_esc(c.description)}</p>
+</div>
+</div>
+`).join('');
+} catch (e) { console.warn('[characters] renderCharacters failed:', e.message); }
+}
 
 const DEFAULT_JOBS = [
 { id: 'g6_1', game: 'gta6', title: 'Vice City Bank Heist', type: 'Heist', diff: 'Hard', reward: '$2,500,000', emoji: '🏦', thumb: 'https://images.unsplash.com/photo-1563207153-f403bf289096?w=400&h=225&fit=crop', steps: ['Meet Jason at the safehouse in Vice City Beach.', 'Steal the Sparrow helicopter from the airport.', 'Enter the bank through the roof vents.', 'Hack the security system (Mini-game: Match the wires).', 'Escape through the back alleys and lose the 5-star wanted level.'] },
@@ -1239,7 +1341,7 @@ function _setStyle(id, prop, val) { const el = document.getElementById(id); if (
 window.GTA6HQ = {
 fetchLatestNews: (force) => fetchLatestNews(force),
 filterNewsTab, openNewsTab, closeNewsTab,
-openModal, closeModal, closeModalOnOverlay,
+openModal, closeModal, closeModalOnOverlay, renderCharacters,
 switchAuthTab, loginUser, registerUser, submitQuestion,
 toggleLike, filterMods, searchQA, lookupPlayer,
 checkPC, handleSearch,
@@ -1249,6 +1351,7 @@ toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateG
 
 function init() {
 try { renderNewsHome(); } catch (e) {}
+try { renderNewsHome(); } catch (e) {} 
 try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
 try { renderMods('all'); } catch (e) {}
 try { renderQA(); } catch (e) {}
