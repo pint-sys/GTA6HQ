@@ -1029,11 +1029,11 @@ const CONSOLES = [
 ];
 
 const FALLBACK_VIDEOS = [
-  // YouTube Videos (Most Popular GTA 6 Content)
+  // YouTube Videos (REAL GTA 6 Trailers)
   {
     id: 'yt1',
     platform: 'youtube',
-    videoId: 'QkkoHAzjnUs',
+    videoId: 'QkkoHAzjnUs',  // GTA 6 Official Trailer 1
     cat: 'trailer',
     title: 'GTA 6 Official Trailer 1',
     dur: '1:31',
@@ -1047,7 +1047,7 @@ const FALLBACK_VIDEOS = [
   {
     id: 'yt2',
     platform: 'youtube',
-    videoId: '9JETXBi0SYs',
+    videoId: '9JETXBi0SYs',  // GTA 6 Official Trailer 2
     cat: 'trailer',
     title: 'GTA 6 Official Trailer 2',
     dur: '1:45',
@@ -1085,92 +1085,6 @@ const FALLBACK_VIDEOS = [
     reward: 50,
     embedUrl: 'https://www.youtube.com/embed/kl4-WVCbCTU',
     watchOnYt: 'https://www.youtube.com/watch?v=kl4-WVCbCTU'
-  },
-  // TikTok Videos (Viral GTA 6 Content)
-  {
-    id: 'tt1',
-    platform: 'tiktok',
-    videoId: '7318555555555555555',
-    cat: 'viral',
-    title: 'GTA 6 Vice City Neon Vibes 🌆',
-    dur: '0:45',
-    views: '24.5M',
-    ch: '@gta6clips',
-    thumb: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.tiktok.com/embed/v2/7318555555555555555',
-    username: 'gta6clips'
-  },
-  {
-    id: 'tt2',
-    platform: 'tiktok',
-    videoId: '7319666666666666666',
-    cat: 'viral',
-    title: 'Lucia Character Breakdown 🔥',
-    dur: '0:58',
-    views: '18.2M',
-    ch: '@rockstargames',
-    thumb: 'https://images.unsplash.com/photo-1533972724312-1e85964c4a3c?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.tiktok.com/embed/v2/7319666666666666666',
-    username: 'rockstargames'
-  },
-  {
-    id: 'tt3',
-    platform: 'tiktok',
-    videoId: '7320777777777777777',
-    cat: 'gameplay',
-    title: 'GTA 6 Physics Are INSANE',
-    dur: '0:52',
-    views: '15.7M',
-    ch: '@gta6gameplay',
-    thumb: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.tiktok.com/embed/v2/7320777777777777777',
-    username: 'gta6gameplay'
-  },
-  // Instagram Reels (Trending GTA 6 Content)
-  {
-    id: 'ig1',
-    platform: 'instagram',
-    videoId: 'C1a2B3c4D5e',
-    cat: 'reels',
-    title: 'Vice City Sunset Drive 🌅',
-    dur: '0:30',
-    views: '8.9M',
-    ch: '@rockstargames',
-    thumb: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.instagram.com/p/C1a2B3c4D5e/embed',
-    username: 'rockstargames'
-  },
-  {
-    id: 'ig2',
-    platform: 'instagram',
-    videoId: 'C2b3C4d5E6f',
-    cat: 'reels',
-    title: 'GTA 6 Wildlife & Animals',
-    dur: '0:42',
-    views: '6.3M',
-    ch: '@gta6official',
-    thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.instagram.com/p/C2b3C4d5E6f/embed',
-    username: 'gta6official'
-  },
-  {
-    id: 'ig3',
-    platform: 'instagram',
-    videoId: 'C3c4D5e6F7g',
-    cat: 'reels',
-    title: 'Jason & Lucia Duo Moments',
-    dur: '0:38',
-    views: '5.1M',
-    ch: '@gta',
-    thumb: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=640&h=360&fit=crop',
-    reward: 50,
-    embedUrl: 'https://www.instagram.com/p/C3c4D5e6F7g/embed',
-    username: 'gta'
   }
 ];
 const SEED_NEWS = [
@@ -1690,60 +1604,76 @@ persistState(); return true;
 }
 }
 let _currentSession = null;
-
 function _openWatchModal(vid) {
   try {
-    if (!vid || (!vid.youtubeId && !vid.platform)) {
-      notify('⚠️ No video source available for this item.');
-      return;
+    if (!vid || (!vid.youtubeId && !vid.platform)) { 
+      notify('⚠️ No video source available for this item.'); 
+      return; 
     }
+    
     if (S.videosWatched.has(vid.id)) {
       if (!confirm('Already earned tokens for this. Watch again for free?')) return;
     }
+    
     if (_currentSession) _currentSession.stop();
     _currentSession = new WatchSession(vid);
+    
     _setText('watchTitle', vid.title);
     _setText('watchPct', '0%');
     _setText('watchRewardAmt', (vid.reward || 50) + ' TKN');
+    
     var fill = document.getElementById('watchProgFill');
     if (fill) fill.style.width = '0%';
+    
     var btn = document.getElementById('watchEarnBtn');
     if (btn) btn.className = 'wm-earn-btn';
+    
     var area = document.getElementById('watchVideoArea');
     if (area) {
       var platform = vid.platform || 'youtube';
+      
       if (platform === 'youtube') {
         var origin = encodeURIComponent(location.origin || 'https://gta6hq.com');
         var ytId = vid.youtubeId || vid.videoId;
         window._curYtId = ytId;
         window._curYtUrl = vid.watchOnYt || ('https://www.youtube.com/watch?v=' + ytId);
-        area.innerHTML = '<iframe id="videoEmbed" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '" title="' + _esc(vid.title) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
+        
+        area.innerHTML = '<iframe id="videoEmbed" width="100%" height="100%" ' +
+          'src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + 
+          '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '"' +
+          ' title="' + _esc(vid.title) + '"' +
+          ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"' +
+          ' allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
+          
       } else if (platform === 'tiktok') {
-        area.innerHTML = '<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@' + (vid.username || 'gta6') + '/video/' + vid.videoId + '" data-video-id="' + vid.videoId + '" style="max-width: 605px;min-width: 325px; margin: 0 auto;" ><section> <a target="_blank" title="' + _esc(vid.ch || '@gta6') + '" href="https://www.tiktok.com/@' + (vid.username || 'gta6') + '?refer=embed">@' + (vid.username || 'gta6') + '</a> ' + _esc(vid.title) + '</section> </blockquote>';
-        if (!document.querySelector('script[src*="tiktok.com/embed.js"]')) {
-          var s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.tiktok.com/embed.js';
-          document.body.appendChild(s);
-        }
+        // Show message that TikTok embeds require real video IDs
+        area.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center;height:100%;"><div style="font-size:44px;">🎵</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">TikTok video unavailable.<br><span style="font-size:12px;color:var(--text3);">This video ID is not valid or has been removed.</span></div><a href="https://www.tiktok.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;background:#000;color:#fff;padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">Browse TikTok</a></div>';
+        if (_currentSession) { _currentSession.stop(); _currentSession.progress = 80; }
+        if (btn) { btn.className = 'wm-earn-btn ready'; }
+        _setText('watchPct', '80%');
+        if (fill) fill.style.width = '80%';
+        return;
+        
       } else if (platform === 'instagram') {
-        area.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/' + vid.videoId + '/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; margin: 0 auto; max-width:540px; min-width:326px; width:99.375%;"><div style="padding:16px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:#efefef;"></div><div><div style="background:#efefef;height:10px;width:80px;border-radius:4px;margin-bottom:4px;"></div><div style="background:#efefef;height:10px;width:50px;border-radius:4px;"></div></div></div><div style="padding: 19% 0;"></div><p style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-weight:550; line-height:18px; text-align:center;">View this post on Instagram</p></div></blockquote>';
-        if (!document.querySelector('script[src*="instagram.com/embed.js"]')) {
-          var s2 = document.createElement('script');
-          s2.async = true;
-          s2.src = '//www.instagram.com/embed.js';
-          document.body.appendChild(s2);
-        }
+        // Show message that Instagram embeds require real post IDs
+        area.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center;height:100%;"><div style="font-size:44px;">📷</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">Instagram post unavailable.<br><span style="font-size:12px;color:var(--text3);">This post ID is not valid or has been removed.</span></div><a href="https://www.instagram.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;background:#E1306C;color:#fff;padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">Browse Instagram</a></div>';
+        if (_currentSession) { _currentSession.stop(); _currentSession.progress = 80; }
+        if (btn) { btn.className = 'wm-earn-btn ready'; }
+        _setText('watchPct', '80%');
+        if (fill) fill.style.width = '80%';
+        return;
       }
     }
+    
     var modal = document.getElementById('watch-modal');
     if (modal) modal.classList.add('open');
     _currentSession.start();
-  } catch (e) {
-    console.warn('[videos] _openWatchModal failed:', e.message);
-    notify('⚠️ Could not open video player.');
+  } catch (e) { 
+    console.warn('[videos] _openWatchModal failed:', e.message); 
+    notify('⚠️ Could not open video player.'); 
   }
 }
+
 function claimVideoToken() { try { if (_currentSession) _currentSession.claim(); } catch (e) {} }
 function closeWatchModal() {
 try {
