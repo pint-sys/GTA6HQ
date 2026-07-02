@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, mods, job guides, Q&A. Release Nov 19 2026."/>
+<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, mods, guides, characters, Q&A. Release Nov 19 2026."/>
 <title>GTA6HQ — The #1 Grand Theft Auto 6 Community</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -250,12 +250,37 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 .id-input:focus{border-color:var(--gold);}
 .btn-sid{background:var(--gold);color:#111;border:none;padding:9px 18px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;}
 .auto-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:4px;padding:3px 8px;font-size:11px;font-weight:600;color:var(--cyan);font-family:var(--font-u);}
+
+/* --- ENHANCED JOB GUIDES STYLES --- */
 .guide-card { position: relative; transition: all 0.3s ease; }
 .guide-card.completed { border-color: var(--green) !important; background: rgba(0,230,118,.03); }
-.guide-card.completed::after { content: '✔'; position: absolute; top: 10px; right: 10px; background: var(--green); color: #000; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; box-shadow: 0 0 10px rgba(0,230,118,0.4); }
-.guide-step { background: var(--bg3); padding: 10px 14px; margin-bottom: 8px; border-radius: var(--radius); border-left: 3px solid var(--gold); font-size: 13px; color: var(--text2); transition: transform 0.2s; }
+.guide-card.completed::after {
+content: '✔'; position: absolute; top: 10px; right: 10px;
+background: var(--green); color: #000; width: 26px; height: 26px;
+border-radius: 50%; display: flex; align-items: center; justify-content: center;
+font-weight: bold; font-size: 14px; box-shadow: 0 0 10px rgba(0,230,118,0.4);
+}
+.guide-step {
+background: var(--bg3); padding: 10px 14px; margin-bottom: 8px;
+border-radius: var(--radius); border-left: 3px solid var(--gold);
+font-size: 13px; color: var(--text2); transition: transform 0.2s;
+}
 .guide-step:hover { transform: translateX(5px); background: var(--bg2); }
 .guide-step strong { color: var(--gold); margin-right: 8px; }
+
+/* --- CHARACTERS SECTION STYLES --- */
+.characters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.character-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden; transition: all 0.3s ease; }
+.character-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.character-img-wrap { width: 100%; aspect-ratio: 4/5; background: var(--bg3); position: relative; overflow: hidden; }
+.character-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; filter: brightness(0.85) contrast(1.1) saturate(0.9); }
+.character-card:hover .character-img-wrap img { transform: scale(1.05); filter: brightness(1) contrast(1) saturate(1); }
+.character-role-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.85); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(240,180,41,0.3); }
+.character-body { padding: 16px; }
+.character-name { font-family: var(--font-d); font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.character-role { font-size: 12px; color: var(--pink); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.character-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
 @media(max-width:960px){ .hero-content{grid-template-columns:1fr;} .page-grid{grid-template-columns:1fr;} .sidebar{display:none;} .footer-grid{grid-template-columns:1fr 1fr;} .nav-links{display:none;} }
 @media(max-width:600px){ .footer-grid{grid-template-columns:1fr;} .hero-stats{grid-template-columns:1fr 1fr;} .cd-units{gap:6px;} .cd-unit{padding:8px 10px;min-width:50px;} .cd-num{font-size:24px;} }
 .nl-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;transition:background .1s;}
@@ -317,6 +342,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#news">News</a>
 <a href="#mods">Mods</a>
 <a href="#guides">Guides</a>
+<a href="#characters">Characters</a>
 <a href="#qa">Q&amp;A</a>
 <a href="#sysreq">PC Specs</a>
 </div>
@@ -336,7 +362,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a class="ptl active" href="#home">🏠 Home</a>
 <a class="ptl" href="#news">📰 News</a>
 <a class="ptl" href="#mods">🔧 Mods</a>
-<a class="ptl" href="#guides">📖 Guides</a>
+<a class="ptl" href="#guides"> Guides</a>
+<a class="ptl" href="#characters">👥 Characters</a>
 <a class="ptl" href="#qa">❓ Q&amp;A</a>
 <a class="ptl" href="#sysreq">💻 PC Specs</a>
 <a class="ptl" href="#leaderboard">🏆 Leaderboard</a>
@@ -345,7 +372,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <!-- TICKER -->
 <div class="ticker-wrap" id="news">
-<div class="ticker-label"> BREAKING</div>
+<div class="ticker-label">🔴 BREAKING</div>
 <div class="ticker-inner">
 <div class="ticker-track">
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
@@ -355,9 +382,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
 <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured</span>
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
-<span class="ticker-item">️ PC version NOT yet announced by Rockstar — console first</span>
+<span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
-<span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
+<span class="ticker-item"> Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
 <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured</span>
 </div>
@@ -370,7 +397,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div>
 <p class="hero-eyebrow">// #1 GTA 6 COMMUNITY HUB — UPDATED AUTOMATICALLY</p>
 <h1 class="hero-title">GTA<span class="accent">6</span>HQ<br/>THE CREW<br/>STARTS HERE</h1>
-<p class="hero-sub">Auto-updated news, mods, job guides, Q&amp;A — all in one place.</p>
+<p class="hero-sub">Auto-updated news, mods, job guides, character profiles, and Q&amp;A — all in one place.</p>
 <div class="hero-actions">
 <button class="btn-hero btn-hg" onclick="GTA6HQ.openModal('auth-modal')">Join the Crew — Free</button>
 </div>
@@ -402,11 +429,11 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- NEWS -->
 <section class="section container">
 <div class="section-header">
-<div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;"> Live</span></div>
+<div class="section-title"> Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></div>
 <button onclick="GTA6HQ.openNewsTab()" style="background:none;border:none;cursor:pointer;font-family:var(--font-u);font-size:13px;color:var(--gold);">All news →</button>
 </div>
 <div id="newsListHome"><div style="text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news…</div></div>
-<button onclick="GTA6HQ.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
+<button onclick="GTA6HQ.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'"> Browse All News &amp; Articles →</button>
 </section>
 <!-- PAGE GRID -->
 <div class="page-grid">
@@ -414,7 +441,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- GUIDES (ENHANCED FOR GTA V & VI) -->
 <section class="section" id="guides">
 <div class="section-header">
-<div class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
+<div class="section-title"> Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
 <button class="btn btn-gold" style="font-size:12px;padding:6px 14px;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
 </div>
 <!-- Filters & Search -->
@@ -432,7 +459,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <!-- Progress Summary -->
 <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-<span>🏆</span>
+<span></span>
 <span><strong style="color:var(--green);">Your Progress:</strong> <span id="guideProgressText">0 / 0 Jobs Completed</span></span>
 </div>
 <!-- Grid -->
@@ -453,6 +480,13 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="mods-grid" id="modsGrid"></div>
 </section>
+<!-- CHARACTERS -->
+<section class="section" id="characters">
+<div class="section-header">
+<div class="section-title"> GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></div>
+</div>
+<div class="characters-grid" id="charactersGrid"></div>
+</section>
 <!-- Q&A -->
 <section class="section" id="qa">
 <div class="section-header">
@@ -469,7 +503,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <section class="section" id="sysreq">
 <div class="section-header">
 <div class="section-title">💻 GTA 6 System Requirements</div>
-<span class="auto-badge"> Updated Jun 2026</span>
+<span class="auto-badge">⚡ Updated Jun 2026</span>
 </div>
 <div class="release-banner">
 <div>
@@ -591,13 +625,13 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="footer-grid">
 <div>
 <div class="footer-logo">GTA<span>6</span>HQ</div>
-<p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and Q&A. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+<p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, character profiles, and Q&A. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
 </div>
 <div>
 <div class="footer-col-title">Explore</div>
 <div class="footer-links">
 <a href="#news">Latest News</a><a href="#mods">Mods</a>
-<a href="#guides">Job Guides</a><a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
+<a href="#guides">Job Guides</a><a href="#characters">Characters</a><a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
 </div>
 </div>
 <div>
@@ -774,25 +808,32 @@ window.addEventListener('blur', () => {});
 window.addEventListener('focus', () => {});
 
 const DEFAULT_JOBS = [
-{ id: 'g6_1', game: 'gta6', title: 'Vice City Bank Heist', type: 'Heist', diff: 'Hard', reward: '$2,500,000', emoji: '🏦', thumb: 'https://images.unsplash.com/photo-1563207153-f403bf289096?w=400&h=225&fit=crop', steps: ['Meet Jason at the safehouse in Vice City Beach.', 'Steal the Sparrow helicopter from the airport.', 'Enter the bank through the roof vents.', 'Hack the security system (Mini-game: Match the wires).', 'Escape through the back alleys and lose the 5-star wanted level.'] },
-{ id: 'g6_2', game: 'gta6', title: 'Grassrivers Boat Delivery', type: 'Side Hustle', diff: 'Medium', reward: '$15,000', emoji: '', thumb: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=225&fit=crop', steps: ['Go to the Grassrivers marina.', 'Board the speedboat and follow the GPS waypoint.', 'Avoid the shallow reefs to prevent damage.', 'Deliver the package to the dock in the Florida Keys area.', 'Collect payment from the contact.'] },
-{ id: 'g6_3', game: 'gta6', title: 'Lucia\'s Prison Break', type: 'Story Mission', diff: 'Very Hard', reward: 'Unlocks Lucia', emoji: '🔓', thumb: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=225&fit=crop', steps: ['Start the mission at the Leonida State Penitentiary.', 'Switch to Jason and create a distraction at the main gate.', 'Switch back to Lucia and sneak through the laundry facility.', 'Pick the lock on the cell door using a bent spoon.', 'Steal the guard tower vehicle and crash through the gates.'] },
-{ id: 'g6_4', game: 'gta6', title: 'Ocean Drive Taxi Run', type: 'Side Hustle', diff: 'Easy', reward: '$5,000', emoji: '🚕', thumb: 'https://images.unsplash.com/photo-1556122071-e404eaedb77f?w=400&h=225&fit=crop', steps: ['Find a taxi or hijack one on Ocean Drive.', 'Pick up the VIP client at the Vice City Mall.', 'Drive safely to the airport (no crashes allowed).', 'Drop off the client and collect the fare.'] },
-{ id: 'g5_1', game: 'gtav', title: 'The Fleeca Job', type: 'Heist', diff: 'Easy', reward: '$57,500', emoji: '🏦', thumb: 'https://images.unsplash.com/photo-1563207153-f403bf289096?w=400&h=225&fit=crop', steps: ['Scope out the bank in Blaine County or Los Santos.', 'Buy necessary equipment (drills, masks) from the van.', 'Rob the bank: one drills, one crowd control.', 'Escape in the getaway vehicle and lose the cops.', 'Split the cash with the crew.'] },
-{ id: 'g5_2', game: 'gtav', title: 'The Jewel Store Job', type: 'Heist', diff: 'Medium', reward: '$250,000', emoji: '💎', thumb: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=225&fit=crop', steps: ['Meet Lester and the crew in the motel.', 'Choose your approach (Smart, Loud, or Clean).', 'Execute the plan: smash the cases and grab the jewelry.', 'Escape via the alleyways or subway tunnels.', 'Lay low and divide the take.'] },
-{ id: 'g5_3', game: 'gtav', title: 'Taxi Fares (Strangers & Freaks)', type: 'Side Hustle', diff: 'Easy', reward: 'Unlocks Franklin', emoji: '', thumb: 'https://images.unsplash.com/photo-1556122071-e404eaedb77f?w=400&h=225&fit=crop', steps: ['Start the mission as Franklin at the taxi depot.', 'Accept the fare from the eccentric passenger.', 'Drive carefully to their bizarre destination.', 'Complete their weird request (e.g., deliver a package, wait for them).', 'Return to the taxi and collect your payout.'] },
-{ id: 'g5_4', game: 'gtav', title: 'Prologue (Tutorial)', type: 'Story Mission', diff: 'Easy', reward: 'Intro to GTA V', emoji: '🔫', thumb: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=225&fit=crop', steps: ['Rob the bank in North Yankton with Michael and Trevor.', 'Engage in a massive shootout with the police outside.', 'Flee into the snow and hijack a vehicle.', 'Escape on the moving freight train.', 'Jump off the train to safety (or fail and die).'] }
+{ id: 'g6_1', game: 'gta6', title: 'Vice City Bank Heist', type: 'Heist', diff: 'Hard', reward: '$2,500,000', emoji: '🏦', steps: ['Meet Jason at the safehouse in Vice City Beach.', 'Steal the Sparrow helicopter from the airport.', 'Enter the bank through the roof vents.', 'Hack the security system (Mini-game: Match the wires).', 'Escape through the back alleys and lose the 5-star wanted level.'] },
+{ id: 'g6_2', game: 'gta6', title: 'Grassrivers Boat Delivery', type: 'Side Hustle', diff: 'Medium', reward: '$15,000', emoji: '🚤', steps: ['Go to the Grassrivers marina.', 'Board the speedboat and follow the GPS waypoint.', 'Avoid the shallow reefs to prevent damage.', 'Deliver the package to the dock in the Florida Keys area.', 'Collect payment from the contact.'] },
+{ id: 'g6_3', game: 'gta6', title: 'Lucia\'s Prison Break', type: 'Story Mission', diff: 'Very Hard', reward: 'Unlocks Lucia', emoji: '🔓', steps: ['Start the mission at the Leonida State Penitentiary.', 'Switch to Jason and create a distraction at the main gate.', 'Switch back to Lucia and sneak through the laundry facility.', 'Pick the lock on the cell door using a bent spoon.', 'Steal the guard tower vehicle and crash through the gates.'] },
+{ id: 'g6_4', game: 'gta6', title: 'Ocean Drive Taxi Run', type: 'Side Hustle', diff: 'Easy', reward: '$5,000', emoji: '🚕', steps: ['Find a taxi or hijack one on Ocean Drive.', 'Pick up the VIP client at the Vice City Mall.', 'Drive safely to the airport (no crashes allowed).', 'Drop off the client and collect the fare.'] },
+{ id: 'g5_1', game: 'gtav', title: 'The Fleeca Job', type: 'Heist', diff: 'Easy', reward: '$57,500', emoji: '🏦', steps: ['Scope out the bank in Blaine County or Los Santos.', 'Buy necessary equipment (drills, masks) from the van.', 'Rob the bank: one drills, one crowd control.', 'Escape in the getaway vehicle and lose the cops.', 'Split the cash with the crew.'] },
+{ id: 'g5_2', game: 'gtav', title: 'The Jewel Store Job', type: 'Heist', diff: 'Medium', reward: '$250,000', emoji: '💎', steps: ['Meet Lester and the crew in the motel.', 'Choose your approach (Smart, Loud, or Clean).', 'Execute the plan: smash the cases and grab the jewelry.', 'Escape via the alleyways or subway tunnels.', 'Lay low and divide the take.'] },
+{ id: 'g5_3', game: 'gtav', title: 'Taxi Fares (Strangers & Freaks)', type: 'Side Hustle', diff: 'Easy', reward: 'Unlocks Franklin', emoji: '🚕', steps: ['Start the mission as Franklin at the taxi depot.', 'Accept the fare from the eccentric passenger.', 'Drive carefully to their bizarre destination.', 'Complete their weird request (e.g., deliver a package, wait for them).', 'Return to the taxi and collect your payout.'] },
+{ id: 'g5_4', game: 'gtav', title: 'Prologue (Tutorial)', type: 'Story Mission', diff: 'Easy', reward: 'Intro to GTA V', emoji: '🔫', steps: ['Rob the bank in North Yankton with Michael and Trevor.', 'Engage in a massive shootout with the police outside.', 'Flee into the snow and hijack a vehicle.', 'Escape on the moving freight train.', 'Jump off the train to safety (or fail and die).'] }
 ];
 let currentGuideGame = 'all';
 let currentGuideType = 'all';
 
+const CHARACTERS = [
+{ id: 'lucia', name: 'Lucia', role: 'Main Protagonist', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop', description: 'The first female protagonist in the Grand Theft Auto series. Lucia is a Latina woman involved in criminal activities in the state of Leonida. She is one half of the Bonnie and Clyde-inspired duo.' },
+{ id: 'jason', name: 'Jason', role: 'Main Protagonist', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop', description: 'The male protagonist and partner to Lucia. Jason is involved in a series of criminal heists and activities across the state of Leonida. His relationship with Lucia is central to the story.' },
+{ id: 'rossi', name: 'Rossi', role: 'Antagonist', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop', description: 'A powerful crime boss operating in Leonida. Rossi is one of the main antagonists that Lucia and Jason must navigate around or confront during their criminal endeavors.' },
+{ id: 'alicia', name: 'Alicia', role: 'Supporting Character', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop', description: 'A key supporting character in the GTA 6 story. Alicia appears to be connected to the criminal underworld and plays an important role in certain missions.' }
+];
+
 const MODS = [
 { id: 1, cat: 'visual', name: 'Ultra Realism ENB', desc: 'Photorealistic lighting, reflections and color grading for GTA 6 PC.', dl: '124K', ver: 'v2.3.1', icon: '🌅' },
-{ id: 2, cat: 'gameplay', name: 'Realistic Traffic AI', desc: 'Drivers follow real traffic laws, react to weather, and use turn signals.', dl: '87K', ver: 'v2.1.0', icon: '' },
-{ id: 3, cat: 'vehicle', name: '2026 Supercar Pack', desc: 'Adds 40 supercars with custom handling and engine sounds.', dl: '203K', ver: 'v1.5.2', icon: '🏎️' },
-{ id: 4, cat: 'weapon', name: 'Military Weapons DLC', desc: '15 military-grade weapons with realistic ballistics and sounds.', dl: '156K', ver: 'v3.0.1', icon: '🔫' },
-{ id: 5, cat: 'gameplay', name: 'Dynamic Weather System', desc: 'Hurricanes, floods, and heat waves that affect gameplay.', dl: '72K', ver: 'v1.2.0', icon: '⛈️' },
-{ id: 6, cat: 'visual', name: '4K Texture Overhaul', desc: 'Complete HD texture replacement for all environments and characters.', dl: '98K', ver: 'v4.0.0', icon: '🖼️' }
+{ id: 2, cat: 'gameplay', name: 'Realistic Traffic AI', desc: 'Drivers follow real traffic laws, react to weather, and use turn signals.', dl: '87K', ver: 'v2.1.0', icon: '🚗' },
+{ id: 3, cat: 'vehicle', name: '2026 Supercar Pack', desc: 'Adds 40 supercars with custom handling and engine sounds.', dl: '203K', ver: 'v1.5.2', icon: '️' },
+{ id: 4, cat: 'weapon', name: 'Military Weapons DLC', desc: '15 military-grade weapons with realistic ballistics and sounds.', dl: '156K', ver: 'v3.0.1', icon: '' },
+{ id: 5, cat: 'gameplay', name: 'Dynamic Weather System', desc: 'Hurricanes, floods, and heat waves that affect gameplay.', dl: '72K', ver: 'v1.2.0', icon: '️' },
+{ id: 6, cat: 'visual', name: '4K Texture Overhaul', desc: 'Complete HD texture replacement for all environments and characters.', dl: '98K', ver: 'v4.0.0', icon: '️' }
 ];
 const QA = [
 { id: 1, votes: 247, solved: true, title: 'How do you unlock the helicopter at the start of GTA 6?', excerpt: 'Stuck at the Port district and need to get across fast without unlocking the bridge.', answers: 8, time: '4h ago' },
@@ -811,7 +852,7 @@ const EVENTS = [
 { icon: '🚀', name: 'GTA 6 Release — Console', time: 'Nov 19, 2026' },
 { icon: '🎮', name: 'GTA6HQ Launch Party', time: 'Discord — Nov 19, 2026' },
 { icon: '💰', name: 'Double XP Weekend', time: 'Nov 14–16, 2026' },
-{ icon: '🏆', name: 'Monthly Leaderboard Reset', time: 'Oct 31, 2026' }
+{ icon: '', name: 'Monthly Leaderboard Reset', time: 'Oct 31, 2026' }
 ];
 const SYS_REQ = [
 { tier: 'minimum', label: 'Minimum', icon: '🟡', desc: '1080p Low, ~30 fps', specs: [
@@ -824,7 +865,7 @@ const SYS_REQ = [
 { l: 'GPU', v: 'NVIDIA RTX 3080 (10GB) / AMD RX 6800 XT (16GB)' }, { l: 'RAM', v: '32 GB DDR5' },
 { l: 'VRAM', v: '10–16 GB' }, { l: 'Storage', v: '150 GB NVMe SSD + DirectStorage' }, { l: 'DirectX', v: 'DirectX 12 Ultimate' }
 ]},
-{ tier: 'ultra', label: 'Ultra / 4K', icon: '🔵', desc: '4K Ultra + Ray Tracing, 60+ fps', specs: [
+{ tier: 'ultra', label: 'Ultra / 4K', icon: '', desc: '4K Ultra + Ray Tracing, 60+ fps', specs: [
 { l: 'OS', v: 'Windows 11 64-bit' }, { l: 'CPU', v: 'Intel Core i9-13900K / AMD Ryzen 9 7950X3D' },
 { l: 'GPU', v: 'NVIDIA RTX 4080 / RTX 4090 (16–24GB VRAM)' }, { l: 'RAM', v: '32–64 GB DDR5' },
 { l: 'VRAM', v: '16 GB+ (ray tracing hungry)' }, { l: 'Storage', v: '150 GB NVMe SSD (PCIe 4.0+)' }, { l: 'DirectX', v: 'DirectX 12 Ultimate + DLSS 3.5' }
@@ -832,13 +873,13 @@ const SYS_REQ = [
 ];
 const CONSOLES = [
 { name: 'PlayStation 5', icon: '🎮', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (10.3 TFLOPS) · 16 GB GDDR6 · 825 GB NVMe SSD · 4K / 60fps target' },
-{ name: 'Xbox Series X', icon: '', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (12 TFLOPS) · 16 GB GDDR6 · 1 TB NVMe SSD · 4K / 60fps target' }
+{ name: 'Xbox Series X', icon: '🎮', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (12 TFLOPS) · 16 GB GDDR6 · 1 TB NVMe SSD · 4K / 60fps target' }
 ];
 
 const SEED_NEWS = [
-{ id:'s1', cat:'official', tag:'Official', emoji:'', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
-{ id:'s2', cat:'official', tag:'Official', emoji:'', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
-{ id:'s3', cat:'rumor', tag:'Rumor', emoji:'🗺️', url:null, source:'', title:'Leaked Map Shows 3× GTA V Scale — Grassrivers, Vice City, Leonida Keys', excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.', time:'Loading live news…' }
+{ id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
+{ id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
+{ id:'s3', cat:'rumor', tag:'Rumor', emoji:'️', url:null, source:'', title:'Leaked Map Shows 3× GTA V Scale — Grassrivers, Vice City, Leonida Keys', excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.', time:'Loading live news…' }
 ];
 
 let _notifyTimer = null;
@@ -911,12 +952,8 @@ if (!jobs.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:cent
 el.innerHTML = jobs.map(g => {
 const isDone = S.completedJobs.includes(g.id);
 const gameBadge = g.game === 'gta6' ? '<span class="tag tag-hot">GTA 6</span>' : '<span class="tag tag-official">GTA V</span>';
-const thumbHtml = g.thumb ? `<img src="${g.thumb}" alt="${_esc(g.title)}" onerror="this.style.display='none';this.parentElement.querySelector('.ph-icon').style.display='flex';">` : '';
 return `<div class="card guide-card ${isDone ? 'completed' : ''}" onclick="GTA6HQ.openGuideDetail('${g.id}')" style="cursor:pointer;">
-<div class="card-thumb-ph" style="background:var(--bg2);">
-<span class="ph-icon" style="display:${g.thumb ? 'none' : 'flex'};font-size:40px;">${g.emoji || '📖'}</span>
-${thumbHtml}
-</div>
+<div class="card-thumb-ph" style="background:var(--bg2);font-size:40px;">${g.emoji || '📖'}</div>
 <div class="card-body">
 <div class="card-tags">${gameBadge}<span class="tag tag-guide">${g.type}</span></div>
 <div class="card-title">${_esc(g.title)}</div>
@@ -940,10 +977,8 @@ if (!job) return;
 const isDone = S.completedJobs.includes(id);
 const gameLabel = job.game === 'gta6' ? '🌴 GTA 6' : '🌆 GTA V';
 let stepsHtml = job.steps.map((s, i) => `<div class="guide-step"><strong>Step ${i+1}:</strong> ${_esc(s)}</div>`).join('');
-const thumbHtml = job.thumb ? `<img src="${job.thumb}" style="width:100%;border-radius:var(--radius);margin-bottom:16px;" onerror="this.style.display='none';">` : '';
 _setHTML('guideDetailTitle', `${job.emoji || '📖'} ${job.title}`);
 _setHTML('guideDetailBody', `
-${thumbHtml}
 <div style="display:flex;gap:8px;margin-bottom:12px;">
 <span class="tag tag-hot">${gameLabel}</span>
 <span class="tag tag-guide">${job.type}</span>
@@ -977,7 +1012,7 @@ const stepsRaw = document.getElementById('newJobSteps').value.trim();
 const game = document.getElementById('newJobGame').value;
 if (!title || !type || !stepsRaw) { notify('Please fill in Title, Type, and Steps.'); return; }
 const steps = stepsRaw.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s);
-const newJob = { id: 'custom_' + Date.now(), game, title, type, diff, reward: reward || 'Unknown', emoji: '📝', thumb: null, steps };
+const newJob = { id: 'custom_' + Date.now(), game, title, type, diff, reward: reward || 'Unknown', emoji: '📝', steps };
 if (!S.customJobs) S.customJobs = [];
 S.customJobs.unshift(newJob); persistState(); closeModal('add-job-modal'); populateGuideTypes(); renderEnhancedGuides();
 notify('✅ Job guide published!');
@@ -990,15 +1025,30 @@ try {
 if (!confirm('This will add a random community job to your guides. Continue?')) return;
 const titles = ['Hidden Package Hunt', 'Secret Casino Vault', 'Underground Racing Ring', 'Smuggler\'s Run'];
 const types = ['Side Hustle', 'Heist', 'Random Event'];
-const thumbs = [
-'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=225&fit=crop',
-'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=225&fit=crop',
-'https://images.unsplash.com/photo-1563207153-f403bf289096?w=400&h=225&fit=crop'
-];
-const newCommunityJob = { id: 'sync_' + Date.now(), game: Math.random() > 0.5 ? 'gta6' : 'gtav', title: 'Community Special: ' + titles[Math.floor(Math.random() * titles.length)], type: types[Math.floor(Math.random() * types.length)], diff: 'Medium', reward: '$50,000', emoji: '', thumb: thumbs[Math.floor(Math.random() * thumbs.length)], steps: ['Find the hidden map marker.', 'Navigate the obstacles.', 'Claim the reward!'] };
+const newCommunityJob = { id: 'sync_' + Date.now(), game: Math.random() > 0.5 ? 'gta6' : 'gtav', title: 'Community Special: ' + titles[Math.floor(Math.random() * titles.length)], type: types[Math.floor(Math.random() * types.length)], diff: 'Medium', reward: '$50,000', emoji: '🎁', steps: ['Find the hidden map marker.', 'Navigate the obstacles.', 'Claim the reward!'] };
 if (!S.customJobs) S.customJobs = [];
 S.customJobs.unshift(newCommunityJob); persistState(); populateGuideTypes(); renderEnhancedGuides(); notify('✅ Synced 1 new community job!');
 } catch (e) {}
+}
+
+function renderCharacters() {
+try {
+const el = document.getElementById('charactersGrid');
+if (!el) return;
+el.innerHTML = CHARACTERS.map(c => `
+<div class="character-card">
+<div class="character-img-wrap">
+<img src="${c.image}" alt="${c.name}" loading="lazy" onerror="this.style.display='none';">
+<div class="character-role-badge">${c.role}</div>
+</div>
+<div class="character-body">
+<div class="character-name">${c.name}</div>
+<div class="character-role">${c.role}</div>
+<p class="character-desc">${c.description}</p>
+</div>
+</div>
+`).join('');
+} catch (e) { console.warn('[characters] renderCharacters failed:', e.message); }
 }
 
 const _RELEASE_DATE = new Date('2026-11-19T08:00:00').getTime();
@@ -1011,7 +1061,7 @@ const titleEl = document.getElementById('cdTitleText');
 if (diff <= 0) {
 if (!_countdownDone) {
 _countdownDone = true;
-if (wrap) wrap.innerHTML = '<div class="cd-done-banner">🌴 GTA VI City Is Ours </div>';
+if (wrap) wrap.innerHTML = '<div class="cd-done-banner"> GTA VI City Is Ours 🌴</div>';
 if (titleEl) titleEl.textContent = '🎉 GTA 6 Has Released';
 }
 return;
@@ -1028,7 +1078,7 @@ const CACHE_TTL_MS = 3 * 60 * 60 * 1000;
 let NEWS = [...SEED_NEWS];
 let _lastFetchTime = 0;
 let _currentFilter = 'all';
-const PLACEHOLDER_IMG_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140"><rect width="100%" height="100%" fill="#18181f"/><text x="50%" y="50%" font-size="34" text-anchor="middle" dominant-baseline="middle">📰</text></svg>`);
+const PLACEHOLDER_IMG_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140"><rect width="100%" height="100%" fill="#18181f"/><text x="50%" y="50%" font-size="34" text-anchor="middle" dominant-baseline="middle"></text></svg>`);
 window._imgErr = function(el) { try { el.onerror=null; el.src=PLACEHOLDER_IMG_SVG; } catch(e){} };
 function _safeImgAttr(url) { const safe = (typeof url === 'string' && /^https?:\/\//.test(url)) ? url : ''; return safe || PLACEHOLDER_IMG_SVG; }
 const RSS_SOURCES = [
@@ -1041,7 +1091,7 @@ const RSS_SOURCES = [
 ];
 const GTA6_KW = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi','rockstar','vice city','leonida','lucia','jason'];
 const NEWS_BLOK = ['scam','fake','giveaway','free hack','generator','cheats','leaked download'];
-const NEWS_EMJ = ['🔥','📰','','💥','🗺️','','🚗','🎯','','🚀','🎬','','🔫','🏆','️'];
+const NEWS_EMJ = ['','📰','🎮','','🗺️','⚡','🚗','🎯','📡','🚀','🎬','💰','','🏆','️'];
 async function fetchLatestNews(force) {
 force = force || false;
 try {
@@ -1157,7 +1207,7 @@ const el = document.getElementById('newsFeed');
 if (!el) return;
 el.innerHTML = NEWS.slice(0, 4).map(n => {
 const dest = (n.url && n.url !== '#') ? n.url : null;
-const thumb = n.image ? `<img src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)" style="width:100%;height:100%;object-fit:cover;">` : (n.emoji || '');
+const thumb = n.image ? `<img src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)" style="width:100%;height:100%;object-fit:cover;">` : (n.emoji || '📰');
 const sideAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(dest)}"` : '';
 return `<div class="nf-item" ${sideAction} style="cursor:${dest ? 'pointer' : 'default'};"><div class="nf-thumb">${thumb}</div><div class="nf-info"><div class="nf-title">${_esc(n.title)}</div><div class="nf-time">${_esc(n.time)}</div></div></div>`;
 }).join('');
@@ -1245,8 +1295,8 @@ const sto = parseInt(document.getElementById('pcStorage')?.value || '0');
 const resultEl = document.getElementById('pcResult');
 if (!document.getElementById('pcGpu')?.value) { if (resultEl) resultEl.innerHTML = '<div style="color:var(--pink);font-size:13px;">Please select all options.</div>'; return; }
 const score = gpu + ram + sto;
-const [res, color] = score >= 8 ? ['🟢 <strong>Ready for Ultra/4K</strong> — Your PC should handle GTA 6 at ultra settings with ray tracing.', 'var(--green)'] : score >= 5 ? ['🟡 <strong>Ready for Recommended</strong> — High/ultra 1080p–1440p. Upgrade RAM to 32GB for best results.', 'var(--gold)'] : score >= 3 ? ['🟠 <strong>Meets Minimum</strong> — Low/medium 1080p. Consider upgrading GPU and adding NVMe SSD.', 'var(--gold2)'] : ['🔴 <strong>Upgrade Needed</strong> — Key upgrades: GPU to RTX 3060+, 16GB RAM, NVMe SSD with 150GB free.', 'var(--pink)'];
-if (resultEl) resultEl.innerHTML = `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:${color};line-height:1.6;">${res}<br><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block;">️ Based on community predictions — official requirements not yet announced.</span></div>`;
+const [res, color] = score >= 8 ? ['🟢 <strong>Ready for Ultra/4K</strong> — Your PC should handle GTA 6 at ultra settings with ray tracing.', 'var(--green)'] : score >= 5 ? [' <strong>Ready for Recommended</strong> — High/ultra 1080p–1440p. Upgrade RAM to 32GB for best results.', 'var(--gold)'] : score >= 3 ? ['🟠 <strong>Meets Minimum</strong> — Low/medium 1080p. Consider upgrading GPU and adding NVMe SSD.', 'var(--gold2)'] : [' <strong>Upgrade Needed</strong> — Key upgrades: GPU to RTX 3060+, 16GB RAM, NVMe SSD with 150GB free.', 'var(--pink)'];
+if (resultEl) resultEl.innerHTML = `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:${color};line-height:1.6;">${res}<br><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block;">⚠️ Based on community predictions — official requirements not yet announced.</span></div>`;
 } catch (e) {}
 }
 function handleSearch(v) { try { if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) { setTimeout(() => _showPlayerCard({ name: 'GTA6Fan', id: v, tokens: Math.floor(Math.random() * 100000) + 500, rank: 'Silver', posts: Math.floor(Math.random() * 200) + 10 }, document.getElementById('playerResult')), 300); } } catch (e) {} }
@@ -1265,13 +1315,15 @@ switchAuthTab, loginUser, registerUser, submitQuestion,
 toggleLike, filterMods, searchQA, lookupPlayer,
 checkPC, handleSearch, share,
 filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
-toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
+toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes,
+renderCharacters
 };
 
 function init() {
 try { renderNewsHome(); } catch (e) {}
 try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
 try { renderMods('all'); } catch (e) {}
+try { renderCharacters(); } catch (e) {}
 try { renderQA(); } catch (e) {}
 try { renderLeaderboard(); } catch (e) {}
 try { renderSidebarNews(); } catch (e) {}
