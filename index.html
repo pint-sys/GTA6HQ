@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, videos, mods, guides, Q&A and secure token rewards. Release Nov 19 2026."/>
+<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, mods, guides, Q&A and secure token rewards. Release Nov 19 2026."/>
 <title>GTA6HQ — The #1 Grand Theft Auto 6 Community</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -120,45 +120,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .like-btn:hover{color:var(--pink);background:rgba(255,60,110,.08);}
 .like-btn.liked{color:var(--pink);}
 .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
-.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
 .mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
-.video-player-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;cursor:pointer;transition:.2s;contain:layout style;}
-.video-player-wrap:hover{border-color:var(--gold);}
-.vp-thumb{aspect-ratio:16/9;background:var(--bg3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.vp-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
-.vp-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
-.play-circle{width:52px;height:52px;background:rgba(240,180,41,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.2s;}
-.video-player-wrap:hover .play-circle{background:var(--gold);transform:scale(1.1);}
-.play-circle svg{width:20px;height:20px;fill:#111;margin-left:3px;}
-.vp-src-badge{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.75);padding:3px 9px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:600;}
-.vp-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.8);padding:2px 7px;border-radius:4px;font-size:11px;font-family:var(--font-u);font-weight:600;}
-.vp-info{padding:12px 14px;}
-.vp-title{font-size:13px;font-weight:600;line-height:1.4;margin-bottom:5px;}
-.vp-meta{font-size:11px;color:var(--text3);font-family:var(--font-u);}
-.watch-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:5000;display:none;align-items:center;justify-content:center;padding:16px;}
-.watch-modal-overlay.open{display:flex;}
-.watch-modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius2);width:100%;max-width:640px;overflow:hidden;}
-.wm-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.wm-title{font-family:var(--font-d);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.wm-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:22px;flex-shrink:0;}
-.wm-close:hover{color:var(--text);}
-.wm-video-area{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.wm-video-area iframe,.wm-video-area video,.wm-video-area blockquote{width:100%;height:100%;border:0;object-fit:contain;display:block;}
-.wm-video-placeholder{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text3);}
-.wm-video-placeholder .big-play{font-size:52px;}
-.wm-video-placeholder p{font-size:13px;font-family:var(--font-u);}
-.wm-progress-bar-wrap{padding:12px 20px;background:var(--bg3);border-top:1px solid var(--border);}
-.wm-prog-top{display:flex;justify-content:space-between;font-family:var(--font-u);font-size:12px;color:var(--text3);margin-bottom:7px;}
-.wm-prog-bar{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;}
-.wm-prog-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:3px;transition:width .5s linear;width:0%;}
-.wm-reward-info{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.wm-reward-text{font-family:var(--font-u);font-size:13px;color:var(--text2);}
-.wm-reward-text strong{color:var(--gold);}
-.wm-earn-btn{background:var(--green);color:#0a0a0e;border:none;padding:9px 20px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none;transition:.2s;}
-.wm-earn-btn.ready{opacity:1;pointer-events:all;animation:pulse-green .8s infinite alternate;}
-@keyframes pulse-green{from{box-shadow:0 0 0 0 rgba(0,230,118,.4);}to{box-shadow:0 0 0 8px rgba(0,230,118,0);}}
-.wm-anti-cheat{font-family:var(--font-u);font-size:10px;color:var(--text3);padding:8px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
-.sec-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse-dot 1.4s infinite;}
 .mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s;cursor:pointer;}
 .mod-card:hover{border-color:var(--cyan);transform:translateY(-2px);}
 .mod-icon-box{width:46px;height:46px;border-radius:10px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;}
@@ -209,12 +171,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .t-gold .tier-name{color:var(--gold);}
 .t-platinum .tier-name{color:var(--cyan);}
 .t-diamond .tier-name{color:var(--purple);}
-.vtab{transition:.15s;}
-.vtab.active{color:var(--gold)!important;border-bottom-color:var(--gold)!important;}
-.vtab:hover{color:var(--text)!important;}
-.vtf{background:var(--bg3);border:1px solid var(--border);color:var(--text3);padding:5px 14px;border-radius:20px;font-family:var(--font-u);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;}
-.vtf:hover{border-color:var(--gold);color:var(--gold);}
-.vtf.active{background:rgba(240,180,41,.12);border-color:var(--gold);color:var(--gold);}
 .sec-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:4px;padding:4px 10px;font-family:var(--font-u);font-size:11px;color:var(--green);font-weight:600;}
 .sec-badge .dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse-dot 1.4s infinite;}
 .sys-req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
@@ -329,14 +285,36 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 .id-input:focus{border-color:var(--gold);}
 .btn-sid{background:var(--gold);color:#111;border:none;padding:9px 18px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;}
 .auto-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:4px;padding:3px 8px;font-size:11px;font-weight:600;color:var(--cyan);font-family:var(--font-u);}
+/* --- ENHANCED JOB GUIDES STYLES --- */
 .guide-card { position: relative; transition: all 0.3s ease; }
 .guide-card.completed { border-color: var(--green) !important; background: rgba(0,230,118,.03); }
-.guide-card.completed::after { content: '✔'; position: absolute; top: 10px; right: 10px; background: var(--green); color: #000; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; box-shadow: 0 0 10px rgba(0,230,118,0.4); }
-.guide-step { background: var(--bg3); padding: 10px 14px; margin-bottom: 8px; border-radius: var(--radius); border-left: 3px solid var(--gold); font-size: 13px; color: var(--text2); transition: transform 0.2s; }
+.guide-card.completed::after {
+content: '✔'; position: absolute; top: 10px; right: 10px;
+background: var(--green); color: #000; width: 26px; height: 26px;
+border-radius: 50%; display: flex; align-items: center; justify-content: center;
+font-weight: bold; font-size: 14px; box-shadow: 0 0 10px rgba(0,230,118,0.4);
+}
+.guide-step {
+background: var(--bg3); padding: 10px 14px; margin-bottom: 8px;
+border-radius: var(--radius); border-left: 3px solid var(--gold);
+font-size: 13px; color: var(--text2); transition: transform 0.2s;
+}
 .guide-step:hover { transform: translateX(5px); background: var(--bg2); }
 .guide-step strong { color: var(--gold); margin-right: 8px; }
-@media(max-width:960px){ .hero-content{grid-template-columns:1fr;} .page-grid{grid-template-columns:1fr;} .sidebar{display:none;} .footer-grid{grid-template-columns:1fr 1fr;} .nav-links{display:none;} }
-@media(max-width:600px){ .footer-grid{grid-template-columns:1fr;} .hero-stats{grid-template-columns:1fr 1fr;} .cd-units{gap:6px;} .cd-unit{padding:8px 10px;min-width:50px;} .cd-num{font-size:24px;} }
+@media(max-width:960px){
+.hero-content{grid-template-columns:1fr;}
+.page-grid{grid-template-columns:1fr;}
+.sidebar{display:none;}
+.footer-grid{grid-template-columns:1fr 1fr;}
+.nav-links{display:none;}
+}
+@media(max-width:600px){
+.footer-grid{grid-template-columns:1fr;}
+.hero-stats{grid-template-columns:1fr 1fr;}
+.cd-units{gap:6px;}
+.cd-unit{padding:8px 10px;min-width:50px;}
+.cd-num{font-size:24px;}
+}
 .nl-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;transition:background .1s;}
 .nl-item:last-child{border-bottom:none;}
 .nl-item:hover{background:rgba(255,255,255,.02);}
@@ -376,6 +354,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </style>
 </head>
 <body>
+<!-- TOPBAR -->
 <div class="topbar">
 <div style="display:flex;align-items:center;gap:14px;">
 <span class="live-badge"><span class="live-dot"></span>LIVE — GTA 6 releases Nov 19, 2026 on PS5 &amp; Xbox Series X|S</span>
@@ -387,13 +366,13 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#policy">Rules</a>
 </div>
 </div>
+<!-- NAV -->
 <nav>
 <div class="nav-inner">
 <a class="logo" href="#home">GTA<span>6</span>HQ</a>
 <div class="nav-links">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
-<a href="#videos">Videos</a>
 <a href="#mods">Mods</a>
 <a href="#guides">Guides</a>
 <a href="#qa">Q&amp;A</a>
@@ -411,11 +390,11 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </nav>
+<!-- PAGE TABS -->
 <div class="page-tabs">
 <div class="page-tabs-inner">
 <a class="ptl active" href="#home">🏠 Home</a>
 <a class="ptl" href="#news">📰 News</a>
-<a class="ptl" href="#videos">🎬 Videos</a>
 <a class="ptl" href="#mods">🔧 Mods</a>
 <a class="ptl" href="#guides">📖 Guides</a>
 <a class="ptl" href="#qa">❓ Q&amp;A</a>
@@ -425,6 +404,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a class="ptl" href="#policy">⚠️ Rules</a>
 </div>
 </div>
+<!-- TICKER -->
 <div class="ticker-wrap" id="news">
 <div class="ticker-label">🔴 BREAKING</div>
 <div class="ticker-inner">
@@ -433,33 +413,34 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
 <span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
-<span class="ticker-item">💰 Earn tokens by watching FULL videos — anti-skip security active</span>
+<span class="ticker-item">💰 Earn tokens by participating in community — anti-fraud security active</span>
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
 <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured &amp; earn +200 tokens</span>
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
 <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
 <span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
-<span class="ticker-item">💰 Earn tokens by watching FULL videos — anti-skip security active</span>
+<span class="ticker-item">💰 Earn tokens by participating in community — anti-fraud security active</span>
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
 <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured &amp; earn +200 tokens</span>
 </div>
 </div>
 </div>
+<!-- HERO -->
 <section id="home" class="hero">
 <div class="hero-grid"></div>
 <div class="hero-content">
 <div>
 <p class="hero-eyebrow">// #1 GTA 6 COMMUNITY HUB — UPDATED AUTOMATICALLY</p>
 <h1 class="hero-title">GTA<span class="accent">6</span>HQ<br/>THE CREW<br/>STARTS HERE</h1>
-<p class="hero-sub">Auto-updated news, secure video rewards, mods, job guides, Q&amp;A, and real cash payouts — all in one place.</p>
+<p class="hero-sub">Auto-updated news, mods, job guides, Q&amp;A, and real cash payouts — all in one place.</p>
 <div class="hero-actions">
 <button class="btn-hero btn-hg" onclick="GTA6HQ.openModal('auth-modal')">Join the Crew — Free</button>
 </div>
 <div class="hero-stats">
 <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
-<div class="hero-stat"><div class="hero-stat-num">1.9K</div><div class="hero-stat-label">Videos</div></div>
 <div class="hero-stat"><div class="hero-stat-num">320+</div><div class="hero-stat-label">Mods</div></div>
+<div class="hero-stat"><div class="hero-stat-num">150+</div><div class="hero-stat-label">Guides</div></div>
 </div>
 </div>
 <div>
@@ -479,7 +460,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </section>
+<!-- MAIN -->
 <div style="padding:28px 0;">
+<!-- NEWS -->
 <section class="section container">
 <div class="section-header">
 <div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></div>
@@ -488,27 +471,16 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div id="newsListHome"><div style="text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news…</div></div>
 <button onclick="GTA6HQ.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
 </section>
+<!-- PAGE GRID -->
 <div class="page-grid">
 <div>
-<section class="section" id="videos">
-<div class="section-header">
-<div class="section-title">🎬 Video Hub <span class="sec-badge" style="margin-left:8px;font-size:10px;"><span class="dot"></span>Watch-to-Earn Verified</span> <span class="auto-badge" style="margin-left:8px;" id="videoRefreshBadge">⚡ Auto-refresh 12h</span></div>
-<button onclick="GTA6HQ.refreshVideos()" style="background:none;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--radius);font-family:var(--font-u);font-size:12px;cursor:pointer;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border)'">🔄 Refresh</button>
-</div>
-<div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
-<span style="font-size:16px;">🔒</span>
-<span><strong style="color:var(--green);">Secure token system:</strong> Watch <strong>80%+</strong> to earn <strong>🪙 50 TKN</strong> per video. Anti-cheat active.</span>
-</div>
-<div class="video-grid" id="videoGrid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-family:var(--font-u);">⏳ Loading videos…</div></div>
-<div style="text-align:center;margin-top:18px;">
-<button onclick="GTA6HQ.openVideosTab()" style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:10px 28px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.2)'" onmouseout="this.style.background='rgba(240,180,41,.1)'">🎬 Browse All Videos &amp; Streams →</button>
-</div>
-</section>
+<!-- GUIDES (ENHANCED FOR GTA V & VI) -->
 <section class="section" id="guides">
 <div class="section-header">
 <div class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
 <button class="btn btn-gold" style="font-size:12px;padding:6px 14px;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
 </div>
+<!-- Filters & Search -->
 <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center;">
 <div class="tabs" id="guideGameTabs" style="margin-bottom:0;">
 <button class="tab active" onclick="GTA6HQ.filterGuides('all', this)">All Games</button>
@@ -517,17 +489,21 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="tabs" id="guideTypeTabs" style="margin-bottom:0;">
 <button class="tab active" onclick="GTA6HQ.filterGuideType('all', this)">All Types</button>
+<!-- Auto-populated by JS -->
 </div>
 <input class="id-input" type="text" id="guideSearch" placeholder="Search jobs..." style="flex:1;min-width:200px;" oninput="GTA6HQ.renderEnhancedGuides()"/>
 <button class="btn-sid" onclick="GTA6HQ.syncCommunityJobs()">🔄 Sync New Jobs</button>
 </div>
+<!-- Progress Summary -->
 <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
 <span>🏆</span>
 <span><strong style="color:var(--green);">Your Progress:</strong> <span id="guideProgressText">0 / 0 Jobs Completed</span></span>
 <span style="margin-left:auto;color:var(--gold);">💰 Earn +50 TKN for marking a job complete!</span>
 </div>
+<!-- Grid -->
 <div class="news-grid" id="guidesGrid"></div>
 </section>
+<!-- MODS -->
 <section class="section" id="mods">
 <div class="section-header">
 <div class="section-title">🔧 Mods Database</div>
@@ -542,6 +518,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="mods-grid" id="modsGrid"></div>
 </section>
+<!-- Q&A -->
 <section class="section" id="qa">
 <div class="section-header">
 <div class="section-title">❓ Questions &amp; Solutions</div>
@@ -553,6 +530,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="qa-list" id="qaList"></div>
 </section>
+<!-- TOKENS -->
 <section class="section token-section" id="tokens">
 <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
 <div>
@@ -570,7 +548,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="prog-bar"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
 </div>
 <div style="background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;font-size:12px;color:var(--text2);">
-<strong style="color:var(--purple);">🔐 Token Security Rules:</strong> Each action is server-verified and rate-limited. Video tokens require 80%+ watch completion with tab-focus tracking. Duplicate accounts, VPNs for abuse, and automated bots result in permanent account ban and token forfeiture.
+<strong style="color:var(--purple);">🔐 Token Security Rules:</strong> Each action is server-verified and rate-limited. Duplicate accounts, VPNs for abuse, and automated bots result in permanent account ban and token forfeiture.
 </div>
 <h3 style="font-family:var(--font-d);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">How to Earn Tokens</h3>
 <div class="token-grid" id="earnGrid"></div>
@@ -578,6 +556,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div style="font-size:12px;color:var(--text3);margin-bottom:12px;font-family:var(--font-u);">Current rate: <strong style="color:var(--gold);">1,000 TKN ≈ $0.50 USD</strong> (PayPal) or <strong style="color:var(--gold);">$0.60 USD</strong> (Amazon Gift Card).</div>
 <div class="token-tiers" id="tierGrid"></div>
 </section>
+<!-- SYS REQ -->
 <section class="section" id="sysreq">
 <div class="section-header">
 <div class="section-title">💻 GTA 6 System Requirements</div>
@@ -645,6 +624,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div id="pcResult" style="margin-top:14px;"></div>
 </div>
 </section>
+<!-- POLICY -->
 <section class="section" id="policy">
 <div class="section-header"><div class="section-title">⚠️ Community Rules &amp; Ban Policy</div></div>
 <div class="policy-box">
@@ -657,7 +637,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </section>
-</div>
+</div><!-- /main col -->
+<!-- SIDEBAR -->
 <div class="sidebar">
 <div class="sidebar-card" id="leaderboard">
 <div class="sidebar-header">🏆 Token Leaderboard</div>
@@ -694,18 +675,19 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="sidebar-body" id="eventsList"></div>
 </div>
 </div>
-</div>
-</div>
+</div><!-- /page-grid -->
+</div><!-- /main -->
+<!-- FOOTER -->
 <footer>
 <div class="footer-grid">
 <div>
 <div class="footer-logo">GTA<span>6</span>HQ</div>
-<p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, secure video rewards, mods, video guides, and a verified cash payout system. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+<p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and a verified cash payout system. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
 </div>
 <div>
 <div class="footer-col-title">Explore</div>
 <div class="footer-links">
-<a href="#news">Latest News</a><a href="#videos">Video Hub</a><a href="#mods">Mods</a>
+<a href="#news">Latest News</a><a href="#mods">Mods</a>
 <a href="#guides">Job Guides</a><a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
 </div>
 </div>
@@ -732,7 +714,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span>Grand Theft Auto 6 and GTA 6 are trademarks of their respective owners.</span>
 </div>
 </footer>
+<!-- DISCORD FLOAT -->
 <a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord">💬</a>
+<!-- NEWS TAB PAGE -->
 <div id="news-tab-page">
 <div class="tab-page-hdr">
 <div class="tab-page-hdr-inner">
@@ -749,57 +733,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="tab-page-content"><div id="newsTabList"></div></div>
 </div>
-<div id="videos-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:3500;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-<div style="position:sticky;top:0;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10;padding:0 20px;">
-<div style="max-width:1300px;margin:0 auto;display:flex;align-items:center;height:56px;gap:16px;">
-<button onclick="GTA6HQ.closeVideosTab()" style="background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:6px 14px;font-family:var(--font-u);font-size:13px;cursor:pointer;">← Back</button>
-<div style="font-family:var(--font-d);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);">🎬 Videos &amp; Streams</div>
-<div style="margin-left:auto;font-family:var(--font-u);font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse-dot 1.4s infinite;display:inline-block;"></span>Watch to earn 🪙 50 TKN per video</div>
-</div>
-<div style="max-width:1300px;margin:0 auto;display:flex;gap:0;overflow-x:auto;">
-<button class="vtab active" onclick="GTA6HQ.switchVTab('videos',this)" style="background:none;border:none;border-bottom:2px solid var(--gold);color:var(--gold);padding:10px 18px;font-family:var(--font-u);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">📹 Videos</button>
-<button class="vtab" onclick="GTA6HQ.switchVTab('streams',this)" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);padding:10px 18px;font-family:var(--font-u);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">🔴 Streams</button>
-</div>
-</div>
-<div id="vtp-videos" style="max-width:1300px;margin:0 auto;padding:24px 20px;">
-<div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;">
-<span>🔒</span><span><strong style="color:var(--green);">Secure token system:</strong> Watch 80%+ to earn <strong>🪙 50 TKN</strong>. Anti-cheat active. One reward per video.</span>
-</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-<button class="vtf active" onclick="GTA6HQ.filterVTP('all',this)">All</button>
-<button class="vtf" onclick="GTA6HQ.filterVTP('trailer',this)">Trailers</button>
-<button class="vtf" onclick="GTA6HQ.filterVTP('guides',this)">Guides</button>
-</div>
-<div class="video-grid" id="vtpVideoGrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));"></div>
-</div>
-<div id="vtp-streams" style="display:none;max-width:1300px;margin:0 auto;padding:24px 20px;">
-<div style="background:rgba(255,60,110,.06);border:1px solid rgba(255,60,110,.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--text2);">
-🔴 <strong style="color:var(--pink);">Live &amp; Replay Streams</strong> — Watch 80%+ to earn <strong>🪙 50 TKN</strong>.
-</div>
-<div class="video-grid" id="vtpStreamGrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));"></div>
-</div>
-</div>
+<!-- NOTIFY TOAST -->
 <div class="notify" id="notifyToast"><span id="notifyMsg"></span></div>
-<div class="watch-modal-overlay" id="watch-modal">
-<div class="watch-modal">
-<div class="wm-header">
-<div class="wm-title" id="watchTitle">Video Title</div>
-<button class="wm-close" onclick="GTA6HQ.closeWatchModal()">×</button>
-</div>
-<div class="wm-video-area" id="watchVideoArea">
-<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">Watch to 80% to unlock tokens</p></div>
-</div>
-<div class="wm-progress-bar-wrap">
-<div class="wm-prog-top"><span>Watch progress</span><span id="watchPct">0%</span></div>
-<div class="wm-prog-bar"><div class="wm-prog-fill" id="watchProgFill"></div></div>
-</div>
-<div class="wm-reward-info">
-<div class="wm-reward-text">Watch <strong>80%+</strong> to earn <strong id="watchRewardAmt">50 TKN</strong></div>
-<button class="wm-earn-btn" id="watchEarnBtn" onclick="GTA6HQ.claimVideoToken()">🪙 Claim Tokens</button>
-</div>
-<div class="wm-anti-cheat"><span class="sec-dot"></span>Anti-cheat active — tab switching and fast-forwarding are monitored</div>
-</div>
-</div>
+<!-- AUTH MODAL -->
 <div class="modal-overlay" id="auth-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'auth-modal')">
 <div class="modal">
 <div class="modal-header">
@@ -826,6 +762,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="modal-footer">By joining you agree to our <a href="#policy" style="color:var(--gold);" onclick="GTA6HQ.closeModal('auth-modal')">Community Rules</a> and 3-Strike ban policy.</div>
 </div>
 </div>
+<!-- ASK MODAL -->
 <div class="modal-overlay" id="ask-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'ask-modal')">
 <div class="modal">
 <div class="modal-header">
@@ -840,6 +777,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </div>
+<!-- TOKEN MODAL -->
 <div class="modal-overlay" id="token-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'token-modal')">
 <div class="modal">
 <div class="modal-header">
@@ -861,15 +799,19 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </div>
+<!-- GUIDE DETAIL MODAL -->
 <div class="modal-overlay" id="guide-detail-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'guide-detail-modal')">
 <div class="modal" style="max-width:600px;">
 <div class="modal-header">
 <div class="modal-title" id="guideDetailTitle">Job Details</div>
 <button class="modal-close" onclick="GTA6HQ.closeModal('guide-detail-modal')">×</button>
 </div>
-<div class="modal-body" id="guideDetailBody"></div>
+<div class="modal-body" id="guideDetailBody">
+<!-- Injected by JS -->
 </div>
 </div>
+</div>
+<!-- ADD JOB MODAL -->
 <div class="modal-overlay" id="add-job-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-job-modal')">
 <div class="modal">
 <div class="modal-header">
@@ -916,23 +858,23 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 const STORAGE_KEY = 'gta6hq_v3';
 const DEFAULT_STATE = {
 tokens: 0, loggedIn: false, username: 'Guest', userId: null,
-tx: [], liked: [], videosWatched: [], watchCooldowns: {}, tabFocused: true,
+tx: [], liked: [], tabFocused: true,
 completedJobs: [], customJobs: []
 };
 function loadState() {
 try {
 const raw = localStorage.getItem(STORAGE_KEY);
-if (!raw) return { ...DEFAULT_STATE, liked: new Set(), videosWatched: new Set() };
+if (!raw) return { ...DEFAULT_STATE, liked: new Set() };
 const parsed = JSON.parse(raw);
 return {
-...DEFAULT_STATE, ...parsed,
+...DEFAULT_STATE,
+...parsed,
 liked: new Set(Array.isArray(parsed.liked) ? parsed.liked : []),
-videosWatched: new Set(Array.isArray(parsed.videosWatched) ? parsed.videosWatched : []),
 tx: Array.isArray(parsed.tx) ? parsed.tx : [],
 completedJobs: Array.isArray(parsed.completedJobs) ? parsed.completedJobs : [],
 customJobs: Array.isArray(parsed.customJobs) ? parsed.customJobs : []
 };
-} catch (e) { return { ...DEFAULT_STATE, liked: new Set(), videosWatched: new Set(), completedJobs: [], customJobs: [] }; }
+} catch (e) { return { ...DEFAULT_STATE, liked: new Set(), completedJobs: [], customJobs: [] }; }
 }
 const S = loadState();
 let _saveTimer = null;
@@ -940,7 +882,7 @@ function persistState() {
 clearTimeout(_saveTimer);
 _saveTimer = setTimeout(() => {
 try {
-localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...S, liked: [...S.liked], videosWatched: [...S.videosWatched], tx: S.tx.slice(0, 30) }));
+localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...S, liked: [...S.liked], tx: S.tx.slice(0, 30) }));
 } catch (e) {}
 }, 400);
 }
@@ -976,7 +918,6 @@ const QA = [
 { id: 4, votes: 98, solved: false, title: 'Does GTA 6 have a co-op story mode or is it solo only?', excerpt: "Heard rumors about 2-player story but can't find official confirmation.", answers: 3, time: '1d ago' }
 ];
 const EARN_TASKS = [
-{ icon: '🎬', cls: 'tt-i-watch', name: 'Watch a full video (80%+)', earn: '+50–200 TKN', key: 'watch', secured: true },
 { icon: '📝', cls: 'tt-i-post', name: 'Post content or guide', earn: '+100 TKN', key: 'post', secured: false },
 { icon: '✅', cls: 'tt-i-answer', name: 'Answer accepted', earn: '+150 TKN', key: 'answer', secured: false },
 { icon: '📤', cls: 'tt-i-share', name: 'Share to Instagram (#GTA6HQ)', earn: '+200 TKN', key: 'share', secured: false },
@@ -984,7 +925,7 @@ const EARN_TASKS = [
 { icon: '🔑', cls: 'tt-i-login', name: 'Daily login', earn: '+25 TKN', key: 'login', secured: false },
 { icon: '⬇️', cls: 'tt-i-mod', name: 'Download a mod', earn: '+25 TKN', key: 'mod', secured: false }
 ];
-const EARN_AMOUNTS = { watch: 50, post: 100, answer: 150, share: 200, refer: 500, login: 25, mod: 25 };
+const EARN_AMOUNTS = { post: 100, answer: 150, share: 200, refer: 500, login: 25, mod: 25 };
 const TIERS = [
 { cls: 't-bronze', name: 'Bronze', pts: '1,000 TKN', usd: '$0.50', alt: '$0.60 Amazon', desc: 'Min threshold' },
 { cls: 't-silver', name: 'Silver', pts: '5,000 TKN', usd: '$2.50', alt: '$3.00 Amazon', desc: 'Popular' },
@@ -1027,65 +968,6 @@ const CONSOLES = [
 { name: 'Xbox Series X', icon: '🎮', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (12 TFLOPS) · 16 GB GDDR6 · 1 TB NVMe SSD · 4K / 60fps target' }
 ];
 
-const FALLBACK_VIDEOS = [
-  // YouTube Videos (Most Popular GTA 6 Content)
-  {
-    id: 'yt1',
-    platform: 'youtube',
-    videoId: 'QkkoHAzjnUs',
-    cat: 'trailer',
-    title: 'GTA 6 Official Trailer 1',
-    dur: '1:31',
-    views: '95M',
-    ch: 'Rockstar Games',
-    thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/maxresdefault.jpg',
-    reward: 50,
-    embedUrl: 'https://www.youtube.com/embed/QkkoHAzjnUs',
-    watchOnYt: 'https://www.youtube.com/watch?v=QkkoHAzjnUs'
-  },
-  {
-    id: 'yt2',
-    platform: 'youtube',
-    videoId: '9JETXBi0SYs',
-    cat: 'trailer',
-    title: 'GTA 6 Official Trailer 2',
-    dur: '1:45',
-    views: '78M',
-    ch: 'Rockstar Games',
-    thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/maxresdefault.jpg',
-    reward: 50,
-    embedUrl: 'https://www.youtube.com/embed/9JETXBi0SYs',
-    watchOnYt: 'https://www.youtube.com/watch?v=9JETXBi0SYs'
-  },
-  {
-    id: 'yt3',
-    platform: 'youtube',
-    videoId: 'kMN_RhFGlQ8',
-    cat: 'guides',
-    title: 'GTA 6 — Everything We Know (Full 2026 Guide)',
-    dur: '34:10',
-    views: '12.8M',
-    ch: 'Typical Gamer',
-    thumb: 'https://img.youtube.com/vi/kMN_RhFGlQ8/maxresdefault.jpg',
-    reward: 50,
-    embedUrl: 'https://www.youtube.com/embed/kMN_RhFGlQ8',
-    watchOnYt: 'https://www.youtube.com/watch?v=kMN_RhFGlQ8'
-  },
-  {
-    id: 'yt4',
-    platform: 'youtube',
-    videoId: 'kl4-WVCbCTU',
-    cat: 'guides',
-    title: 'GTA 6 Map — Full State of Leonida Explained',
-    dur: '26:02',
-    views: '8.4M',
-    ch: 'DarkViperAU',
-    thumb: 'https://img.youtube.com/vi/kl4-WVCbCTU/maxresdefault.jpg',
-    reward: 50,
-    embedUrl: 'https://www.youtube.com/embed/kl4-WVCbCTU',
-    watchOnYt: 'https://www.youtube.com/watch?v=kl4-WVCbCTU'
-  }
-];
 const SEED_NEWS = [
 { id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
 { id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
@@ -1325,15 +1207,14 @@ const RSS_SOURCES = [
 ];
 const GTA6_KW = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi','rockstar','vice city','leonida','lucia','jason'];
 const NEWS_BLOK = ['scam','fake','giveaway','free hack','generator','cheats','leaked download'];
-const NEWS_EMJ = ['\ud83d\udd25','\ud83d\udcf0','\ud83c\udfae','\ud83d\udca5','\ud83d\uddfa\ufe0f','\u26a1','\ud83d\ude97','\ud83c\udfaf','\ud83d\udce1','\ud83d\ude80','\ud83c\udfac','\ud83d\udcb0','\ud83d\udd2b','\ud83c\udfc6','\ud83c\udfd9\ufe0f'];
-
+const NEWS_EMJ = ['🔥','','🎮','','🗺️','⚡','🚗','🎯','📡','🚀','🎬','💰','🔫','🏆','🏙️'];
 async function fetchLatestNews(force) {
 force = force || false;
 try {
 const now = Date.now();
 if (!force && _lastFetchTime && (now - _lastFetchTime < CACHE_TTL_MS)) { renderNewsHome(); return; }
 const homeEl = document.getElementById('newsListHome');
-if (homeEl && !_lastFetchTime) homeEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-family:var(--font-u);font-size:13px;">\u23f3 Fetching latest GTA 6 news\u2026</div>';
+if (homeEl && !_lastFetchTime) homeEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Fetching latest GTA 6 news…</div>';
 try {
 const res = await fetch('news-data.json?t=' + now, { cache: 'no-store' });
 if (res.ok) {
@@ -1471,290 +1352,12 @@ const label = cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Upd
 return (_tagCache[cat] = `<span class="nl-tag ${cls}">${label}</span>`);
 }
 
-let VIDEOS = [];
-let STREAMS = [];
-let VIDEOS_LOADED = false;
-const SRC_COLOR = { youtube: '#ff0000', discord: '#5865F2', instagram: '#e1306c', tiktok: '#000000' };
-const SRC_LABEL = { youtube: 'YouTube', discord: 'Discord', instagram: 'Instagram', tiktok: 'TikTok' };
-function _dedupeVideos(list) {
-const seenId = new Set(); const seenYt = new Set(); const out = [];
-for (const v of list) {
-if (!v || !v.id) continue;
-const yt = v.youtubeId || '';
-if (seenId.has(v.id)) continue;
-if (yt && seenYt.has(yt)) continue;
-seenId.add(v.id);
-if (yt) seenYt.add(yt);
-out.push(v);
-}
-return out;
-}
-const VIDEO_CACHE_TTL = 12 * 60 * 60 * 1000;
-let _lastVideoFetchTime = 0;
-async function loadVideos(force) {
-force = force || false;
-try {
-const now = Date.now();
-if (!force && _lastVideoFetchTime && (now - _lastVideoFetchTime < VIDEO_CACHE_TTL) && VIDEOS.length > 0) return;
-let loaded = null;
-try {
-const res = await fetch(`news-data.json?t=${now}`, { cache: 'no-store' });
-if (res.ok) {
-const data = await res.json();
-if (data && Array.isArray(data.videos) && data.videos.length > 0) loaded = data.videos;
-}
-} catch (e) {}
-const newVideos = _dedupeVideos(loaded && loaded.length ? loaded : FALLBACK_VIDEOS);
-if (newVideos.length !== VIDEOS.length || JSON.stringify(newVideos.map(v => v.id)) !== JSON.stringify(VIDEOS.map(v => v.id))) {
-VIDEOS = newVideos; STREAMS = []; VIDEOS_LOADED = true; _lastVideoFetchTime = now;
-try { renderVideos(); renderVTPVideos('all'); } catch (e) {}
-if (force) notify('🎬 Videos refreshed! New content loaded.');
-} else { _lastVideoFetchTime = now; if (force) notify('🎬 Videos are already up to date.'); }
-} catch (e) { VIDEOS = _dedupeVideos(FALLBACK_VIDEOS); STREAMS = []; VIDEOS_LOADED = true; }
-}
-function refreshVideos() {
-  try {
-    notify('🔄 Refreshing videos...');
-    const badge = document.getElementById('videoRefreshBadge');
-    if (badge) {
-      badge.textContent = '⏳ Refreshing...';
-      badge.style.color = 'var(--gold)';
-    }
-    loadVideos(true).then(() => {
-      if (badge) {
-        badge.textContent = '⚡ Auto-refresh 12h';
-        badge.style.color = '';
-      }
-    });
-  } catch (e) {
-    console.warn('[videos] refreshVideos failed:', e.message);
-  }
-}
-function renderVideos() {
-try {
-const grid = document.getElementById('videoGrid');
-if (!grid) return;
-const items = VIDEOS.slice(0, 3);
-if (!items.length) { grid.innerHTML = _emptyMessage(VIDEOS_LOADED ? 'No videos available.' : 'Videos loading…'); return; }
-grid.innerHTML = items.map(v => _videoCard(v)).join('');
-} catch (e) {}
-}
-function renderVTPVideos(filter = 'all') {
-try {
-const grid = document.getElementById('vtpVideoGrid');
-if (!grid) return;
-const items = filter === 'all' ? VIDEOS : VIDEOS.filter(v => v.platform === filter || v.cat === filter);
-if (!items.length) { grid.innerHTML = _emptyMessage(VIDEOS_LOADED ? 'No videos in this category.' : 'Videos loading…'); return; }
-grid.innerHTML = items.map(v => _videoCard(v)).join('');
-} catch (e) {}
-}
-function renderVTPStreams() {
-try {
-const grid = document.getElementById('vtpStreamGrid');
-if (!grid) return;
-if (!STREAMS.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);">No streams available.</div>'; return; }
-grid.innerHTML = STREAMS.map(s => {
-const watched = S.videosWatched.has(s.id);
-const isLive = s.status === 'live';
-const liveBadge = isLive ? '<div style="background:var(--pink);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;">🔴 LIVE</div>' : '<div style="background:rgba(0,0,0,.7);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--text3);">REPLAY</div>';
-const badge = watched ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>' : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${s.id}','stream')"><div class="vp-thumb" style="background:#0a0010;">${s.youtubeId ? `<img src="https://img.youtube.com/vi/${s.youtubeId}/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';">` : ''}<div class="vp-overlay">${liveBadge}<div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>${badge}</div>${s.dur ? `<span class="vp-dur">${s.dur}</span>` : ''}</div><div class="vp-info"><div class="vp-title">${_esc(s.title)}</div><div class="vp-meta">${_esc(s.ch)} · Stream replay</div></div></div>`;
-}).join('');
-} catch (e) {}
-}
-function openVideoById(videoId, source = 'video') {
-try {
-const pool = source === 'stream' ? STREAMS : [...VIDEOS, ...STREAMS];
-const vid = videoId.startsWith('vid_') ? pool.find(v => v.youtubeId === videoId.replace('vid_', '')) : pool.find(v => v.id === videoId);
-if (!vid) { notify('⚠️ Video not found.'); return; }
-_openWatchModal(vid);
-} catch (e) {}
-}
-function openFirstVideo() { try { if (!VIDEOS.length) { notify('⚠️ No videos loaded yet.'); return; } _openWatchModal(VIDEOS[0]); } catch (e) {} }
-
-class WatchSession {
-constructor(vid) { this.videoId = vid.id; this.title = vid.title; this.reward = vid.reward || 50; this.progress = 0; this.tabSwitches = 0; this.claimed = false; this.active = false; this._interval = null; }
-start() { this.active = true; this.stop(); this._interval = setInterval(() => { try { this._tick(); } catch (e) { this.stop(); } }, 500); }
-stop() { if (this._interval !== null) { clearInterval(this._interval); this._interval = null; } this.active = false; }
-_tick() {
-if (!this.active) { this.stop(); return; }
-if (!S.tabFocused) {
-this.tabSwitches++;
-if (this.tabSwitches > 3) { this.stop(); _setText('watchVideoMsg', '⚠️ Too many tab switches. Session cancelled.'); const btn = document.getElementById('watchEarnBtn'); if (btn) btn.className = 'wm-earn-btn'; return; }
-}
-this.progress = Math.min(this.progress + (S.tabFocused ? 1.4 : 0.1), 100);
-const pct = Math.round(this.progress);
-_setText('watchPct', pct + '%');
-const fill = document.getElementById('watchProgFill');
-if (fill) fill.style.width = pct + '%';
-const btn = document.getElementById('watchEarnBtn');
-if (pct >= 80 && !this.claimed && btn) btn.className = 'wm-earn-btn ready';
-if (pct >= 100) { this.stop(); _setText('watchVideoMsg', '✅ Video complete! Tokens ready to claim.'); }
-}
-claim() {
-if (this.progress < 80) { notify('Watch at least 80% first!'); return false; }
-if (this.claimed) { notify('Tokens already claimed.'); return false; }
-this.claimed = true; this.stop();
-S.videosWatched.add(this.videoId);
-earnTokens(this.reward, `Watched: ${this.title.substring(0, 30)}`, { skipCooldown: true });
-const btn = document.getElementById('watchEarnBtn');
-if (btn) { btn.textContent = '✅ Tokens Claimed!'; btn.style.background = 'var(--text3)'; btn.className = 'wm-earn-btn'; }
-persistState(); return true;
-}
-}
-let _currentSession = null;
-function _openWatchModal(vid) {
-  try {
-    if (!vid || (!vid.youtubeId && !vid.platform)) { 
-      notify('⚠️ No video source available for this item.'); 
-      return; 
-    }
-    
-    if (S.videosWatched.has(vid.id)) {
-      if (!confirm('Already earned tokens for this. Watch again for free?')) return;
-    }
-    
-    if (_currentSession) _currentSession.stop();
-    _currentSession = new WatchSession(vid);
-    
-    _setText('watchTitle', vid.title);
-    _setText('watchPct', '0%');
-    _setText('watchRewardAmt', (vid.reward || 50) + ' TKN');
-    
-    var fill = document.getElementById('watchProgFill');
-    if (fill) fill.style.width = '0%';
-    
-    var btn = document.getElementById('watchEarnBtn');
-    if (btn) btn.className = 'wm-earn-btn';
-    
-    var area = document.getElementById('watchVideoArea');
-    if (area) {
-      var platform = vid.platform || 'youtube';
-      
-      if (platform === 'youtube') {
-        var origin = encodeURIComponent(location.origin || 'https://gta6hq.com');
-        var ytId = vid.youtubeId || vid.videoId;
-        window._curYtId = ytId;
-        window._curYtUrl = vid.watchOnYt || ('https://www.youtube.com/watch?v=' + ytId);
-        
-        area.innerHTML = '<iframe id="videoEmbed" width="100%" height="100%" ' +
-          'src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + 
-          '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + origin + '"' +
-          ' title="' + _esc(vid.title) + '"' +
-          ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"' +
-          ' allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
-          
-      } else if (platform === 'tiktok') {
-        // Show message that TikTok embeds require real video IDs
-        area.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center;height:100%;"><div style="font-size:44px;">🎵</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">TikTok video unavailable.<br><span style="font-size:12px;color:var(--text3);">This video ID is not valid or has been removed.</span></div><a href="https://www.tiktok.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;background:#000;color:#fff;padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">Browse TikTok</a></div>';
-        if (_currentSession) { _currentSession.stop(); _currentSession.progress = 80; }
-        if (btn) { btn.className = 'wm-earn-btn ready'; }
-        _setText('watchPct', '80%');
-        if (fill) fill.style.width = '80%';
-        return;
-        
-      } else if (platform === 'instagram') {
-        // Show message that Instagram embeds require real post IDs
-        area.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center;height:100%;"><div style="font-size:44px;">📷</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text2);line-height:1.7;">Instagram post unavailable.<br><span style="font-size:12px;color:var(--text3);">This post ID is not valid or has been removed.</span></div><a href="https://www.instagram.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;background:#E1306C;color:#fff;padding:12px 26px;border-radius:6px;font-family:var(--font-u);font-size:14px;font-weight:700;text-decoration:none;">Browse Instagram</a></div>';
-        if (_currentSession) { _currentSession.stop(); _currentSession.progress = 80; }
-        if (btn) { btn.className = 'wm-earn-btn ready'; }
-        _setText('watchPct', '80%');
-        if (fill) fill.style.width = '80%';
-        return;
-      }
-    }
-    
-    var modal = document.getElementById('watch-modal');
-    if (modal) modal.classList.add('open');
-    _currentSession.start();
-  } catch (e) { 
-    console.warn('[videos] _openWatchModal failed:', e.message); 
-    notify('⚠️ Could not open video player.'); 
-  }
-}
-
-function claimVideoToken() { try { if (_currentSession) _currentSession.claim(); } catch (e) {} }
-function closeWatchModal() {
-try {
-if (!_currentSession) { const modal = document.getElementById('watch-modal'); if (modal) modal.classList.remove('open'); return; }
-if (!_currentSession.claimed && _currentSession.progress >= 80) { if (confirm('Claim your tokens before closing?')) _currentSession.claim(); }
-_currentSession.stop(); _currentSession = null;
-const area = document.getElementById('watchVideoArea');
-if (area) area.innerHTML = `<div class="wm-video-placeholder"><div class="big-play">▶</div><p id="watchVideoMsg">Watch to 80% to unlock tokens</p></div>`;
-const modal = document.getElementById('watch-modal');
-if (modal) modal.classList.remove('open');
-} catch (e) {}
-}
-function _videoCard(v) {
-  const watched = S.videosWatched.has(v.id);
-  const thumb = (v.thumb && v.thumb.startsWith('http')) 
-    ? `<img src="${v.thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';">`
-    : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;background:linear-gradient(135deg,#1a1a2e,#16213e);">🎬</div>`;
-  
-  const badge = watched
-    ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
-    : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
-  
-  const platform = v.platform || 'youtube';
-  
-  // Always show YouTube link button if available
-  const ytLink = (platform === 'youtube' && v.watchOnYt)
-    ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" 
-       style="display:block;text-align:center;padding:8px 12px;background:rgba(255,0,0,.15);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;font-weight:600;"
-       onmouseover="this.style.background='rgba(255,0,0,.25)'" onmouseout="this.style.background='rgba(255,0,0,.15)'">
-       ▶ Watch on YouTube (New Tab)</a>`
-    : '';
-  
-  return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')">
-    <div class="vp-thumb">${thumb}
-      <div class="vp-overlay">
-        <div class="vp-src-badge">
-          <span style="width:8px;height:8px;border-radius:50%;background:${SRC_COLOR[platform]||'#888'};flex-shrink:0;"></span>
-          ${SRC_LABEL[platform]||'Video'}
-        </div>
-        <div class="play-circle"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg></div>
-        ${badge}
-      </div>
-      <span class="vp-dur">${v.dur || ''}</span>
-    </div>
-    <div class="vp-info">
-      <div class="vp-title">${_esc(v.title)}</div>
-      <div class="vp-meta">${_esc(v.ch || '')} · ${v.views || ''} views</div>
-    </div>
-    ${ytLink}
-  </div>`;
-}
-function _emptyMessage(msg) { return `<div style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:40px;margin-bottom:12px;">🎬</div><div style="font-family:var(--font-u);font-size:14px;color:var(--text3);">${msg}</div></div>`; }
-
-function openVideosTab() {
-try {
-const page = document.getElementById('videos-tab-page');
-if (!page) return;
-page.style.display = 'block'; page.scrollTop = 0;
-document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
-switchVTab('videos'); renderVTPVideos('all'); renderVTPStreams();
-document.querySelectorAll('.vtf').forEach((b, i) => b.classList.toggle('active', i === 0));
-} catch (e) {}
-}
-function closeVideosTab() { try { const page = document.getElementById('videos-tab-page'); if (page) page.style.display = 'none'; document.documentElement.style.overflow = ''; document.body.style.overflow = ''; } catch (e) {} }
-function switchVTab(tab, btn) {
-try {
-document.querySelectorAll('.vtab').forEach(b => { b.classList.remove('active'); b.style.borderBottomColor = 'transparent'; b.style.color = 'var(--text3)'; });
-if (btn) { btn.classList.add('active'); btn.style.borderBottomColor = 'var(--gold)'; btn.style.color = 'var(--gold)'; }
-const t = typeof tab === 'string' ? tab : 'videos';
-const vEl = document.getElementById('vtp-videos'); const sEl = document.getElementById('vtp-streams');
-if (vEl) vEl.style.display = t === 'videos' ? 'block' : 'none';
-if (sEl) sEl.style.display = t === 'streams' ? 'block' : 'none';
-} catch (e) {}
-}
-function filterVTP(filter, btn) { try { document.querySelectorAll('.vtf').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderVTPVideos(filter); } catch (e) {} }
 function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('.ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
 function closeNewsTab() { try { const page = document.getElementById('news-tab-page'); if (page) page.style.display = 'none'; document.documentElement.style.overflow = ''; document.body.style.overflow = ''; } catch (e) {} }
 document.addEventListener('keydown', e => {
 if (e.key !== 'Escape') return;
 try {
-const vp = document.getElementById('videos-tab-page'); const np = document.getElementById('news-tab-page');
-if (vp && vp.style.display === 'block') { closeVideosTab(); return; }
+const np = document.getElementById('news-tab-page');
 if (np && np.style.display === 'block') { closeNewsTab(); }
 } catch (_) {}
 });
@@ -1781,7 +1384,7 @@ const el = document.getElementById('earnGrid');
 if (!el) return;
 el.innerHTML = EARN_TASKS.map(t => {
 const amt = EARN_AMOUNTS[t.key] || 25;
-const btn = t.secured ? `<button class="earn-btn" onclick="GTA6HQ.openFirstVideo()">Watch Video</button>` : `<button class="earn-btn" onclick="GTA6HQ.earn(${amt},'${t.name}')">Earn</button>`;
+const btn = `<button class="earn-btn" onclick="GTA6HQ.earn(${amt},'${t.name}')">Earn</button>`;
 return `<div class="token-task"><div class="tt-icon ${t.cls}">${t.icon}</div><div class="tt-info"><div class="tt-name">${_esc(t.name)}</div><div class="tt-earn">${t.earn}</div></div>${btn}</div>`;
 }).join('');
 } catch (e) {}
@@ -1826,7 +1429,6 @@ if (resultEl) resultEl.innerHTML = `<div style="background:var(--bg3);border:1px
 }
 function handleSearch(v) { try { if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) { setTimeout(() => _showPlayerCard({ name: 'GTA6Fan', id: v, tokens: Math.floor(Math.random() * 100000) + 500, rank: 'Silver', posts: Math.floor(Math.random() * 200) + 10 }, document.getElementById('playerResult')), 300); } } catch (e) {} }
 function share() { try { earnTokens(200, 'Shared content'); notify('🔗 Link copied! Share on Instagram with #GTA6HQ to earn +200 TKN'); } catch (e) {} }
-function filterVideos(f, btn) { try { document.querySelectorAll('#videoTabs .tab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderVideos(); } catch (e) {} }
 
 function _esc(str) { return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function _setText(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
@@ -1834,15 +1436,15 @@ function _setHTML(id, html) { const el = document.getElementById(id); if (el) el
 function _setStyle(id, prop, val) { const el = document.getElementById(id); if (el) el.style[prop] = val; }
 
 window.GTA6HQ = {
-  fetchLatestNews: (force) => fetchLatestNews(force),
-  filterNewsTab, openNewsTab, closeNewsTab,
-  earn: (amt, reason) => earnTokens(amt, reason),
-  showCashout, openModal, closeModal, closeModalOnOverlay,
-  switchAuthTab, loginUser, registerUser, submitQuestion,
-  toggleLike, filterMods, searchQA, lookupPlayer,
-  checkPC, handleSearch, share,
-  filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
-  toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
+fetchLatestNews: (force) => fetchLatestNews(force),
+filterNewsTab, openNewsTab, closeNewsTab,
+earn: (amt, reason) => earnTokens(amt, reason),
+showCashout, openModal, closeModal, closeModalOnOverlay,
+switchAuthTab, loginUser, registerUser, submitQuestion,
+toggleLike, filterMods, searchQA, lookupPlayer,
+checkPC, handleSearch, share,
+filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
+toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
 };
 
 function init() {
@@ -1861,11 +1463,15 @@ try { updateCountdown(); } catch (e) {}
 try { setInterval(updateCountdown, 1000); } catch (e) {}
 try { setInterval(renderSidebarNews, 60000); } catch (e) {}
 try { setInterval(function() { fetchLatestNews(true); }, 3 * 60 * 60 * 1000); } catch (e) {}
-
 setTimeout(() => {
 try {
 fetchLatestNews();
-setTimeout(() => { try { if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!'); } catch (e) {} }, 2500);
+} catch (e) { console.warn('init deferred fetch block failed:', e.message); }
+}, 200);
+setTimeout(() => {
+try { if (!S.loggedIn) notify('👋 Sign up free to earn tokens and join the GTA 6 crew!'); }
+catch (e) { console.warn('welcome notify failed:', e.message); }
+}, 2500);
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
