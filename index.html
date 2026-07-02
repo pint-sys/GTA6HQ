@@ -1120,32 +1120,21 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       thumb: 'https://img.youtube.com/vi/YVfyYrEmzgM/hqdefault.jpg', reward: 50 },
   ];
 
+  // Seed news — shown ONLY while live RSS is loading.
+  // No external URLs: items have url:null so they render as non-clickable text.
   const SEED_NEWS = [
-    { id: 1, cat: 'official', tag: 'Official', emoji: '🚀',
-      title: 'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled',
-      excerpt: 'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced.',
-      time: '2h ago', likes: 1842, source: 'Rockstar Games',
-      url: 'https://www.rockstargames.com/newswire/article/o1k91k839k8391/grand-theft-auto-vi-coming-to-playstation-5-and-xbox-series-x-s' },
-    { id: 2, cat: 'official', tag: 'Official', emoji: '🎮',
-      title: "Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead",
-      excerpt: "Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.",
-      time: '5h ago', likes: 934, source: 'IGN',
-      url: 'https://www.ign.com/articles/gta-6-protagonists-jason-lucia-confirmed' },
-    { id: 3, cat: 'rumor', tag: 'Rumor', emoji: '🗺️',
-      title: 'Leaked Map Shows 3x GTA V Scale — Grassrivers, Vice City, Leonida Keys',
-      excerpt: 'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.',
-      time: '8h ago', likes: 2120, source: 'GTA Forums',
-      url: 'https://gtaforums.com/topic/987177-gta-vi-map-leak-state-of-leonida/' },
-    { id: 4, cat: 'update', tag: 'Update', emoji: '⚡',
-      title: 'GTA 6 Engine: Real-Time Global Illumination & Ocean Physics Confirmed',
-      excerpt: 'The RAGE 9 engine simulates water physics, dense NPC crowds, and dynamic lighting unlike anything seen in gaming.',
-      time: '1d ago', likes: 997, source: 'Digital Foundry',
-      url: 'https://www.eurogamer.net/digital-foundry-2024-gta-6-trailer-tech-analysis' },
-    { id: 5, cat: 'official', tag: 'Official', emoji: '💻',
-      title: 'PC Version: No Official Date — History Suggests 12–18 Months After Console',
-      excerpt: 'Rockstar has not confirmed PC. GTA V launched PC 18 months after console, RDR2 was 13 months.',
-      time: '2d ago', likes: 3102, source: 'PC Gamer',
-      url: 'https://www.pcgamer.com/gta-6-pc-release-date/' },
+    { id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'',
+      title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled',
+      excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…',
+      time:'Loading live news…' },
+    { id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'',
+      title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead",
+      excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.",
+      time:'Loading live news…' },
+    { id:'s3', cat:'rumor', tag:'Rumor', emoji:'🗺️', url:null, source:'',
+      title:'Leaked Map Shows 3× GTA V Scale — Grassrivers, Vice City, Leonida Keys',
+      excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.',
+      time:'Loading live news…' },
   ];
 
   /* ---------------------------------------------------------
@@ -1331,38 +1320,114 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     return safe || PLACEHOLDER_IMG_SVG;
   }
 
-  async function fetchLatestNews(force = false) {
+  // Gaming RSS feeds — direct article URLs, filtered for GTA 6 coverage
+  const RSS_SOURCES = [
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.ign.com/rss/articles/news'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.eurogamer.net/?format=rss'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.pcgamer.com/rss/'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://kotaku.com/rss'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.rockpapershotgun.com/feed'),
+    'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.gamespot.com/feeds/mashup/'),
+  ];
+  const GTA6_KW   = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi','rockstar','vice city','leonida','lucia','jason'];
+  const NEWS_BLOK = ['scam','fake','giveaway','free hack','generator','cheats','leaked download'];
+  const NEWS_EMJ  = ['\ud83d\udd25','\ud83d\udcf0','\ud83c\udfae','\ud83d\udca5','\ud83d\uddfa\ufe0f','\u26a1','\ud83d\ude97','\ud83c\udfaf','\ud83d\udce1','\ud83d\ude80','\ud83c\udfac','\ud83d\udcb0','\ud83d\udd2b','\ud83c\udfc6','\ud83c\udfd9\ufe0f'];
+
+  async function fetchLatestNews(force) {
+    force = force || false;
     try {
       const now = Date.now();
       if (!force && _lastFetchTime && (now - _lastFetchTime < CACHE_TTL_MS)) {
-        renderNewsHome();
-        return;
+        renderNewsHome(); return;
       }
-
-      // Priority: news-data.json (static build output). Network failures
-      // degrade gracefully to the seed data already in NEWS.
+      // Show loading indicator when starting fresh
+      const homeEl = document.getElementById('newsListHome');
+      if (homeEl && !_lastFetchTime) {
+        homeEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-family:var(--font-u);font-size:13px;">\u23f3 Fetching latest GTA 6 news\u2026</div>';
+      }
+      // Priority 1: news-data.json static build output
       try {
-        const res = await fetch(`news-data.json?t=${now}`, { cache: 'no-store' });
+        const res = await fetch('news-data.json?t=' + now, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data.news) && data.news.length > 0) {
-            NEWS = _sanitizeNewsItems(data.news);
-            _lastFetchTime = now;
-            _afterFetch(force);
-            return;
+            const clean = _sanitizeNewsItems(data.news).filter(function(n){ return n.url; });
+            if (clean.length > 0) {
+              NEWS = clean; _lastFetchTime = now; _afterFetch(force); return;
+            }
           }
         }
-      } catch (e) {
-        console.warn('[news] news-data.json not available:', e.message);
-      }
-
-      // Nothing new — keep showing seed/cache, still refresh UI.
-      _afterFetch(force);
+      } catch (e) { console.warn('[news] news-data.json failed:', e.message); }
+      // Priority 2: live RSS from gaming news sites
+      await _fetchRSS(now, force);
     } catch (e) {
-      console.warn('[news] fetchLatestNews failed:', e.message);
-      renderNewsHome();
+      console.warn('[news] fetchLatestNews error:', e.message); renderNewsHome();
     }
   }
+
+  async function _fetchRSS(now, force) {
+    try {
+      const seen = new Set(), items = [], MAX = 30;
+      for (var fi = 0; fi < RSS_SOURCES.length; fi++) {
+        if (items.length >= MAX) break;
+        try {
+          var res = await fetch(RSS_SOURCES[fi], { cache: 'no-store' });
+          if (!res.ok) continue;
+          var data = await res.json();
+          if (!data || data.status !== 'ok' || !Array.isArray(data.items)) continue;
+          for (var ii = 0; ii < data.items.length; ii++) {
+            if (items.length >= MAX) break;
+            var item = data.items[ii];
+            var title = (item.title || '').replace(/<[^>]*>/g, '').trim();
+            if (!title) continue;
+            var tl = title.toLowerCase();
+            var body = (item.description || item.content || '').replace(/<[^>]*>/g, '').toLowerCase();
+            // Only GTA 6 articles
+            var isGTA = false;
+            for (var ki = 0; ki < GTA6_KW.length; ki++) { if (tl.includes(GTA6_KW[ki]) || body.includes(GTA6_KW[ki])) { isGTA = true; break; } }
+            if (!isGTA) continue;
+            // Block spam
+            var isBlok = false;
+            for (var bi = 0; bi < NEWS_BLOK.length; bi++) { if (tl.includes(NEWS_BLOK[bi])) { isBlok = true; break; } }
+            if (isBlok) continue;
+            // Deduplicate
+            var key = tl.replace(/[^a-z0-9]/g, '').substring(0, 60);
+            if (seen.has(key)) continue;
+            seen.add(key);
+            // Must have a real direct URL
+            var url = (item.link || '').trim();
+            if (!url || url.indexOf('http') !== 0) continue;
+            // Source hostname
+            var source = '';
+            try { source = new URL(url).hostname.replace('www.', ''); } catch(e2) {}
+            // Excerpt
+            var excerpt = (item.description || item.content || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+            if (excerpt.toLowerCase().indexOf(title.substring(0, 20).toLowerCase()) === 0) {
+              excerpt = excerpt.substring(title.length).replace(/^[\s\-–—|]+/, '').trim();
+            }
+            if (excerpt.length < 40) excerpt = 'Read the full article on ' + source + '.';
+            if (excerpt.length > 220) excerpt = excerpt.substring(0, 220) + '…';
+            // Time ago
+            var pub = new Date(item.pubDate || now);
+            var diffH = Math.round((now - pub) / 3600000);
+            var time = diffH < 1 ? 'Just now' : diffH < 24 ? diffH + 'h ago' : Math.floor(diffH / 24) + 'd ago';
+            // Category
+            var cat = (tl.includes('official') || tl.includes('rockstar') || tl.includes('confirm') || tl.includes('trailer') || tl.includes('release')) ? 'official'
+                    : (tl.includes('leak') || tl.includes('rumor') || tl.includes('alleged') || tl.includes('report')) ? 'rumor' : 'update';
+            items.push({
+              id: 'rss' + items.length, cat: cat,
+              tag: cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update',
+              emoji: NEWS_EMJ[items.length % NEWS_EMJ.length],
+              title: title, excerpt: excerpt, time: time, url: url, source: source, likes: 0
+            });
+          }
+        } catch(e) { console.warn('[news] RSS failed:', RSS_SOURCES[fi], e.message); }
+      }
+      if (items.length > 0) { NEWS = items; _lastFetchTime = now; }
+      _afterFetch(force);
+    } catch(e) { console.warn('[news] _fetchRSS error:', e.message); _afterFetch(false); }
+  }
+
 
   function _sanitizeNewsItems(items) {
     const seen = new Set();
@@ -1402,19 +1467,19 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
       }
       el.innerHTML = items.map(n => {
         const hasUrl = n.url && n.url !== '#';
-        const url    = hasUrl ? n.url : '#';
-        const target = hasUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
-        // Rows with real URLs open article directly; otherwise open news tab
-        const rowClick = hasUrl
-          ? `onclick="window.open('${url.replace(/'/g,"\\'")}','_blank','noopener,noreferrer')"`
-          : `onclick="GTA6HQ.openNewsTab()"`;
         const thumb  = n.image
           ? `<img class="nl-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
           : '';
-        return `<div class="nl-item" ${rowClick} style="cursor:pointer;">
+        const rowAttr = hasUrl
+          ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(n.url)}" style="cursor:pointer;"`
+          : `style="cursor:default;opacity:.7;"`;
+        const titleHtml = hasUrl
+          ? `<a href="${_esc(n.url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${_esc(n.title)}</a>`
+          : _esc(n.title);
+        return `<div class="nl-item" ${rowAttr}>
           ${thumb}
           ${_catTag(n.cat)}
-          <div class="nl-title"><a href="${url}"${target} onclick="event.stopPropagation()">${_esc(n.title)}</a></div>
+          <div class="nl-title">${titleHtml}</div>
           <span class="nl-meta">${_esc(n.time)}</span>
           ${n.source ? `<span class="nl-src">${_esc(n.source)}</span>` : ''}
         </div>`;
@@ -1437,7 +1502,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         const thumb  = n.image
           ? `<img class="ntp-thumb" src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)">`
           : `<div class="ntp-emoji">${n.emoji || '📰'}</div>`;
-        const rowAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}"` : '';
+        const rowAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(dest)}"` : '';
         return `<div class="ntp-item" ${rowAction} style="cursor:${dest ? 'pointer' : 'default'};">
           ${thumb}
           <div class="ntp-body">
@@ -1462,7 +1527,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         const thumb = n.image
           ? `<img src="${_safeImgAttr(n.image)}" alt="" loading="lazy" onerror="window._imgErr(this)" style="width:100%;height:100%;object-fit:cover;">`
           : (n.emoji || '📰');
-        const sideAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener')" data-url="${_esc(dest)}"` : '';
+        const sideAction = dest ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(dest)}"` : '';
         return `<div class="nf-item" ${sideAction} style="cursor:${dest ? 'pointer' : 'default'};">
           <div class="nf-thumb">${thumb}</div>
           <div class="nf-info">
