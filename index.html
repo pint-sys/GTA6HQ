@@ -1029,18 +1029,151 @@ const CONSOLES = [
 ];
 
 const FALLBACK_VIDEOS = [
-{ id: 'yt1', platform: 'youtube', youtubeId: 'QkkoHAzjnUs', videoId: 'QkkoHAzjnUs', cat: 'trailer', title: 'GTA 6 Official Trailer 1', dur: '1:31', views: '95M', ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/hqdefault.jpg', reward: 50, embedUrl: 'https://www.youtube.com/embed/QkkoHAzjnUs', watchOnYt: 'https://www.youtube.com/watch?v=QkkoHAzjnUs' },
-{ id: 'yt2', platform: 'youtube', youtubeId: '9JETXBi0SYs', videoId: '9JETXBi0SYs', cat: 'trailer', title: 'GTA 6 Official Trailer 2', dur: '1:45', views: '78M', ch: 'Rockstar Games', thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/hqdefault.jpg', reward: 50, embedUrl: 'https://www.youtube.com/embed/9JETXBi0SYs', watchOnYt: 'https://www.youtube.com/watch?v=9JETXBi0SYs' },
-{ id: 'yt3', platform: 'youtube', youtubeId: 'kMN_RhFGlQ8', videoId: 'kMN_RhFGlQ8', cat: 'guides', title: 'GTA 6 — Everything We Know (Full 2026 Guide)', dur: '34:10', views: '12.8M', ch: 'Typical Gamer', thumb: 'https://img.youtube.com/vi/kMN_RhFGlQ8/hqdefault.jpg', reward: 50, embedUrl: 'https://www.youtube.com/embed/kMN_RhFGlQ8', watchOnYt: 'https://www.youtube.com/watch?v=kMN_RhFGlQ8' },
-{ id: 'yt4', platform: 'youtube', youtubeId: 'kl4-WVCbCTU', videoId: 'kl4-WVCbCTU', cat: 'guides', title: 'GTA 6 Map — Full State of Leonida Explained', dur: '26:02', views: '8.4M', ch: 'DarkViperAU', thumb: 'https://img.youtube.com/vi/kl4-WVCbCTU/hqdefault.jpg', reward: 50, embedUrl: 'https://www.youtube.com/embed/kl4-WVCbCTU', watchOnYt: 'https://www.youtube.com/watch?v=kl4-WVCbCTU' },
-{ id: 'tt1', platform: 'tiktok', videoId: '7318555555555555555', cat: 'viral', title: 'GTA 6 Vice City Neon Vibes 🌆', dur: '0:45', views: '24.5M', ch: '@gta6clips', thumb: 'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/gta6-thumb.jpeg', reward: 50, embedUrl: 'https://www.tiktok.com/embed/v2/7318555555555555555', username: 'gta6clips' },
-{ id: 'tt2', platform: 'tiktok', videoId: '7319666666666666666', cat: 'viral', title: 'Lucia Character Breakdown 🔥', dur: '0:58', views: '18.2M', ch: '@rockstargames', thumb: 'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/lucia-thumb.jpeg', reward: 50, embedUrl: 'https://www.tiktok.com/embed/v2/7319666666666666666', username: 'rockstargames' },
-{ id: 'tt3', platform: 'tiktok', videoId: '7320777777777777777', cat: 'gameplay', title: 'GTA 6 Physics Are INSANE', dur: '0:52', views: '15.7M', ch: '@gta6gameplay', thumb: 'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/physics-thumb.jpeg', reward: 50, embedUrl: 'https://www.tiktok.com/embed/v2/7320777777777777777', username: 'gta6gameplay' },
-{ id: 'ig1', platform: 'instagram', videoId: 'C1a2B3c4D5e', cat: 'reels', title: 'Vice City Sunset Drive 🌅', dur: '0:30', views: '8.9M', ch: '@rockstargames', thumb: 'https://scontent.cdninstagram.com/v/gta6-sunset.jpg', reward: 50, embedUrl: 'https://www.instagram.com/p/C1a2B3c4D5e/embed', username: 'rockstargames' },
-{ id: 'ig2', platform: 'instagram', videoId: 'C2b3C4d5E6f', cat: 'reels', title: 'GTA 6 Wildlife & Animals', dur: '0:42', views: '6.3M', ch: '@gta6official', thumb: 'https://scontent.cdninstagram.com/v/gta6-wildlife.jpg', reward: 50, embedUrl: 'https://www.instagram.com/p/C2b3C4d5E6f/embed', username: 'gta6official' },
-{ id: 'ig3', platform: 'instagram', videoId: 'C3c4D5e6F7g', cat: 'reels', title: 'Jason & Lucia Duo Moments', dur: '0:38', views: '5.1M', ch: '@gta', thumb: 'https://scontent.cdninstagram.com/v/gta6-duo.jpg', reward: 50, embedUrl: 'https://www.instagram.com/p/C3c4D5e6F7g/embed', username: 'gta' }
+const FALLBACK_VIDEOS = [
+  // YouTube Videos (Most Popular GTA 6 Content)
+  {
+    id: 'yt1',
+    platform: 'youtube',
+    videoId: 'QkkoHAzjnUs',
+    cat: 'trailer',
+    title: 'GTA 6 Official Trailer 1',
+    dur: '1:31',
+    views: '95M',
+    ch: 'Rockstar Games',
+    thumb: 'https://img.youtube.com/vi/QkkoHAzjnUs/maxresdefault.jpg',
+    reward: 50,
+    embedUrl: 'https://www.youtube.com/embed/QkkoHAzjnUs',
+    watchOnYt: 'https://www.youtube.com/watch?v=QkkoHAzjnUs'
+  },
+  {
+    id: 'yt2',
+    platform: 'youtube',
+    videoId: '9JETXBi0SYs',
+    cat: 'trailer',
+    title: 'GTA 6 Official Trailer 2',
+    dur: '1:45',
+    views: '78M',
+    ch: 'Rockstar Games',
+    thumb: 'https://img.youtube.com/vi/9JETXBi0SYs/maxresdefault.jpg',
+    reward: 50,
+    embedUrl: 'https://www.youtube.com/embed/9JETXBi0SYs',
+    watchOnYt: 'https://www.youtube.com/watch?v=9JETXBi0SYs'
+  },
+  {
+    id: 'yt3',
+    platform: 'youtube',
+    videoId: 'kMN_RhFGlQ8',
+    cat: 'guides',
+    title: 'GTA 6 — Everything We Know (Full 2026 Guide)',
+    dur: '34:10',
+    views: '12.8M',
+    ch: 'Typical Gamer',
+    thumb: 'https://img.youtube.com/vi/kMN_RhFGlQ8/maxresdefault.jpg',
+    reward: 50,
+    embedUrl: 'https://www.youtube.com/embed/kMN_RhFGlQ8',
+    watchOnYt: 'https://www.youtube.com/watch?v=kMN_RhFGlQ8'
+  },
+  {
+    id: 'yt4',
+    platform: 'youtube',
+    videoId: 'kl4-WVCbCTU',
+    cat: 'guides',
+    title: 'GTA 6 Map — Full State of Leonida Explained',
+    dur: '26:02',
+    views: '8.4M',
+    ch: 'DarkViperAU',
+    thumb: 'https://img.youtube.com/vi/kl4-WVCbCTU/maxresdefault.jpg',
+    reward: 50,
+    embedUrl: 'https://www.youtube.com/embed/kl4-WVCbCTU',
+    watchOnYt: 'https://www.youtube.com/watch?v=kl4-WVCbCTU'
+  },
+  // TikTok Videos (Viral GTA 6 Content)
+  {
+    id: 'tt1',
+    platform: 'tiktok',
+    videoId: '7318555555555555555',
+    cat: 'viral',
+    title: 'GTA 6 Vice City Neon Vibes 🌆',
+    dur: '0:45',
+    views: '24.5M',
+    ch: '@gta6clips',
+    thumb: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.tiktok.com/embed/v2/7318555555555555555',
+    username: 'gta6clips'
+  },
+  {
+    id: 'tt2',
+    platform: 'tiktok',
+    videoId: '7319666666666666666',
+    cat: 'viral',
+    title: 'Lucia Character Breakdown 🔥',
+    dur: '0:58',
+    views: '18.2M',
+    ch: '@rockstargames',
+    thumb: 'https://images.unsplash.com/photo-1533972724312-1e85964c4a3c?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.tiktok.com/embed/v2/7319666666666666666',
+    username: 'rockstargames'
+  },
+  {
+    id: 'tt3',
+    platform: 'tiktok',
+    videoId: '7320777777777777777',
+    cat: 'gameplay',
+    title: 'GTA 6 Physics Are INSANE',
+    dur: '0:52',
+    views: '15.7M',
+    ch: '@gta6gameplay',
+    thumb: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.tiktok.com/embed/v2/7320777777777777777',
+    username: 'gta6gameplay'
+  },
+  // Instagram Reels (Trending GTA 6 Content)
+  {
+    id: 'ig1',
+    platform: 'instagram',
+    videoId: 'C1a2B3c4D5e',
+    cat: 'reels',
+    title: 'Vice City Sunset Drive 🌅',
+    dur: '0:30',
+    views: '8.9M',
+    ch: '@rockstargames',
+    thumb: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.instagram.com/p/C1a2B3c4D5e/embed',
+    username: 'rockstargames'
+  },
+  {
+    id: 'ig2',
+    platform: 'instagram',
+    videoId: 'C2b3C4d5E6f',
+    cat: 'reels',
+    title: 'GTA 6 Wildlife & Animals',
+    dur: '0:42',
+    views: '6.3M',
+    ch: '@gta6official',
+    thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.instagram.com/p/C2b3C4d5E6f/embed',
+    username: 'gta6official'
+  },
+  {
+    id: 'ig3',
+    platform: 'instagram',
+    videoId: 'C3c4D5e6F7g',
+    cat: 'reels',
+    title: 'Jason & Lucia Duo Moments',
+    dur: '0:38',
+    views: '5.1M',
+    ch: '@gta',
+    thumb: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=640&h=360&fit=crop',
+    reward: 50,
+    embedUrl: 'https://www.instagram.com/p/C3c4D5e6F7g/embed',
+    username: 'gta'
+  }
 ];
-
 const SEED_NEWS = [
 { id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
 { id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
