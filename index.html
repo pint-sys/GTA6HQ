@@ -110,6 +110,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .tag-new{background:var(--green);color:#0a0a0e;}
 .tag-update{background:var(--gold);color:#111;}
 .tag-official{background:rgba(168,85,247,.15);color:var(--purple);}
+.tag-character{background:rgba(255,60,110,.15);color:var(--pink);}
 .card-title{font-family:var(--font-b);font-size:14px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:7px;}
 .card-title a{color:inherit;text-decoration:none;}
 .card-title a:hover{color:var(--gold);}
@@ -256,8 +257,19 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 .guide-step { background: var(--bg3); padding: 10px 14px; margin-bottom: 8px; border-radius: var(--radius); border-left: 3px solid var(--gold); font-size: 13px; color: var(--text2); transition: transform 0.2s; }
 .guide-step:hover { transform: translateX(5px); background: var(--bg2); }
 .guide-step strong { color: var(--gold); margin-right: 8px; }
+/* Character Cards */
+.character-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.character-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden; transition: all 0.3s ease; }
+.character-card:hover { transform: translateY(-5px); border-color: var(--pink); box-shadow: 0 10px 30px rgba(255, 60, 110, 0.2); }
+.character-image { width: 100%; height: 400px; object-fit: cover; display: block; }
+.character-body { padding: 20px; }
+.character-role { display: inline-block; padding: 4px 12px; background: var(--pink); color: #fff; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.character-name { font-family: var(--font-d); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.character-description { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 15px; }
+.character-details { display: flex; gap: 15px; flex-wrap: wrap; font-size: 12px; color: var(--text3); font-family: var(--font-u); }
+.character-detail { display: flex; align-items: center; gap: 5px; }
 @media(max-width:960px){ .hero-content{grid-template-columns:1fr;} .page-grid{grid-template-columns:1fr;} .sidebar{display:none;} .footer-grid{grid-template-columns:1fr 1fr;} .nav-links{display:none;} }
-@media(max-width:600px){ .footer-grid{grid-template-columns:1fr;} .hero-stats{grid-template-columns:1fr 1fr;} .cd-units{gap:6px;} .cd-unit{padding:8px 10px;min-width:50px;} .cd-num{font-size:24px;} }
+@media(max-width:600px){ .footer-grid{grid-template-columns:1fr;} .hero-stats{grid-template-columns:1fr 1fr;} .cd-units{gap:6px;} .cd-unit{padding:8px 10px;min-width:50px;} .cd-num{font-size:24px;} .character-grid{grid-template-columns:1fr;} }
 .nl-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;transition:background .1s;}
 .nl-item:last-child{border-bottom:none;}
 .nl-item:hover{background:rgba(255,255,255,.02);}
@@ -305,7 +317,6 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#news">News</a>
 <a href="#sysreq">PC Requirements</a>
 <a href="#policy">Rules</a>
-<a href="#characters">Characters</a>
 </div>
 </div>
 <nav>
@@ -314,7 +325,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="nav-links">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
-  <a href="#characters">Characters</a>
+<a href="#characters">Characters</a>
 <a href="#mods">Mods</a>
 <a href="#guides">Guides</a>
 <a href="#qa">Q&amp;A</a>
@@ -350,7 +361,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
 <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
-<span class="ticker-item"> Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
+<span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
 <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured</span>
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
@@ -358,7 +369,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
 <span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
 <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
-<span class="ticker-item"> Tag #GTA6HQ on Instagram to get featured</span>
+<span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured</span>
 </div>
 </div>
 </div>
@@ -406,13 +417,11 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </section>
 <div class="page-grid">
 <div>
-  <!-- CHARACTERS -->
 <section class="section" id="characters">
 <div class="section-header">
-<div class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></div>
-<a class="see-all" href="#characters">View all →</a>
+<div class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Main Cast</span></div>
 </div>
-<div class="news-grid" id="charactersGrid"></div>
+<div class="character-grid" id="characterGrid"></div>
 </section>
 <section class="section" id="guides">
 <div class="section-header">
@@ -589,7 +598,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div>
 <div class="footer-col-title">Explore</div>
 <div class="footer-links">
-<a href="#news">Latest News</a><a href="#mods">Mods</a>
+<a href="#news">Latest News</a><a href="#characters">Characters</a><a href="#mods">Mods</a>
 <a href="#guides">Job Guides</a><a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
 </div>
 </div>
@@ -763,97 +772,6 @@ document.addEventListener('visibilitychange', () => {});
 window.addEventListener('blur', () => {});
 window.addEventListener('focus', () => {});
 
-  /* ---------------------------------------------------------
-CHARACTERS DATA AND RENDERING
---------------------------------------------------------- */
-const CHARACTERS = [
-{
-id: 'lucia',
-name: 'Lucia',
-role: 'Protagonist',
-emoji: '👩',
-image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop',
-description: 'The first female protagonist in the Grand Theft Auto series. Lucia is a Latina woman involved in criminal activities in the state of Leonida. She is one half of the Bonnie and Clyde-inspired duo.',
-traits: ['Criminal', 'Survivor', 'Strategic'],
-status: 'Playable'
-},
-{
-id: 'jason',
-name: 'Jason',
-role: 'Protagonist',
-emoji: '👨',
-image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop',
-description: 'The male protagonist and partner to Lucia. Jason is involved in a series of criminal heists and activities across the state of Leonida. His relationship with Lucia is central to the story.',
-traits: ['Criminal', 'Loyal', 'Tactical'],
-status: 'Playable'
-},
-{
-id: 'rossi',
-name: 'Rossi',
-role: 'Antagonist',
-emoji: '👤',
-image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop',
-description: 'A powerful crime boss operating in Leonida. Rossi is one of the main antagonists that Lucia and Jason must navigate around or confront during their criminal endeavors.',
-traits: ['Crime Boss', 'Influential', 'Dangerous'],
-status: 'NPC'
-},
-{
-id: 'alicia',
-name: 'Alicia',
-role: 'Supporting Character',
-emoji: '👩💼',
-image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop',
-description: 'A key supporting character in the GTA 6 story. Alicia appears to be connected to the criminal underworld and plays an important role in certain missions.',
-traits: ['Connected', 'Mysterious', 'Resourceful'],
-status: 'NPC'
-},
-{
-id: 'duo',
-name: 'The Duo',
-role: 'Partners in Crime',
-emoji: '👥',
-image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop',
-description: 'Lucia and Jason work together as a criminal duo, inspired by the infamous Bonnie and Clyde. Their partnership is central to the GTA 6 narrative as they navigate the criminal underworld of Leonida.',
-traits: ['Partners', 'Heist Crew', 'Outlaws'],
-status: 'Playable'
-},
-{
-id: 'sheriff',
-name: 'Leonida Sheriff',
-role: 'Law Enforcement',
-emoji: '👮',
-image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop',
-description: 'Law enforcement in the state of Leonida. The sheriff and police force are tasked with maintaining order and pursuing criminals like Lucia and Jason throughout the game.',
-traits: ['Authority', 'Pursuer', 'Law'],
-status: 'NPC'
-}
-];
-
-function renderCharacters() {
-try {
-const el = document.getElementById('charactersGrid');
-if (!el) return;
-
-el.innerHTML = CHARACTERS.map(c => `
-<div class="card" style="overflow:hidden;">
-<div class="card-thumb-ph" style="background:var(--bg2);">
-<img src="${c.image}" alt="${_esc(c.name)}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.ph-icon').style.display='flex';">
-<span class="ph-icon" style="display:none;font-size:60px;">${c.emoji}</span>
-<div style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.8);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;color:var(--gold);">${c.status}</div>
-</div>
-<div class="card-body">
-<div class="card-tags">
-<span class="tag tag-guide">${c.role}</span>
-${c.traits.map(t => `<span class="tag tag-question">${t}</span>`).join('')}
-</div>
-<div class="card-title" style="font-size:16px;margin-bottom:8px;">${c.emoji} ${_esc(c.name)}</div>
-<p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;">${_esc(c.description)}</p>
-</div>
-</div>
-`).join('');
-} catch (e) { console.warn('[characters] renderCharacters failed:', e.message); }
-}
-
 const DEFAULT_JOBS = [
 { id: 'g6_1', game: 'gta6', title: 'Vice City Bank Heist', type: 'Heist', diff: 'Hard', reward: '$2,500,000', emoji: '🏦', thumb: 'https://images.unsplash.com/photo-1563207153-f403bf289096?w=400&h=225&fit=crop', steps: ['Meet Jason at the safehouse in Vice City Beach.', 'Steal the Sparrow helicopter from the airport.', 'Enter the bank through the roof vents.', 'Hack the security system (Mini-game: Match the wires).', 'Escape through the back alleys and lose the 5-star wanted level.'] },
 { id: 'g6_2', game: 'gta6', title: 'Grassrivers Boat Delivery', type: 'Side Hustle', diff: 'Medium', reward: '$15,000', emoji: '🚤', thumb: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=225&fit=crop', steps: ['Go to the Grassrivers marina.', 'Board the speedboat and follow the GPS waypoint.', 'Avoid the shallow reefs to prevent damage.', 'Deliver the package to the dock in the Florida Keys area.', 'Collect payment from the contact.'] },
@@ -916,6 +834,64 @@ const CONSOLES = [
 { name: 'Xbox Series X', icon: '🎮', specs: 'AMD Zen 2 CPU (8-core) · AMD RDNA 2 GPU (12 TFLOPS) · 16 GB GDDR6 · 1 TB NVMe SSD · 4K / 60fps target' }
 ];
 
+// GTA 6 Characters Data
+const CHARACTERS = [
+{
+id: 1,
+name: 'Lucia',
+role: 'Protagonist',
+image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop',
+description: 'The first female protagonist in GTA series history. Lucia is a Latina woman navigating the criminal underworld of Vice City. She\'s intelligent, resourceful, and determined to make her mark in the criminal world.',
+age: 'Late 20s',
+location: 'Vice City'
+},
+{
+id: 2,
+name: 'Jason',
+role: 'Protagonist',
+image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=800&fit=crop',
+description: 'The male protagonist and Lucia\'s partner in crime. Jason is a skilled criminal with a complex past. Together with Lucia, he forms the dynamic duo at the heart of GTA 6\'s story.',
+age: 'Early 30s',
+location: 'Vice City'
+},
+{
+id: 3,
+name: 'Diego',
+role: 'Supporting Character',
+image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=800&fit=crop',
+description: 'A key figure in the Vice City criminal underworld. Diego appears to be connected to the drug trade and has significant influence in the Leonida region.',
+age: '30s',
+location: 'Vice City'
+},
+{
+id: 4,
+name: 'Alonzo',
+role: 'Supporting Character',
+image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=800&fit=crop',
+description: 'A mysterious character with ties to organized crime. Alonzo plays a significant role in the criminal activities throughout the State of Leonida.',
+age: '40s',
+location: 'Leonida'
+},
+{
+id: 5,
+name: 'Constance',
+role: 'Supporting Character',
+image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=600&h=800&fit=crop',
+description: 'A powerful figure in Vice City\'s criminal landscape. Constance appears to be involved in high-level criminal operations and has significant connections.',
+age: '40s',
+location: 'Vice City'
+},
+{
+id: 6,
+name: 'Ricky',
+role: 'Supporting Character',
+image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=800&fit=crop',
+description: 'A young criminal operating in the Vice City area. Ricky is involved in various criminal activities and appears to be part of the local street crime scene.',
+age: '20s',
+location: 'Vice City'
+}
+];
+
 const SEED_NEWS = [
 { id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
 { id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
@@ -958,6 +934,28 @@ closeModal('auth-modal'); persistState(); notify('Account created!');
 } catch (e) {}
 }
 function submitQuestion() { try { closeModal('ask-modal'); notify('Question posted!'); } catch (e) {} }
+
+// Render Characters
+function renderCharacters() {
+try {
+const el = document.getElementById('characterGrid');
+if (!el) return;
+el.innerHTML = CHARACTERS.map(char => `
+<div class="character-card">
+<img src="${char.image}" alt="${char.name}" class="character-image" onerror="this.src='https://via.placeholder.com/600x800/1a1a2e/ff3c6e?text=${encodeURIComponent(char.name)}'">
+<div class="character-body">
+<span class="character-role">${char.role}</span>
+<h3 class="character-name">${char.name}</h3>
+<p class="character-description">${char.description}</p>
+<div class="character-details">
+<div class="character-detail">🎂 ${char.age}</div>
+<div class="character-detail">📍 ${char.location}</div>
+</div>
+</div>
+</div>
+`).join('');
+} catch (e) { console.error('Error rendering characters:', e); }
+}
 
 function populateGuideTypes() {
 try {
@@ -1123,7 +1121,7 @@ const RSS_SOURCES = [
 ];
 const GTA6_KW = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi','rockstar','vice city','leonida','lucia','jason'];
 const NEWS_BLOK = ['scam','fake','giveaway','free hack','generator','cheats','leaked download'];
-const NEWS_EMJ = ['🔥','📰','🎮','💥','🗺️','','🚗','🎯','','🚀','🎬','','🔫','🏆','️'];
+const NEWS_EMJ = ['🔥','','🎮','','🗺️','','🚗','🎯','','🚀','','','🔫','🏆','️'];
 async function fetchLatestNews(force) {
 force = force || false;
 try {
@@ -1341,17 +1339,18 @@ function _setStyle(id, prop, val) { const el = document.getElementById(id); if (
 window.GTA6HQ = {
 fetchLatestNews: (force) => fetchLatestNews(force),
 filterNewsTab, openNewsTab, closeNewsTab,
-openModal, closeModal, closeModalOnOverlay, renderCharacters,
+openModal, closeModal, closeModalOnOverlay,
 switchAuthTab, loginUser, registerUser, submitQuestion,
 toggleLike, filterMods, searchQA, lookupPlayer,
 checkPC, handleSearch,
 filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
-toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes
+toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes,
+renderCharacters
 };
 
 function init() {
 try { renderNewsHome(); } catch (e) {}
-try { renderNewsHome(); } catch (e) {} 
+try { renderCharacters(); } catch (e) {}
 try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
 try { renderMods('all'); } catch (e) {}
 try { renderQA(); } catch (e) {}
