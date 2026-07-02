@@ -1029,11 +1029,11 @@ const CONSOLES = [
 ];
 
 const FALLBACK_VIDEOS = [
-  // YouTube Videos (REAL GTA 6 Trailers)
+  // YouTube Videos (Most Popular GTA 6 Content)
   {
     id: 'yt1',
     platform: 'youtube',
-    videoId: 'QkkoHAzjnUs',  // GTA 6 Official Trailer 1
+    videoId: 'QkkoHAzjnUs',
     cat: 'trailer',
     title: 'GTA 6 Official Trailer 1',
     dur: '1:31',
@@ -1047,7 +1047,7 @@ const FALLBACK_VIDEOS = [
   {
     id: 'yt2',
     platform: 'youtube',
-    videoId: '9JETXBi0SYs',  // GTA 6 Official Trailer 2
+    videoId: '9JETXBi0SYs',
     cat: 'trailer',
     title: 'GTA 6 Official Trailer 2',
     dur: '1:45',
@@ -1690,14 +1690,22 @@ function _videoCard(v) {
   const watched = S.videosWatched.has(v.id);
   const thumb = (v.thumb && v.thumb.startsWith('http')) 
     ? `<img src="${v.thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.style.display='none';">`
-    : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;">🎬</div>`;
+    : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3;background:linear-gradient(135deg,#1a1a2e,#16213e);">🎬</div>`;
+  
   const badge = watched
     ? '<span style="background:rgba(0,230,118,.85);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;color:#0a0a0e;">✓ Watched</span>'
     : '<span style="background:rgba(0,0,0,.6);padding:3px 9px;border-radius:4px;font-size:11px;color:var(--gold);">🪙 +50 TKN</span>';
+  
   const platform = v.platform || 'youtube';
+  
+  // Always show YouTube link button if available
   const ytLink = (platform === 'youtube' && v.watchOnYt)
-    ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;padding:6px 10px;background:rgba(255,0,0,.07);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;" onmouseover="this.style.background='rgba(255,0,0,.16)'" onmouseout="this.style.background='rgba(255,0,0,.07)'">▶ Official trailer — watch on YouTube</a>`
+    ? `<a href="${v.watchOnYt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" 
+       style="display:block;text-align:center;padding:8px 12px;background:rgba(255,0,0,.15);border-top:1px solid var(--border);font-size:11px;font-family:var(--font-u);color:#ff5555;text-decoration:none;font-weight:600;"
+       onmouseover="this.style.background='rgba(255,0,0,.25)'" onmouseout="this.style.background='rgba(255,0,0,.15)'">
+       ▶ Watch on YouTube (New Tab)</a>`
     : '';
+  
   return `<div class="video-player-wrap" onclick="GTA6HQ.openVideoById('${v.id}')">
     <div class="vp-thumb">${thumb}
       <div class="vp-overlay">
