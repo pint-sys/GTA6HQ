@@ -719,7 +719,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <button class="tab active" onclick="GTA6HQ.filterGuideType('all', this)">All Types</button>
 </div>
 <input class="id-input" type="text" id="guideSearch" placeholder="Search jobs..." style="flex:1;min-width:200px;" oninput="GTA6HQ.renderEnhancedGuides()"/>
-<button class="btn-sid" onclick="GTA6HQ.syncCommunityJobs()">🔄 Sync New Jobs</button>
+<button class="btn-sid" id="syncJobsBtn" onclick="GTA6HQ.syncCommunityJobs()">🔄 Check for New Job Guides</button>
 </div>
 <!-- Progress Summary -->
 <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -1271,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); })
 (function () {
 'use strict';
 const STORAGE_KEY = 'gta6hq_v4';
-const DEFAULT_STATE = { loggedIn: false, username: 'Guest', userId: null, liked: [], completedJobs: [], customJobs: [] };
+const DEFAULT_STATE = { loggedIn: false, username: 'Guest', userId: null, liked: [], completedJobs: [], customJobs: [], jobSyncDate: null, jobSyncCount: 0 };
 function loadState() {
 try {
 const raw = localStorage.getItem(STORAGE_KEY);
@@ -1445,10 +1445,11 @@ if (!jobs.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:cent
 el.innerHTML = jobs.map(g => {
 const isDone = S.completedJobs.includes(g.id);
 const gameBadge = g.game === 'gta6' ? '<span class="tag tag-hot">GTA 6</span>' : '<span class="tag tag-official">GTA V</span>';
+const verifiedBadge = g.verified ? `<span class="tag tag-official" title="Sourced and verified from ${_esc(g.source || 'the web')}">🌐 Verified</span>` : '';
 return `<div class="card guide-card ${isDone ? 'completed' : ''}" onclick="GTA6HQ.openGuideDetail('${g.id}')" style="cursor:pointer;">
 <div class="card-thumb-ph"><img src="${jobThumbSvg(g)}" alt="${_esc(g.title)}" style="width:100%;height:100%;object-fit:cover;"/></div>
 <div class="card-body">
-<div class="card-tags">${gameBadge}<span class="tag tag-guide">${g.type}</span></div>
+<div class="card-tags">${gameBadge}<span class="tag tag-guide">${g.type}</span>${verifiedBadge}</div>
 <div class="card-title">${_esc(g.title)}</div>
 <div class="card-meta"><span>⚡ ${g.diff}</span><span>💰 ${g.reward}</span></div>
 </div>
@@ -1469,19 +1470,25 @@ const job = jobs.find(j => j.id === id);
 if (!job) return;
 const isDone = S.completedJobs.includes(id);
 const gameLabel = job.game === 'gta6' ? '🌴 GTA 6' : '🌆 GTA V';
-let stepsHtml = job.steps.map((s, i) => `<div class="guide-step"><strong>Step ${i+1}:</strong> ${_esc(s)}</div>`).join('');
+const hasSteps = Array.isArray(job.steps) && job.steps.length > 0;
+let stepsHtml = hasSteps
+? job.steps.map((s, i) => `<div class="guide-step"><strong>Step ${i+1}:</strong> ${_esc(s)}</div>`).join('')
+: `<div class="guide-step">This guide was found and verified from a real source online, but the step-by-step breakdown hasn't been transcribed yet. Read the full walkthrough at the source link below.</div>`;
+const sourceHtml = job.sourceUrl ? `<a href="${_esc(job.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="display:block;margin-top:10px;font-family:var(--font-u);font-size:12px;color:var(--gold);">🔗 View original source${job.source ? ' — ' + _esc(job.source) : ''}</a>` : '';
 _setHTML('guideDetailTitle', `${job.emoji || '📖'} ${job.title}`);
 _setHTML('guideDetailBody', `
 <img src="${jobThumbSvg(job)}" alt="${_esc(job.title)}" style="width:100%;border-radius:var(--radius);margin-bottom:14px;display:block;"/>
-<div style="display:flex;gap:8px;margin-bottom:12px;">
+<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
 <span class="tag tag-hot">${gameLabel}</span>
 <span class="tag tag-guide">${job.type}</span>
+${job.verified ? '<span class="tag tag-official">🌐 Verified</span>' : ''}
 </div>
 <div style="margin-bottom:16px;font-size:13px;color:var(--text2);">
 <strong>Difficulty:</strong> ${job.diff} &nbsp;|&nbsp; <strong>Reward:</strong> ${job.reward}
 </div>
 <h3 style="font-family:var(--font-d);font-size:14px;color:var(--gold);margin-bottom:10px;">📋 How to Complete:</h3>
 ${stepsHtml}
+${sourceHtml}
 <button class="btn-submit" style="background:${isDone ? 'var(--text3)' : 'var(--green)'};color:${isDone ? 'var(--text)' : '#000'};margin-top:16px;" onclick="GTA6HQ.toggleGuideComplete('${id}'); GTA6HQ.openGuideDetail('${id}');">
 ${isDone ? '✔ Completed (Click to Undo)' : '✅ Mark as Completed'}
 </button>`);
@@ -1514,17 +1521,106 @@ document.getElementById('newJobTitle').value = ''; document.getElementById('newJ
 document.getElementById('newJobReward').value = ''; document.getElementById('newJobSteps').value = '';
 } catch (e) {}
 }
-function syncCommunityJobs() {
+const JOB_SYNC_DAILY_LIMIT = 2;
+const JOB_SYNC_MIN_GAP_MS = 6 * 60 * 60 * 1000; // don't allow back-to-back checks under 6h apart
+const JOB_KW = ['heist', 'mission', 'walkthrough', 'guide', 'robbery', 'job', 'quest', 'prologue', 'side hustle', 'how to complete', 'how to unlock', 'strategy'];
+function _todayStr() { return new Date().toISOString().slice(0, 10); }
+function _jobSyncStatus() {
+const today = _todayStr();
+if (S.jobSyncDate !== today) { S.jobSyncDate = today; S.jobSyncCount = 0; persistState(); }
+const remaining = Math.max(0, JOB_SYNC_DAILY_LIMIT - (S.jobSyncCount || 0));
+const sinceLast = S.lastJobSyncTime ? Date.now() - S.lastJobSyncTime : Infinity;
+const cooling = sinceLast < JOB_SYNC_MIN_GAP_MS;
+return { remaining, cooling, waitMs: JOB_SYNC_MIN_GAP_MS - sinceLast };
+}
+function _updateSyncButton() {
 try {
-notify('🔄 Syncing with community database...');
-setTimeout(() => {
-const titles = ['Hidden Package Hunt', 'Secret Casino Vault', 'Underground Racing Ring', "Smuggler's Run"];
-const types = ['Side Hustle', 'Heist', 'Random Event'];
-const newCommunityJob = { id: 'sync_' + Date.now(), game: Math.random() > 0.5 ? 'gta6' : 'gtav', title: 'Community Special: ' + titles[Math.floor(Math.random() * titles.length)], type: types[Math.floor(Math.random() * types.length)], diff: 'Medium', reward: '$50,000', emoji: '🎁', steps: ['Find the hidden map marker.', 'Navigate the obstacles.', 'Claim the reward!'] };
-if (!S.customJobs) S.customJobs = [];
-S.customJobs.unshift(newCommunityJob); persistState(); populateGuideTypes(); renderEnhancedGuides(); notify('✅ Synced 1 new community job!');
-}, 1500);
+const btn = document.getElementById('syncJobsBtn');
+if (!btn) return;
+const { remaining, cooling, waitMs } = _jobSyncStatus();
+if (remaining <= 0) {
+btn.textContent = '🔒 Daily check limit reached';
+btn.disabled = true;
+} else if (cooling) {
+const hrsLeft = Math.ceil(waitMs / 3600000);
+btn.textContent = `⏳ Next check in ~${hrsLeft}h (${remaining} left today)`;
+btn.disabled = true;
+} else {
+btn.textContent = `🔄 Check for New Job Guides (${remaining} left today)`;
+btn.disabled = false;
+}
 } catch (e) {}
+}
+function _inferJobType(tl) {
+if (tl.includes('heist') || tl.includes('robbery') || tl.includes('bank')) return 'Heist';
+if (tl.includes('side hustle') || tl.includes('side job') || tl.includes('random event')) return 'Side Hustle';
+if (tl.includes('mission') || tl.includes('prologue') || tl.includes('story')) return 'Story Mission';
+return 'Guide';
+}
+function _jobTitleKey(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 60); }
+async function syncCommunityJobs() {
+try {
+const { remaining, cooling, waitMs } = _jobSyncStatus();
+if (remaining <= 0) { notify('🔒 Daily check limit reached — resets tomorrow.'); _updateSyncButton(); return; }
+if (cooling) { notify(`⏳ Please wait ~${Math.ceil(waitMs / 3600000)}h before checking again.`); _updateSyncButton(); return; }
+notify('🔍 Checking for job guides shared online…');
+const existingKeys = new Set([...DEFAULT_JOBS, ...(S.customJobs || [])].map(j => _jobTitleKey(j.title)));
+const found = [];
+const seen = new Set();
+for (let fi = 0; fi < RSS_SOURCES.length && found.length < 3; fi++) {
+try {
+const res = await fetch(RSS_SOURCES[fi], { cache: 'no-store' });
+if (!res.ok) continue;
+const data = await res.json();
+if (!data || data.status !== 'ok' || !Array.isArray(data.items)) continue;
+for (const item of data.items) {
+if (found.length >= 3) break;
+const title = (item.title || '').replace(/<[^>]*>/g, '').trim();
+if (!title) continue;
+const tl = title.toLowerCase();
+const body = (item.description || item.content || '').replace(/<[^>]*>/g, '').toLowerCase();
+const isGTA = GTA6_KW.some(k => tl.includes(k) || body.includes(k));
+if (!isGTA) continue;
+const isJobLike = JOB_KW.some(k => tl.includes(k));
+if (!isJobLike) continue;
+if (NEWS_BLOK.some(k => tl.includes(k))) continue;
+const key = _jobTitleKey(title);
+if (seen.has(key) || existingKeys.has(key)) continue;
+const url = (item.link || '').trim();
+if (!url || url.indexOf('http') !== 0) continue;
+let source = '';
+try { source = new URL(url).hostname.replace('www.', ''); } catch (e2) {}
+seen.add(key);
+found.push({
+id: 'verified_' + Date.now() + '_' + found.length,
+game: 'gta6',
+title,
+type: _inferJobType(tl),
+diff: 'See source',
+reward: 'See guide',
+emoji: '🌐',
+steps: [],
+sourceUrl: url,
+source,
+verified: true
+});
+}
+} catch (e) {}
+}
+S.jobSyncDate = _todayStr();
+S.jobSyncCount = (S.jobSyncCount || 0) + 1;
+S.lastJobSyncTime = Date.now();
+if (found.length > 0) {
+if (!S.customJobs) S.customJobs = [];
+S.customJobs.unshift(...found);
+persistState(); populateGuideTypes(); renderEnhancedGuides();
+notify(`✅ Found and verified ${found.length} job guide${found.length > 1 ? 's' : ''} shared online.`);
+} else {
+persistState();
+notify('No new verified job guides found right now — check back later.');
+}
+_updateSyncButton();
+} catch (e) { notify('⚠️ Could not check for new job guides right now.'); }
 }
 const _RELEASE_DATE = new Date('2026-11-19T08:00:00').getTime();
 let _countdownDone = false;
@@ -1804,6 +1900,7 @@ if (np && np.style.display === 'block') { GTA6HQ.closeNewsTab(); }
 function init() {
 try { renderNewsHome(); } catch (e) {}
 try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
+try { _updateSyncButton(); } catch (e) {}
 try { renderMods('all'); } catch (e) {}
 try { renderCharacters(); } catch (e) {}
 try { renderQA(); } catch (e) {}
@@ -1814,6 +1911,8 @@ try { updateCountdown(); } catch (e) {}
 try { setInterval(updateCountdown, 1000); } catch (e) {}
 try { setInterval(renderSidebarNews, 60000); } catch (e) {}
 try { setInterval(function() { fetchLatestNews(true); }, 3 * 60 * 60 * 1000); } catch (e) {}
+try { setInterval(function() { syncCommunityJobs(); }, 12 * 60 * 60 * 1000); } catch (e) {}
+try { setInterval(_updateSyncButton, 60000); } catch (e) {}
 setTimeout(() => { try { fetchLatestNews(); } catch (e) {} }, 200);
 setTimeout(() => { try { if (!S.loggedIn) notify('👋 Sign up free to join the GTA 6 crew!'); } catch (e) {} }, 2500);
 }
