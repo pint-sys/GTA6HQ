@@ -530,7 +530,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#news">News</a>
 <a href="#sysreq">PC Requirements</a>
 <a href="#policy">Rules</a>
-<a href="javascript:void(0)" id="adminToggleLink" onclick="toggleAdmin()">Admin</a>
+<a href="javascript:void(0)" id="adminToggleLink" onclick="GTA6HQ.adminLinkClick()">Admin Sign In</a>
+<a href="javascript:void(0)" id="adminDashLink" onclick="GTA6HQ.openAdminDashboard()" style="display:none;">Dashboard</a>
 </div>
 </div>
 <!-- NAV -->
@@ -741,7 +742,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <section class="section" id="mods">
 <div class="section-header">
 <div class="section-title">🔧 Mods Database</div>
-<a class="see-all" href="#mods">Browse mods →</a>
+<button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>
 </div>
 <div class="tabs" id="modTabs">
 <button class="tab active" onclick="GTA6HQ.filterMods('all',this)">All</button>
@@ -1077,8 +1078,147 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 
+<!-- ADMIN LOGIN MODAL (real Firebase auth, not a client-side password) -->
+<div class="modal-overlay" id="admin-login-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'admin-login-modal')">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--gold);">🔐 Admin Sign In</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('admin-login-modal')">×</button>
+</div>
+<div class="modal-body">
+<div id="adminAuthModeNotice" style="display:none;background:rgba(255,60,110,.08);border:1px solid rgba(255,60,110,.25);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text2);margin-bottom:14px;">
+⚠️ Firebase isn't configured yet, so this is running in local demo mode — admin status is only stored in your browser and isn't securely enforced. See the setup notes in the code comments.
+</div>
+<div class="form-group"><label class="form-label">Admin Email</label><input class="form-input" type="email" id="adminEmail" placeholder="you@gta6hq.com"/></div>
+<div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="adminPassword" placeholder="••••••••"/></div>
+<button class="btn-submit" onclick="GTA6HQ.adminSignIn()">Sign In</button>
+<div id="adminAuthStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
+</div>
+</div>
+</div>
+
+<!-- ADD MOD MODAL (admin only) -->
+<div class="modal-overlay" id="add-mod-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-mod-modal')">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--cyan);">+ Add Mod</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-mod-modal')">×</button>
+</div>
+<div class="modal-body">
+<div class="form-group"><label class="form-label">Mod Name</label><input class="form-input" type="text" id="newModName" placeholder="e.g., Ultra Realism ENB"/></div>
+<div class="form-group">
+<label class="form-label">Category</label>
+<select class="form-input" id="newModCat">
+<option value="visual">Visual</option>
+<option value="gameplay">Gameplay</option>
+<option value="vehicle">Vehicles</option>
+<option value="weapon">Weapons</option>
+</select>
+</div>
+<div class="form-group"><label class="form-label">Version</label><input class="form-input" type="text" id="newModVer" placeholder="e.g., v1.0.0"/></div>
+<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newModDesc" rows="3" placeholder="What does this mod do?"></textarea></div>
+<div class="form-group"><label class="form-label">Download URL</label><input class="form-input" type="text" id="newModUrl" placeholder="https://…"/></div>
+<button class="btn-submit" style="background:var(--cyan);color:#062028;" onclick="GTA6HQ.submitNewMod()">Publish Mod</button>
+<div id="modSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
+</div>
+</div>
+</div>
+
+<!-- ADMIN DASHBOARD MODAL -->
+<div class="modal-overlay" id="admin-dashboard-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'admin-dashboard-modal')">
+<div class="modal" style="max-width:720px;">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--gold);">🛠️ Admin Dashboard</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('admin-dashboard-modal')">×</button>
+</div>
+<div class="modal-body">
+<div id="adminDashStatus" style="font-size:12px;color:var(--text3);margin-bottom:12px;"></div>
+<div class="tabs">
+<button class="tab active" onclick="GTA6HQ.switchDashTab('mods',this)">🔧 Mods</button>
+<button class="tab" onclick="GTA6HQ.switchDashTab('characters',this)">👥 Characters</button>
+<button class="tab" onclick="GTA6HQ.switchDashTab('jobs',this)">📖 Job Sync Log</button>
+</div>
+<div id="dashPanel"></div>
+</div>
+</div>
+</div>
+
 <!-- MAIN APPLICATION SCRIPT -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script>
+/*
+==============================================================================
+ FIREBASE / RBAC SETUP — READ ME BEFORE GOING LIVE
+==============================================================================
+This site ships with a real (not client-side-only) admin permission model
+using Firebase Authentication + Firestore Security Rules. Two things are
+required on YOUR end before this is actually secure — neither can be done
+from inside this HTML file:
+
+1) Fill in your real Firebase project config below (Firebase Console →
+   Project Settings → General → "Your apps" → SDK setup snippet).
+   Until you do, the site runs in a clearly-labeled LOCAL DEMO MODE where
+   "admin" is just a localStorage flag — fine for previewing the UI, not
+   secure, and it says so in the Admin Sign In modal.
+
+2) Paste these Firestore Security Rules into Firebase Console → Firestore
+   Database → Rules. This is what actually enforces "admin-only writes" —
+   your JS can *ask* Firestore to write, but Firestore itself refuses the
+   write server-side unless the rule is satisfied. Hiding a button in the
+   UI never did that; this does.
+
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       function isAdmin() {
+         return request.auth != null &&
+           exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+       }
+       match /admins/{uid} {
+         allow read: if request.auth != null;
+         allow write: if isAdmin();
+       }
+       match /mods/{modId} {
+         allow read: if true;
+         allow create, update, delete: if isAdmin();
+       }
+       match /characters/{charId} {
+         allow read: if true;
+         allow create, update, delete: if isAdmin();
+       }
+     }
+   }
+
+3) After deploying the rules, create your own admin account in Firebase
+   Console → Authentication → add a user (email + password), then add a
+   document under a top-level "admins" collection whose Document ID is
+   that user's UID (any field/value inside is fine, e.g. {role:"admin"}).
+   Only UIDs with a matching /admins/{uid} document can write mods or
+   characters — this is checked by Firestore itself, server-side.
+==============================================================================
+*/
+const FIREBASE_CONFIG = {
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_PROJECT.appspot.com",
+messagingSenderId: "YOUR_SENDER_ID",
+appId: "YOUR_APP_ID"
+};
+const FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('YOUR_') !== 0;
+let fbAuth = null, fbDb = null;
+if (FIREBASE_CONFIGURED) {
+try {
+firebase.initializeApp(FIREBASE_CONFIG);
+fbAuth = firebase.auth();
+fbDb = firebase.firestore();
+} catch (e) { console.warn('[firebase] init failed, falling back to local demo mode:', e.message); }
+}
+</script>
+<script>
+
 // Small, original stylized "game-art" style avatars (SVG, not real photos, not reproductions of any copyrighted artwork)
 // and job-guide thumbnails, generated locally so no external/real-world images are used.
 function svgDataUri(svg) { return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg); }
@@ -1097,34 +1237,215 @@ _notifyTimerGlobal = setTimeout(() => toast.classList.remove('show'), 3600);
 } catch (e) {}
 }
 function isAdmin() { try { return localStorage.getItem('gta6hq_is_admin') === '1'; } catch (e) { return false; } }
+let _adminUnsub = null;
 function _refreshAdminUI() {
 try {
 const on = isAdmin();
-const btn = document.getElementById('addCharacterBtn');
-if (btn) btn.style.display = on ? 'inline-block' : 'none';
+const addCharBtn = document.getElementById('addCharacterBtn');
+if (addCharBtn) addCharBtn.style.display = on ? 'inline-block' : 'none';
+const addModBtn = document.getElementById('addModBtn');
+if (addModBtn) addModBtn.style.display = on ? 'inline-block' : 'none';
 const link = document.getElementById('adminToggleLink');
-if (link) link.textContent = on ? 'Admin: ON' : 'Admin';
+if (link) link.textContent = on ? (FIREBASE_CONFIGURED ? 'Admin: Signed In (Sign Out)' : 'Admin: ON (demo, click to end)') : 'Admin Sign In';
+const dashLink = document.getElementById('adminDashLink');
+if (dashLink) dashLink.style.display = on ? 'inline-block' : 'none';
 } catch (e) {}
 }
-function toggleAdmin() {
+// Real RBAC: admin status comes from Firebase Auth + a matching /admins/{uid} Firestore
+// document, which only Firestore's own server-side Security Rules can grant or deny.
+// If Firebase isn't configured (see setup comment above), we fall back to a clearly-labeled
+// local demo mode so the UI can still be previewed — this fallback is NOT secure and never
+// pretends to be; it's just for looking at the interface before you wire up Firebase.
+function adminLinkClick() {
+if (isAdmin()) { adminSignOut(); return; }
 try {
-if (isAdmin()) {
-localStorage.setItem('gta6hq_is_admin', '0');
-notify('Admin mode off.');
+const notice = document.getElementById('adminAuthModeNotice');
+if (notice) notice.style.display = FIREBASE_CONFIGURED ? 'none' : 'block';
+} catch (e) {}
+GTA6HQ.openModal('admin-login-modal');
+}
+async function adminSignIn() {
+const statusEl = document.getElementById('adminAuthStatus');
+const email = (document.getElementById('adminEmail')?.value || '').trim();
+const pw = document.getElementById('adminPassword')?.value || '';
+if (!FIREBASE_CONFIGURED) {
+// Local demo mode only — not secure, clearly labeled as such in the modal.
+if (email && pw) {
+localStorage.setItem('gta6hq_is_admin', '1');
+notify('✅ Demo admin mode on (not securely enforced — see setup notes).');
+GTA6HQ.closeModal('admin-login-modal');
 _refreshAdminUI();
+} else if (statusEl) {
+statusEl.textContent = 'Enter an email and password to continue (demo mode).';
+}
 return;
 }
-const pw = prompt('Enter admin password:');
-if (pw === null) return;
-if (pw === 'gta6hq-admin') {
+if (!email || !pw) { if (statusEl) statusEl.textContent = 'Enter your admin email and password.'; return; }
+try {
+if (statusEl) statusEl.textContent = 'Signing in…';
+const cred = await fbAuth.signInWithEmailAndPassword(email, pw);
+const uid = cred.user.uid;
+const doc = await fbDb.collection('admins').doc(uid).get();
+if (doc.exists) {
 localStorage.setItem('gta6hq_is_admin', '1');
-notify('✅ Admin mode on — you can now add characters.');
+notify('✅ Signed in as admin.');
+GTA6HQ.closeModal('admin-login-modal');
 } else {
-notify('❌ Incorrect password.');
+await fbAuth.signOut();
+localStorage.setItem('gta6hq_is_admin', '0');
+if (statusEl) statusEl.textContent = 'This account is not on the admin list.';
 }
+} catch (e) {
+if (statusEl) statusEl.textContent = 'Sign-in failed: ' + (e.message || 'unknown error');
+}
+_refreshAdminUI();
+}
+function adminSignOut() {
+try {
+if (FIREBASE_CONFIGURED && fbAuth) fbAuth.signOut().catch(() => {});
+localStorage.setItem('gta6hq_is_admin', '0');
+notify('Signed out of admin mode.');
 _refreshAdminUI();
 } catch (e) {}
 }
+// Keep UI in sync if Firebase's own auth state changes (e.g. token expiry, sign-out elsewhere).
+if (FIREBASE_CONFIGURED && fbAuth) {
+fbAuth.onAuthStateChanged(async (user) => {
+try {
+if (!user) { localStorage.setItem('gta6hq_is_admin', '0'); _refreshAdminUI(); return; }
+const doc = await fbDb.collection('admins').doc(user.uid).get();
+localStorage.setItem('gta6hq_is_admin', doc.exists ? '1' : '0');
+} catch (e) {}
+_refreshAdminUI();
+});
+}
+function slugify(str) {
+return String(str || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || ('item-' + Date.now());
+}
+
+// ---------- MOD DATABASE (Firestore-backed with admin-only writes; local fallback in demo mode) ----------
+const DEFAULT_MODS = [
+{ id: 'ultra-realism-enb', cat: 'visual', name: 'Ultra Realism ENB', desc: 'Photorealistic lighting, reflections and color grading for GTA 6 PC.', dl: '124K', ver: 'v2.3.1', icon: '🌅' },
+{ id: 'realistic-traffic-ai', cat: 'gameplay', name: 'Realistic Traffic AI', desc: 'Drivers follow real traffic laws, react to weather, and use turn signals.', dl: '87K', ver: 'v2.1.0', icon: '🚗' },
+{ id: '2026-supercar-pack', cat: 'vehicle', name: '2026 Supercar Pack', desc: 'Adds 40 supercars with custom handling and engine sounds.', dl: '203K', ver: 'v1.5.2', icon: '🏎️' },
+{ id: 'military-weapons-dlc', cat: 'weapon', name: 'Military Weapons DLC', desc: '15 military-grade weapons with realistic ballistics and sounds.', dl: '156K', ver: 'v3.0.1', icon: '🔫' },
+{ id: 'dynamic-weather-system', cat: 'gameplay', name: 'Dynamic Weather System', desc: 'Hurricanes, floods, and heat waves that affect gameplay.', dl: '72K', ver: 'v1.2.0', icon: '⛈️' },
+{ id: '4k-texture-overhaul', cat: 'visual', name: '4K Texture Overhaul', desc: 'Complete HD texture replacement for all environments and characters.', dl: '98K', ver: 'v4.0.0', icon: '🖼️' }
+];
+let MODS = [...DEFAULT_MODS];
+const MOD_ICONS = { visual: '🖼️', gameplay: '🎮', vehicle: '🏎️', weapon: '🔫' };
+async function loadMods() {
+if (FIREBASE_CONFIGURED && fbDb) {
+try {
+const snap = await fbDb.collection('mods').get();
+const remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+const byId = new Map(DEFAULT_MODS.map(m => [m.id, m]));
+remote.forEach(m => byId.set(m.id, m));
+MODS = [...byId.values()];
+return;
+} catch (e) { console.warn('[mods] Firestore load failed, using local list:', e.message); }
+}
+try {
+const raw = localStorage.getItem('gta6hq_mods_v1');
+const custom = raw ? JSON.parse(raw) : [];
+const byId = new Map(DEFAULT_MODS.map(m => [m.id, m]));
+(Array.isArray(custom) ? custom : []).forEach(m => byId.set(m.id, m));
+MODS = [...byId.values()];
+} catch (e) { MODS = [...DEFAULT_MODS]; }
+}
+function openAddModModal() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+GTA6HQ.openModal('add-mod-modal');
+}
+async function submitNewMod() {
+const statusEl = document.getElementById('modSubmitStatus');
+if (!isAdmin()) { if (statusEl) statusEl.textContent = 'Admin sign-in required.'; return; }
+const name = document.getElementById('newModName').value.trim();
+const cat = document.getElementById('newModCat').value;
+const ver = document.getElementById('newModVer').value.trim() || 'v1.0.0';
+const desc = document.getElementById('newModDesc').value.trim() || 'No description yet.';
+const url = document.getElementById('newModUrl').value.trim();
+if (!name) { if (statusEl) statusEl.textContent = 'Please enter a mod name.'; return; }
+const id = slugify(name);
+if (MODS.some(m => m.id === id)) { if (statusEl) statusEl.textContent = 'A mod with that name already exists — pick a different name to avoid a duplicate.'; return; }
+const newMod = { id, cat, name, desc, dl: '0', ver, icon: MOD_ICONS[cat] || '🧩', url: url || null };
+try {
+if (FIREBASE_CONFIGURED && fbDb) {
+// Firestore Security Rules (see setup comment) reject this write server-side unless
+// the signed-in user's UID has a matching /admins/{uid} document.
+await fbDb.collection('mods').doc(id).set(newMod);
+} else {
+const raw = localStorage.getItem('gta6hq_mods_v1');
+const custom = raw ? JSON.parse(raw) : [];
+custom.push(newMod);
+localStorage.setItem('gta6hq_mods_v1', JSON.stringify(custom));
+}
+await loadMods();
+renderMods('all');
+GTA6HQ.closeModal('add-mod-modal');
+notify('✅ Mod published!');
+document.getElementById('newModName').value = ''; document.getElementById('newModVer').value = '';
+document.getElementById('newModDesc').value = ''; document.getElementById('newModUrl').value = '';
+} catch (e) {
+if (statusEl) statusEl.textContent = 'Publish failed — Firestore rejected the write (' + (e.message || 'permission error') + '). This is the security working as intended if you are not signed in as an approved admin.';
+}
+}
+async function deleteMod(id) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+if (!confirm('Delete this mod?')) return;
+try {
+if (FIREBASE_CONFIGURED && fbDb) {
+await fbDb.collection('mods').doc(id).delete();
+} else {
+const raw = localStorage.getItem('gta6hq_mods_v1');
+const custom = raw ? JSON.parse(raw) : [];
+localStorage.setItem('gta6hq_mods_v1', JSON.stringify(custom.filter(m => m.id !== id)));
+}
+await loadMods();
+renderMods('all');
+renderAdminDashboard();
+notify('Mod deleted.');
+} catch (e) { notify('Delete failed: ' + (e.message || 'permission error')); }
+}
+
+// ---------- ADMIN DASHBOARD ----------
+let _dashTab = 'mods';
+function openAdminDashboard() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+GTA6HQ.openModal('admin-dashboard-modal');
+renderAdminDashboard();
+}
+function switchDashTab(tab, btn) {
+_dashTab = tab;
+document.querySelectorAll('#admin-dashboard-modal .tab').forEach(t => t.classList.remove('active'));
+if (btn) btn.classList.add('active');
+renderAdminDashboard();
+}
+function renderAdminDashboard() {
+try {
+const statusEl = document.getElementById('adminDashStatus');
+if (statusEl) statusEl.textContent = FIREBASE_CONFIGURED ? '🔒 Backed by Firestore — deletes are enforced server-side by your Security Rules.' : '⚠️ Local demo mode — not securely enforced. Configure Firebase to make this real.';
+const panel = document.getElementById('dashPanel');
+if (!panel) return;
+if (_dashTab === 'mods') {
+panel.innerHTML = MODS.map(m => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+<div style="flex:1;"><strong style="font-size:13px;">${_esc(m.name)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(m.cat)} · ${_esc(m.ver)}</div></div>
+<button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteMod('${m.id}')">Delete</button>
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No mods yet.</div>';
+} else if (_dashTab === 'characters') {
+panel.innerHTML = CHARACTERS.map(c => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+<div style="flex:1;"><strong style="font-size:13px;">${_esc(c.first)} ${_esc(c.last)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(c.role)}</div></div>
+<button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteCharacter('${c.id}')">Delete</button>
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No characters yet.</div>';
+} else if (_dashTab === 'jobs') {
+const status = (window.GTA6HQ && typeof GTA6HQ.jobSyncStatus === 'function') ? GTA6HQ.jobSyncStatus() : { remaining: '?', cooling: false };
+const verifiedJobs = ((window.GTA6HQ && GTA6HQ.getCustomJobs && GTA6HQ.getCustomJobs()) || []).filter(j => j.verified);
+panel.innerHTML = `<div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Checks remaining today: <strong style="color:var(--gold);">${status.remaining}</strong> ${status.cooling ? '(cooling down)' : ''}</div>` +
+(verifiedJobs.map(j => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><strong>${_esc(j.title)}</strong><div style="color:var(--text3);">via ${_esc(j.source || 'unknown source')}</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No verified guides synced yet.</div>');
+}
+} catch (e) {}
+}
+
 
 // Original, generated portrait artwork (silhouette + color-blocked skyline) — not a real photo,
 // not a reproduction of any copyrighted character art. Purely a stylized placeholder portrait.
@@ -1190,17 +1511,26 @@ description: "A well-connected figure in Leonida's underworld, often surrounded 
 description: "An older associate drawn into the criminal dealings around Vice City and the wider state of Leonida." }
 ];
 
-function loadCharacters() {
+async function loadCharacters() {
+if (FIREBASE_CONFIGURED && fbDb) {
+try {
+const snap = await fbDb.collection('characters').get();
+const remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+const byId = new Map(DEFAULT_CHARACTERS.map(c => [c.id, c]));
+remote.forEach(c => byId.set(c.id, c));
+CHARACTERS = [...byId.values()];
+return;
+} catch (e) { console.warn('[characters] Firestore load failed, using local list:', e.message); }
+}
 try {
 const raw = localStorage.getItem('gta6hq_characters_v1');
 const custom = raw ? JSON.parse(raw) : [];
-return [...DEFAULT_CHARACTERS, ...(Array.isArray(custom) ? custom : [])];
-} catch (e) { return [...DEFAULT_CHARACTERS]; }
+const byId = new Map(DEFAULT_CHARACTERS.map(c => [c.id, c]));
+(Array.isArray(custom) ? custom : []).forEach(c => byId.set(c.id, c));
+CHARACTERS = [...byId.values()];
+} catch (e) { CHARACTERS = [...DEFAULT_CHARACTERS]; }
 }
-function saveCustomCharacters(list) {
-try { localStorage.setItem('gta6hq_characters_v1', JSON.stringify(list)); } catch (e) {}
-}
-let CHARACTERS = loadCharacters();
+let CHARACTERS = [...DEFAULT_CHARACTERS];
 
 function renderCharacters() {
 try {
@@ -1234,32 +1564,65 @@ _setHTML('guideDetailBody', `
 GTA6HQ.openModal('guide-detail-modal');
 } catch (e) {}
 }
-function openAddCharacterModal() { try { GTA6HQ.openModal('add-character-modal'); } catch (e) {} }
-function submitNewCharacter() {
+function openAddCharacterModal() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+GTA6HQ.openModal('add-character-modal');
+}
+async function submitNewCharacter() {
 try {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
 const first = document.getElementById('newCharFirst').value.trim();
 const last = document.getElementById('newCharLast').value.trim();
 const role = document.getElementById('newCharRole').value.trim() || 'Supporting Character';
 const color = document.getElementById('newCharColor').value;
 const description = document.getElementById('newCharDesc').value.trim() || 'No bio yet.';
 if (!first || !last) { notify('Please enter a first name and surname.'); return; }
-const newChar = { id: 'custom_' + Date.now(), first, last, role, color, description };
+const id = slugify(first + '-' + last);
+if (CHARACTERS.some(c => c.id === id)) { notify('A character with that name already exists — that would create a duplicate.'); return; }
+const newChar = { id, first, last, role, color, description };
+if (FIREBASE_CONFIGURED && fbDb) {
+// Enforced server-side: Firestore rejects this unless the signed-in UID has a matching
+// /admins/{uid} document. See the Security Rules in the setup comment above.
+await fbDb.collection('characters').doc(id).set(newChar);
+} else {
 const raw = localStorage.getItem('gta6hq_characters_v1');
 const custom = raw ? JSON.parse(raw) : [];
 custom.push(newChar);
 saveCustomCharacters(custom);
-CHARACTERS = loadCharacters();
+}
+await loadCharacters();
 renderCharacters();
 GTA6HQ.closeModal('add-character-modal');
 notify('✅ Character published!');
 document.getElementById('newCharFirst').value = ''; document.getElementById('newCharLast').value = '';
 document.getElementById('newCharRole').value = ''; document.getElementById('newCharDesc').value = '';
-} catch (e) {}
+} catch (e) { notify('Publish failed: ' + (e.message || 'permission error')); }
+}
+function saveCustomCharacters(list) {
+try { localStorage.setItem('gta6hq_characters_v1', JSON.stringify(list)); } catch (e) {}
+}
+async function deleteCharacter(id) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+if (DEFAULT_CHARACTERS.some(c => c.id === id)) { notify('Default characters can\'t be deleted, only custom ones.'); return; }
+if (!confirm('Delete this character?')) return;
+try {
+if (FIREBASE_CONFIGURED && fbDb) {
+await fbDb.collection('characters').doc(id).delete();
+} else {
+const raw = localStorage.getItem('gta6hq_characters_v1');
+const custom = raw ? JSON.parse(raw) : [];
+saveCustomCharacters(custom.filter(c => c.id !== id));
+}
+await loadCharacters();
+renderCharacters();
+renderAdminDashboard();
+notify('Character deleted.');
+} catch (e) { notify('Delete failed: ' + (e.message || 'permission error')); }
 }
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() { renderCharacters(); });
+document.addEventListener('DOMContentLoaded', function() { loadCharacters().then(renderCharacters); });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
@@ -1330,14 +1693,6 @@ const DEFAULT_JOBS = [
 ];
 let currentGuideGame = 'all';
 let currentGuideType = 'all';
-const MODS = [
-{ id: 1, cat: 'visual', name: 'Ultra Realism ENB', desc: 'Photorealistic lighting, reflections and color grading for GTA 6 PC.', dl: '124K', ver: 'v2.3.1', icon: '🌅' },
-{ id: 2, cat: 'gameplay', name: 'Realistic Traffic AI', desc: 'Drivers follow real traffic laws, react to weather, and use turn signals.', dl: '87K', ver: 'v2.1.0', icon: '🚗' },
-{ id: 3, cat: 'vehicle', name: '2026 Supercar Pack', desc: 'Adds 40 supercars with custom handling and engine sounds.', dl: '203K', ver: 'v1.5.2', icon: '🏎️' },
-{ id: 4, cat: 'weapon', name: 'Military Weapons DLC', desc: '15 military-grade weapons with realistic ballistics and sounds.', dl: '156K', ver: 'v3.0.1', icon: '🔫' },
-{ id: 5, cat: 'gameplay', name: 'Dynamic Weather System', desc: 'Hurricanes, floods, and heat waves that affect gameplay.', dl: '72K', ver: 'v1.2.0', icon: '⛈️' },
-{ id: 6, cat: 'visual', name: '4K Texture Overhaul', desc: 'Complete HD texture replacement for all environments and characters.', dl: '98K', ver: 'v4.0.0', icon: '🖼️' }
-];
 const QA = [
 { id: 1, votes: 247, solved: true, title: 'How do you unlock the helicopter at the start of GTA 6?', excerpt: 'Stuck at the Port district and need to get across fast without unlocking the bridge.', answers: 8, time: '4h ago' },
 { id: 2, votes: 189, solved: false, title: 'What is the fastest car available before the first open-world segment?', excerpt: 'Looking for speed builds that work in early missions without much grind.', answers: 12, time: '6h ago' },
@@ -1846,7 +2201,13 @@ if (cel) cel.innerHTML = CONSOLES.map(c => `<div class="console-card"><div class
 } catch (e) {}
 }
 function toggleLike(id, btn) { try { if (S.liked.has(id)) { S.liked.delete(id); btn.classList.remove('liked'); } else { S.liked.add(id); btn.classList.add('liked'); } persistState(); } catch (e) {} }
-function toggleLikeMod(id) { try { notify('⬇️ Download started.'); } catch (e) {} }
+function toggleLikeMod(id) {
+try {
+const m = MODS.find(x => x.id === id);
+if (m && m.url) { window.open(m.url, '_blank', 'noopener,noreferrer'); }
+else { notify('⬇️ Download started.'); }
+} catch (e) {}
+}
 function filterMods(filter, btn) { try { document.querySelectorAll('#modTabs .tab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderMods(filter); } catch (e) {} }
 function searchQA() {
 try {
@@ -1887,7 +2248,11 @@ toggleLike, toggleLikeMod, filterMods, searchQA, lookupPlayer,
 checkPC, handleSearch,
 filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
 toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes,
-renderCharacters
+renderCharacters, openCharacterDetail, openAddCharacterModal, submitNewCharacter, deleteCharacter,
+adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
+openAddModModal, submitNewMod, deleteMod,
+jobSyncStatus: () => _jobSyncStatus(),
+getCustomJobs: () => S.customJobs || []
 };
 function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('.ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
 document.addEventListener('keydown', e => {
@@ -1901,12 +2266,13 @@ function init() {
 try { renderNewsHome(); } catch (e) {}
 try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
 try { _updateSyncButton(); } catch (e) {}
-try { renderMods('all'); } catch (e) {}
-try { renderCharacters(); } catch (e) {}
+try { loadMods().then(() => renderMods('all')); } catch (e) {}
+try { loadCharacters().then(renderCharacters); } catch (e) {}
 try { renderQA(); } catch (e) {}
 try { renderSidebarNews(); } catch (e) {}
 try { renderEvents(); } catch (e) {}
 try { renderSysReq(); } catch (e) {}
+try { _refreshAdminUI(); } catch (e) {}
 try { updateCountdown(); } catch (e) {}
 try { setInterval(updateCountdown, 1000); } catch (e) {}
 try { setInterval(renderSidebarNews, 60000); } catch (e) {}
