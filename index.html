@@ -1144,30 +1144,19 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 
 <!-- MAIN APPLICATION SCRIPT -->
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-<script>
+<script type="module">
 /*
 ==============================================================================
- FIREBASE / RBAC SETUP — READ ME BEFORE GOING LIVE
+ FIREBASE / RBAC SETUP
 ==============================================================================
-This site ships with a real (not client-side-only) admin permission model
-using Firebase Authentication + Firestore Security Rules. Two things are
-required on YOUR end before this is actually secure — neither can be done
-from inside this HTML file:
+This uses your real gta6hq-befa7 project (same config as your existing
+firebase-config.js) via the modular Firebase SDK. Two things still need to
+happen on YOUR end — inside the Firebase Console, not this file:
 
-1) Fill in your real Firebase project config below (Firebase Console →
-   Project Settings → General → "Your apps" → SDK setup snippet).
-   Until you do, the site runs in a clearly-labeled LOCAL DEMO MODE where
-   "admin" is just a localStorage flag — fine for previewing the UI, not
-   secure, and it says so in the Admin Sign In modal.
-
-2) Paste these Firestore Security Rules into Firebase Console → Firestore
-   Database → Rules. This is what actually enforces "admin-only writes" —
-   your JS can *ask* Firestore to write, but Firestore itself refuses the
-   write server-side unless the rule is satisfied. Hiding a button in the
-   UI never did that; this does.
+1) Paste these Firestore Security Rules into Firebase Console → Firestore
+   Database → Rules → Publish. This is what actually enforces "admin-only
+   writes" server-side — the JS below can *ask* Firestore to write, but
+   Firestore itself refuses unless the rule is satisfied:
 
    rules_version = '2';
    service cloud.firestore {
@@ -1191,31 +1180,80 @@ from inside this HTML file:
      }
    }
 
-3) After deploying the rules, create your own admin account in Firebase
-   Console → Authentication → add a user (email + password), then add a
-   document under a top-level "admins" collection whose Document ID is
-   that user's UID (any field/value inside is fine, e.g. {role:"admin"}).
-   Only UIDs with a matching /admins/{uid} document can write mods or
-   characters — this is checked by Firestore itself, server-side.
+2) In Firebase Console → Authentication → enable Email/Password sign-in,
+   add your own admin user, copy that user's UID, then in Firestore create
+   a collection called "admins" with a document whose Document ID is that
+   UID (any field inside is fine, e.g. {role:"admin"}). Only that UID (and
+   any others you add the same way) can write mods or characters — Firestore
+   checks this itself, server-side, regardless of what the browser sends.
+
+Also make sure your live domain (e.g. your Vercel domain) is added under
+Authentication → Settings → Authorized domains, or sign-in will fail.
 ==============================================================================
 */
-const FIREBASE_CONFIG = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_PROJECT.appspot.com",
-messagingSenderId: "YOUR_SENDER_ID",
-appId: "YOUR_APP_ID"
+import { initializeApp }                    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc,
+         query, orderBy, limit }             from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut,
+         onAuthStateChanged }                from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
+  authDomain:    'gta6hq-befa7.firebaseapp.com',
+  projectId:     'gta6hq-befa7',
+  storageBucket: 'gta6hq-befa7.appspot.com',
 };
-const FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('YOUR_') !== 0;
-let fbAuth = null, fbDb = null;
-if (FIREBASE_CONFIGURED) {
+
+let db = null, auth = null;
 try {
-firebase.initializeApp(FIREBASE_CONFIG);
-fbAuth = firebase.auth();
-fbDb = firebase.firestore();
-} catch (e) { console.warn('[firebase] init failed, falling back to local demo mode:', e.message); }
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+  console.log('[firebase] Initialised successfully.');
+} catch (err) {
+  console.error('[firebase] Init failed:', err.message);
 }
+
+/**
+ * Fetch the latest 12 news articles from Firestore (kept for parity with
+ * firebase-config.js — not wired into the RSS-based news feed on this page
+ * unless you want to switch news sources later).
+ * @returns {Promise<Array>}
+ */
+window.fetchLiveNews = async function fetchLiveNews() {
+  if (!db) return [];
+  try {
+    const q             = query(collection(db, 'automated_news'), orderBy('timestamp', 'desc'), limit(12));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (error) {
+    console.error('[firebase] Error reading from Firestore:', error);
+    return [];
+  }
+};
+
+// Small bridge so the rest of the site's plain (non-module) scripts can use
+// Firebase Auth + Firestore without needing `import` themselves.
+window.FB = {
+  ready: !!(db && auth),
+  async signIn(email, password) {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    return cred.user;
+  },
+  async signOutUser() { return signOut(auth); },
+  onAuthChange(cb) { return onAuthStateChanged(auth, cb); },
+  async getAdminDoc(uid) {
+    const snap = await getDoc(doc(db, 'admins', uid));
+    return snap.exists();
+  },
+  async getCollection(name) {
+    const snap = await getDocs(collection(db, name));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  },
+  async setDoc(collectionName, id, data) { return setDoc(doc(db, collectionName, id), data); },
+  async deleteDoc(collectionName, id) { return deleteDoc(doc(db, collectionName, id)); }
+};
+window.dispatchEvent(new Event('fb-ready'));
 </script>
 <script>
 
@@ -1237,7 +1275,7 @@ _notifyTimerGlobal = setTimeout(() => toast.classList.remove('show'), 3600);
 } catch (e) {}
 }
 function isAdmin() { try { return localStorage.getItem('gta6hq_is_admin') === '1'; } catch (e) { return false; } }
-let _adminUnsub = null;
+function firebaseReady() { return !!(window.FB && window.FB.ready); }
 function _refreshAdminUI() {
 try {
 const on = isAdmin();
@@ -1246,21 +1284,21 @@ if (addCharBtn) addCharBtn.style.display = on ? 'inline-block' : 'none';
 const addModBtn = document.getElementById('addModBtn');
 if (addModBtn) addModBtn.style.display = on ? 'inline-block' : 'none';
 const link = document.getElementById('adminToggleLink');
-if (link) link.textContent = on ? (FIREBASE_CONFIGURED ? 'Admin: Signed In (Sign Out)' : 'Admin: ON (demo, click to end)') : 'Admin Sign In';
+if (link) link.textContent = on ? (firebaseReady() ? 'Admin: Signed In (Sign Out)' : 'Admin: ON (demo, click to end)') : 'Admin Sign In';
 const dashLink = document.getElementById('adminDashLink');
 if (dashLink) dashLink.style.display = on ? 'inline-block' : 'none';
 } catch (e) {}
 }
 // Real RBAC: admin status comes from Firebase Auth + a matching /admins/{uid} Firestore
 // document, which only Firestore's own server-side Security Rules can grant or deny.
-// If Firebase isn't configured (see setup comment above), we fall back to a clearly-labeled
-// local demo mode so the UI can still be previewed — this fallback is NOT secure and never
-// pretends to be; it's just for looking at the interface before you wire up Firebase.
+// If Firebase hasn't finished loading yet (or isn't configured), we fall back to a
+// clearly-labeled local demo mode so the UI can still be previewed — this fallback is
+// NOT secure and never pretends to be; it's just for looking at the interface.
 function adminLinkClick() {
 if (isAdmin()) { adminSignOut(); return; }
 try {
 const notice = document.getElementById('adminAuthModeNotice');
-if (notice) notice.style.display = FIREBASE_CONFIGURED ? 'none' : 'block';
+if (notice) notice.style.display = firebaseReady() ? 'none' : 'block';
 } catch (e) {}
 GTA6HQ.openModal('admin-login-modal');
 }
@@ -1268,7 +1306,7 @@ async function adminSignIn() {
 const statusEl = document.getElementById('adminAuthStatus');
 const email = (document.getElementById('adminEmail')?.value || '').trim();
 const pw = document.getElementById('adminPassword')?.value || '';
-if (!FIREBASE_CONFIGURED) {
+if (!firebaseReady()) {
 // Local demo mode only — not secure, clearly labeled as such in the modal.
 if (email && pw) {
 localStorage.setItem('gta6hq_is_admin', '1');
@@ -1283,15 +1321,14 @@ return;
 if (!email || !pw) { if (statusEl) statusEl.textContent = 'Enter your admin email and password.'; return; }
 try {
 if (statusEl) statusEl.textContent = 'Signing in…';
-const cred = await fbAuth.signInWithEmailAndPassword(email, pw);
-const uid = cred.user.uid;
-const doc = await fbDb.collection('admins').doc(uid).get();
-if (doc.exists) {
+const user = await window.FB.signIn(email, pw);
+const isOnAdminList = await window.FB.getAdminDoc(user.uid);
+if (isOnAdminList) {
 localStorage.setItem('gta6hq_is_admin', '1');
 notify('✅ Signed in as admin.');
 GTA6HQ.closeModal('admin-login-modal');
 } else {
-await fbAuth.signOut();
+await window.FB.signOutUser();
 localStorage.setItem('gta6hq_is_admin', '0');
 if (statusEl) statusEl.textContent = 'This account is not on the admin list.';
 }
@@ -1302,23 +1339,28 @@ _refreshAdminUI();
 }
 function adminSignOut() {
 try {
-if (FIREBASE_CONFIGURED && fbAuth) fbAuth.signOut().catch(() => {});
+if (firebaseReady()) window.FB.signOutUser().catch(() => {});
 localStorage.setItem('gta6hq_is_admin', '0');
 notify('Signed out of admin mode.');
 _refreshAdminUI();
 } catch (e) {}
 }
 // Keep UI in sync if Firebase's own auth state changes (e.g. token expiry, sign-out elsewhere).
-if (FIREBASE_CONFIGURED && fbAuth) {
-fbAuth.onAuthStateChanged(async (user) => {
+// Firebase loads as a deferred module, so we wait for its "fb-ready" signal (with a
+// DOMContentLoaded fallback in case timing differs).
+function _wireAuthStateListener() {
+if (!firebaseReady()) return;
+window.FB.onAuthChange(async (user) => {
 try {
 if (!user) { localStorage.setItem('gta6hq_is_admin', '0'); _refreshAdminUI(); return; }
-const doc = await fbDb.collection('admins').doc(user.uid).get();
-localStorage.setItem('gta6hq_is_admin', doc.exists ? '1' : '0');
+const isOnAdminList = await window.FB.getAdminDoc(user.uid);
+localStorage.setItem('gta6hq_is_admin', isOnAdminList ? '1' : '0');
 } catch (e) {}
 _refreshAdminUI();
 });
 }
+window.addEventListener('fb-ready', _wireAuthStateListener);
+document.addEventListener('DOMContentLoaded', _wireAuthStateListener);
 function slugify(str) {
 return String(str || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || ('item-' + Date.now());
 }
@@ -1335,10 +1377,9 @@ const DEFAULT_MODS = [
 let MODS = [...DEFAULT_MODS];
 const MOD_ICONS = { visual: '🖼️', gameplay: '🎮', vehicle: '🏎️', weapon: '🔫' };
 async function loadMods() {
-if (FIREBASE_CONFIGURED && fbDb) {
+if (firebaseReady()) {
 try {
-const snap = await fbDb.collection('mods').get();
-const remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+const remote = await window.FB.getCollection('mods');
 const byId = new Map(DEFAULT_MODS.map(m => [m.id, m]));
 remote.forEach(m => byId.set(m.id, m));
 MODS = [...byId.values()];
@@ -1370,10 +1411,10 @@ const id = slugify(name);
 if (MODS.some(m => m.id === id)) { if (statusEl) statusEl.textContent = 'A mod with that name already exists — pick a different name to avoid a duplicate.'; return; }
 const newMod = { id, cat, name, desc, dl: '0', ver, icon: MOD_ICONS[cat] || '🧩', url: url || null };
 try {
-if (FIREBASE_CONFIGURED && fbDb) {
+if (firebaseReady()) {
 // Firestore Security Rules (see setup comment) reject this write server-side unless
 // the signed-in user's UID has a matching /admins/{uid} document.
-await fbDb.collection('mods').doc(id).set(newMod);
+await window.FB.setDoc('mods', id, newMod);
 } else {
 const raw = localStorage.getItem('gta6hq_mods_v1');
 const custom = raw ? JSON.parse(raw) : [];
@@ -1394,8 +1435,8 @@ async function deleteMod(id) {
 if (!isAdmin()) { notify('Admin sign-in required.'); return; }
 if (!confirm('Delete this mod?')) return;
 try {
-if (FIREBASE_CONFIGURED && fbDb) {
-await fbDb.collection('mods').doc(id).delete();
+if (firebaseReady()) {
+await window.FB.deleteDoc('mods', id);
 } else {
 const raw = localStorage.getItem('gta6hq_mods_v1');
 const custom = raw ? JSON.parse(raw) : [];
@@ -1424,7 +1465,7 @@ renderAdminDashboard();
 function renderAdminDashboard() {
 try {
 const statusEl = document.getElementById('adminDashStatus');
-if (statusEl) statusEl.textContent = FIREBASE_CONFIGURED ? '🔒 Backed by Firestore — deletes are enforced server-side by your Security Rules.' : '⚠️ Local demo mode — not securely enforced. Configure Firebase to make this real.';
+if (statusEl) statusEl.textContent = firebaseReady() ? '🔒 Backed by Firestore — deletes are enforced server-side by your Security Rules.' : '⚠️ Local demo mode — not securely enforced. Configure Firebase to make this real.';
 const panel = document.getElementById('dashPanel');
 if (!panel) return;
 if (_dashTab === 'mods') {
@@ -1512,10 +1553,9 @@ description: "An older associate drawn into the criminal dealings around Vice Ci
 ];
 
 async function loadCharacters() {
-if (FIREBASE_CONFIGURED && fbDb) {
+if (firebaseReady()) {
 try {
-const snap = await fbDb.collection('characters').get();
-const remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+const remote = await window.FB.getCollection('characters');
 const byId = new Map(DEFAULT_CHARACTERS.map(c => [c.id, c]));
 remote.forEach(c => byId.set(c.id, c));
 CHARACTERS = [...byId.values()];
@@ -1580,10 +1620,10 @@ if (!first || !last) { notify('Please enter a first name and surname.'); return;
 const id = slugify(first + '-' + last);
 if (CHARACTERS.some(c => c.id === id)) { notify('A character with that name already exists — that would create a duplicate.'); return; }
 const newChar = { id, first, last, role, color, description };
-if (FIREBASE_CONFIGURED && fbDb) {
+if (firebaseReady()) {
 // Enforced server-side: Firestore rejects this unless the signed-in UID has a matching
 // /admins/{uid} document. See the Security Rules in the setup comment above.
-await fbDb.collection('characters').doc(id).set(newChar);
+await window.FB.setDoc('characters', id, newChar);
 } else {
 const raw = localStorage.getItem('gta6hq_characters_v1');
 const custom = raw ? JSON.parse(raw) : [];
@@ -1606,8 +1646,8 @@ if (!isAdmin()) { notify('Admin sign-in required.'); return; }
 if (DEFAULT_CHARACTERS.some(c => c.id === id)) { notify('Default characters can\'t be deleted, only custom ones.'); return; }
 if (!confirm('Delete this character?')) return;
 try {
-if (FIREBASE_CONFIGURED && fbDb) {
-await fbDb.collection('characters').doc(id).delete();
+if (firebaseReady()) {
+await window.FB.deleteDoc('characters', id);
 } else {
 const raw = localStorage.getItem('gta6hq_characters_v1');
 const custom = raw ? JSON.parse(raw) : [];
