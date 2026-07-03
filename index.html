@@ -57,7 +57,12 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .ticker-track:hover{animation-play-state:paused;}
 @keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 .ticker-item{padding:0 36px;font-family:var(--font-u);font-size:13px;font-weight:600;color:#fff;}
-.hero{position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(135deg,#0a0a0e 0%,#12121e 40%,#1a0a14 100%);}
+.hero{position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden;background:#150a24;}
+.hero-scene{position:absolute;inset:0;z-index:0;}
+.hero-scene svg{width:100%;height:100%;display:block;}
+.hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(10,10,14,.88) 0%,rgba(10,10,14,.6) 38%,rgba(10,10,14,.25) 62%,rgba(10,10,14,.55) 100%);}
+.hero-grid{z-index:2;}
+.hero-content{z-index:3;}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.2;}
 .hero-content{position:relative;max-width:1300px;margin:0 auto;padding:60px 20px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
 .hero-eyebrow{font-family:var(--font-u);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--pink);margin-bottom:12px;}
@@ -123,16 +128,16 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
 .mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
 
-/* --- CHARACTERS SECTION STYLES (full-portrait, name-overlay cards) --- */
+/* --- CHARACTERS SECTION STYLES (full-portrait, name-overlay cards — small) --- */
 .characters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
 }
 .character-card {
     position: relative;
     aspect-ratio: 3/4;
-    border-radius: var(--radius2);
+    border-radius: var(--radius);
     overflow: hidden;
     cursor: pointer;
     background: var(--bg3);
@@ -141,8 +146,8 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 }
 .character-card:hover {
     border-color: var(--gold);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0,0,0,.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,.45);
 }
 .character-card img {
     position: absolute;
@@ -160,47 +165,47 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 }
 .character-overlay-name {
     position: absolute;
-    left: 14px;
-    right: 46px;
-    bottom: 12px;
+    left: 8px;
+    right: 28px;
+    bottom: 7px;
     font-family: var(--font-d);
-    font-size: 17px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1.15;
     color: #fff;
     text-transform: uppercase;
-    letter-spacing: .5px;
+    letter-spacing: .3px;
 }
 .character-overlay-name .surname { color: var(--pink); display: block; }
 .character-arrow {
     position: absolute;
-    right: 12px;
-    bottom: 12px;
-    width: 26px;
-    height: 26px;
+    right: 7px;
+    bottom: 7px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: var(--pink);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 9px;
     flex-shrink: 0;
 }
 .character-role-pill {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 6px;
+    left: 6px;
     background: rgba(0,0,0,.65);
     border: 1px solid rgba(255,255,255,.15);
     color: var(--gold);
     font-family: var(--font-u);
-    font-size: 9px;
+    font-size: 7px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .5px;
-    padding: 3px 8px;
-    border-radius: 4px;
+    letter-spacing: .3px;
+    padding: 2px 5px;
+    border-radius: 3px;
 }
 
 /* --- NEWS FEATURE GRID (featured story + supporting cards) --- */
@@ -586,6 +591,70 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <!-- HERO -->
 <section id="home" class="hero">
+<div class="hero-scene">
+<svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#150a24"/>
+<stop offset="0.35" stop-color="#3a1240"/>
+<stop offset="0.62" stop-color="#c3406b"/>
+<stop offset="0.8" stop-color="#f0894a"/>
+<stop offset="1" stop-color="#f7b24a"/>
+</linearGradient>
+<radialGradient id="heroSun" cx="50%" cy="72%" r="26%">
+<stop offset="0" stop-color="#ffe8a8" stop-opacity="0.9"/>
+<stop offset="55%" stop-color="#ff9a5a" stop-opacity="0.35"/>
+<stop offset="100%" stop-color="#ff9a5a" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1600" height="600" fill="url(#heroSky)"/>
+<circle cx="800" cy="430" r="600" fill="url(#heroSun)"/>
+<circle cx="800" cy="420" r="70" fill="#ffe6b0" opacity="0.85"/>
+<g fill="#1a0e28" opacity="0.55">
+<rect x="60" y="330" width="34" height="180"/>
+<rect x="110" y="300" width="26" height="210"/>
+<rect x="150" y="360" width="46" height="150"/>
+<rect x="210" y="280" width="30" height="230"/>
+<rect x="1330" y="310" width="30" height="200"/>
+<rect x="1370" y="270" width="24" height="240"/>
+<rect x="1410" y="350" width="46" height="160"/>
+<rect x="1470" y="290" width="30" height="220"/>
+<rect x="1520" y="340" width="28" height="170"/>
+</g>
+<g fill="#170c26" opacity="0.7">
+<rect x="0" y="420" width="1600" height="180"/>
+<rect x="250" y="360" width="40" height="60"/>
+<rect x="330" y="380" width="26" height="40"/>
+<rect x="900" y="370" width="34" height="50"/>
+<rect x="1000" y="390" width="24" height="30"/>
+<rect x="1120" y="360" width="40" height="60"/>
+</g>
+<g opacity="0.5" fill="none" stroke="#2a1436" stroke-width="1">
+<line x1="0" y1="440" x2="1600" y2="440"/>
+<line x1="0" y1="460" x2="1600" y2="460"/>
+<line x1="0" y1="480" x2="1600" y2="480"/>
+</g>
+<g fill="#120a1f" opacity="0.85">
+<path d="M120 600 C120 470 100 420 90 400 C80 420 60 470 60 600 Z"/>
+<path d="M90 405 C60 390 30 385 10 392 C30 400 55 410 90 412 Z"/>
+<path d="M90 400 C65 378 45 365 22 358 C40 375 62 392 90 405 Z"/>
+<path d="M92 398 C118 372 140 358 165 350 C145 370 122 388 92 400 Z"/>
+<path d="M93 402 C125 398 152 402 172 412 C148 408 120 408 93 405 Z"/>
+</g>
+<g fill="#120a1f" opacity="0.85">
+<path d="M1500 600 C1500 450 1478 392 1466 368 C1454 392 1432 450 1432 600 Z"/>
+<path d="M1467 372 C1432 352 1396 345 1372 353 C1398 363 1428 375 1467 378 Z"/>
+<path d="M1466 366 C1436 340 1410 324 1382 315 C1404 336 1432 356 1466 368 Z"/>
+<path d="M1468 364 C1500 332 1528 314 1558 304 C1532 328 1502 350 1468 366 Z"/>
+<path d="M1469 370 C1508 364 1542 368 1566 380 C1536 375 1502 375 1469 372 Z"/>
+</g>
+<g fill="#f4c7d8" opacity="0.6">
+<path d="M300 140 l10 -6 l10 6 l-10 3 z"/>
+<path d="M340 165 l9 -5 l9 5 l-9 3 z"/>
+</g>
+</svg>
+</div>
+<div class="hero-overlay"></div>
 <div class="hero-grid"></div>
 <div class="hero-content">
 <div>
@@ -1064,18 +1133,36 @@ return svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"
 <defs>
 <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0" stop-color="${seedColor1}"/>
-<stop offset="1" stop-color="${seedColor2}"/>
+<stop offset="0.55" stop-color="${seedColor2}"/>
+<stop offset="1" stop-color="#120a1f"/>
+</linearGradient>
+<radialGradient id="glow" cx="50%" cy="38%" r="45%">
+<stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+<stop offset="0.92" stop-color="#ffffff" stop-opacity="0"/>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0.55"/>
 </linearGradient>
 </defs>
 <rect width="300" height="400" fill="url(#g)"/>
-<g opacity="0.25" fill="#000">
-<rect x="0" y="260" width="40" height="140"/><rect x="45" y="230" width="30" height="170"/>
-<rect x="80" y="280" width="50" height="120"/><rect x="235" y="240" width="35" height="160"/>
-<rect x="275" y="270" width="25" height="130"/>
+<circle cx="150" cy="150" r="130" fill="url(#glow)"/>
+<g fill="#0c0714" opacity="0.65">
+<rect x="0" y="300" width="26" height="100"/><rect x="28" y="275" width="20" height="125"/>
+<rect x="52" y="310" width="34" height="90"/><rect x="220" y="285" width="24" height="115"/>
+<rect x="248" y="260" width="18" height="140"/><rect x="270" y="300" width="30" height="100"/>
 </g>
-<circle cx="150" cy="165" r="70" fill="#000" opacity="0.22"/>
-<path d="M150 105 C110 105 90 140 92 175 C93 205 108 232 150 240 C192 232 207 205 208 175 C210 140 190 105 150 105 Z" fill="#000" opacity="0.35"/>
-<text x="150" y="205" font-family="Oswald, sans-serif" font-size="80" font-weight="700" text-anchor="middle" fill="#ffffff" fill-opacity="0.95">${initials}</text>
+<g opacity="0.55" stroke="#ffffff" stroke-opacity="0.15">
+<line x1="0" y1="320" x2="300" y2="320"/><line x1="0" y1="340" x2="300" y2="340"/><line x1="0" y1="360" x2="300" y2="360"/>
+</g>
+<path d="M150 84 C104 84 78 122 80 162 C81 196 96 226 150 236 C204 226 219 196 220 162 C222 122 196 84 150 84 Z" fill="#0c0714" opacity="0.85"/>
+<path d="M150 232 C104 232 66 262 58 310 L58 400 L242 400 L242 310 C234 262 196 232 150 232 Z" fill="#0c0714" opacity="0.85"/>
+<path d="M150 232 C104 232 66 262 58 310 L58 400 L242 400 L242 310 C234 262 196 232 150 232 Z" fill="url(#rim)"/>
+<path d="M150 84 C104 84 78 122 80 162 C81 196 96 226 150 236 C204 226 219 196 220 162 C222 122 196 84 150 84 Z" fill="url(#rim)"/>
+<rect width="300" height="400" fill="#000" opacity="0.12"/>
+<rect width="300" height="400" fill="none" stroke="#000" stroke-opacity="0.4" stroke-width="24"/>
+<text x="150" y="390" font-family="Oswald, sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#ffffff" fill-opacity="0.9" letter-spacing="2">${initials}</text>
 </svg>`);
 }
 
