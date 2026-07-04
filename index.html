@@ -521,8 +521,51 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 .page-grid{grid-template-columns:1fr;}
 .sidebar{display:none;}
 .footer-grid{grid-template-columns:1fr 1fr;}
-.nav-links{display:none;}
+.nav-links{
+position:absolute;top:60px;left:0;right:0;
+flex-direction:column;align-items:stretch;gap:0;
+background:rgba(10,10,14,.98);backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);
+max-height:0;overflow:hidden;transition:max-height .25s ease;
 }
+.nav-links.open{max-height:400px;}
+.nav-links a{padding:14px 20px;border-bottom:1px solid var(--border);border-radius:0;}
+.hamburger-btn{display:flex;}
+}
+@media(min-width:961px){
+.hamburger-btn{display:none;}
+}
+.hamburger-btn{
+flex-direction:column;justify-content:center;align-items:center;gap:4px;
+width:34px;height:34px;background:transparent;border:1px solid var(--border2);border-radius:6px;cursor:pointer;flex-shrink:0;
+}
+.hamburger-btn span{width:16px;height:2px;background:var(--text);border-radius:2px;transition:.2s;}
+.hamburger-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.hamburger-btn[aria-expanded="true"] span:nth-child(2){opacity:0;}
+.hamburger-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+/* Scroll progress bar */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--gold));z-index:10001;width:0%;transition:width .1s linear;}
+
+/* Back to top button */
+.back-to-top{
+position:fixed;bottom:22px;right:80px;width:42px;height:42px;border-radius:50%;
+background:var(--card);border:1px solid var(--border2);color:var(--gold);
+display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1500;
+opacity:0;pointer-events:none;transform:translateY(10px);transition:.25s;font-size:18px;
+}
+.back-to-top.show{opacity:1;pointer-events:all;transform:translateY(0);}
+.back-to-top:hover{border-color:var(--gold);background:rgba(240,180,41,.1);}
+
+/* Hero scroll indicator */
+.hero-scroll-indicator{
+position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text3);
+font-family:var(--font-u);font-size:11px;text-transform:uppercase;letter-spacing:1px;
+z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
+}
+.hero-scroll-indicator svg{width:18px;height:18px;}
+@keyframes bounce-down{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
 @media(max-width:600px){
 .footer-grid{grid-template-columns:1fr;}
 .hero-stats{grid-template-columns:1fr 1fr;}
@@ -569,6 +612,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 <a class="skip-link" href="#home">Skip to main content</a>
 <!-- TOPBAR -->
 <div class="topbar">
@@ -584,7 +628,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <nav aria-label="Main navigation">
 <div class="nav-inner">
 <a class="logo" href="#home" aria-label="GTA6HQ home">GTA<span>6</span>HQ</a>
-<div class="nav-links">
+<div class="nav-links" id="navLinks">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
 <a href="#mods">Mods</a>
@@ -601,6 +645,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <button class="btn btn-outline" onclick="GTA6HQ.openModal('auth-modal')">Sign In</button>
 <button class="btn btn-gold" onclick="GTA6HQ.openModal('auth-modal')">Join Free</button>
+<button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks" onclick="toggleMobileNav()">
+<span></span><span></span><span></span>
+</button>
 </div>
 </div>
 </nav>
@@ -735,6 +782,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 </div>
+<a href="#news" class="hero-scroll-indicator" aria-label="Scroll down to explore">
+Explore
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
 </section>
 <!-- MAIN -->
 <div style="padding:28px 0;">
@@ -951,6 +1002,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </footer>
 <!-- DISCORD FLOAT -->
 <a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord" aria-label="Join our Discord server">💬</a>
+<button class="back-to-top" id="backToTopBtn" aria-label="Back to top" onclick="scrollToTop()">↑</button>
 
 <!-- NEWS TAB PAGE -->
 <div id="news-tab-page">
@@ -2068,6 +2120,67 @@ document.addEventListener('DOMContentLoaded', function() { loadCustomSections().
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
 </script>
 
+<!-- NAV / SCROLL UI BEHAVIOR -->
+<script>
+function toggleMobileNav() {
+try {
+const nav = document.getElementById('navLinks');
+const btn = document.getElementById('hamburgerBtn');
+if (!nav || !btn) return;
+const isOpen = nav.classList.toggle('open');
+btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+} catch (e) {}
+}
+function scrollToTop() {
+try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+}
+// Close the mobile menu automatically after picking a link
+document.addEventListener('DOMContentLoaded', function() {
+try {
+const nav = document.getElementById('navLinks');
+if (!nav) return;
+nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+nav.classList.remove('open');
+const btn = document.getElementById('hamburgerBtn');
+if (btn) btn.setAttribute('aria-expanded', 'false');
+}));
+} catch (e) {}
+});
+// Scroll progress bar + back-to-top visibility + scroll-spy active nav highlighting
+(function() {
+const SPY_SECTION_IDS = ['home', 'news', 'mods', 'guides', 'characters', 'qa', 'sysreq', 'policy'];
+let ticking = false;
+function updateOnScroll() {
+try {
+const scrollTop = window.scrollY || document.documentElement.scrollTop;
+const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+const bar = document.getElementById('scrollProgress');
+if (bar) bar.style.width = pct + '%';
+
+const backBtn = document.getElementById('backToTopBtn');
+if (backBtn) backBtn.classList.toggle('show', scrollTop > 500);
+
+let currentId = SPY_SECTION_IDS[0];
+for (const id of SPY_SECTION_IDS) {
+const el = document.getElementById(id);
+if (!el) continue;
+const rect = el.getBoundingClientRect();
+if (rect.top <= 140) currentId = id;
+}
+document.querySelectorAll('.nav-links a, .ptl').forEach(a => {
+const href = a.getAttribute('href') || '';
+a.classList.toggle('active', href === '#' + currentId);
+});
+} catch (e) {}
+ticking = false;
+}
+window.addEventListener('scroll', () => {
+if (!ticking) { window.requestAnimationFrame(updateOnScroll); ticking = true; }
+}, { passive: true });
+document.addEventListener('DOMContentLoaded', updateOnScroll);
+})();
+</script>
 
 <!-- MAIN APPLICATION SCRIPT -->
 <script>
