@@ -6,7 +6,7 @@
 <meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, videos, mods, guides, Q&A and secure token rewards. Release Nov 19 2026."/>
 <title>GTA6HQ — The #1 Grand Theft Auto 6 Community</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Anton&family=Poppins:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Russo+One&display=swap" rel="stylesheet"/>
 <style>
 :root{
 --bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;--card:#1a1a23;--card2:#1e1e28;
@@ -527,9 +527,6 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <span class="live-badge"><span class="live-dot"></span>LIVE — GTA 6 releases Nov 19, 2026 on PS5 &amp; Xbox Series X|S</span>
 </div>
 <div>
-<a href="#news">News</a>
-<a href="#sysreq">PC Requirements</a>
-<a href="#policy">Rules</a>
 <a href="javascript:void(0)" id="adminToggleLink" onclick="GTA6HQ.adminLinkClick()">Admin Sign In</a>
 <a href="javascript:void(0)" id="adminDashLink" onclick="GTA6HQ.openAdminDashboard()" style="display:none;">Dashboard</a>
 </div>
@@ -574,7 +571,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="ticker-wrap" id="news">
 <div class="ticker-label">🔴 BREAKING</div>
 <div class="ticker-inner">
-<div class="ticker-track">
+<div class="ticker-track" id="tickerTrack">
 <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
 <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
 <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
@@ -660,8 +657,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="hero-content">
 <div>
 <p class="hero-eyebrow">// #1 GTA 6 COMMUNITY HUB — UPDATED AUTOMATICALLY</p>
-<h1 class="hero-title">GTA<span class="accent">6</span>HQ<br/>THE CREW<br/>STARTS HERE</h1>
-<p class="hero-sub">Auto-updated news, mods, job guides, character intel, and Q&amp;A — all in one place.</p>
+<h1 class="hero-title">GTA<span class="accent">6</span>HQ<br/><span id="heroTaglineText">THE CREW<br/>STARTS HERE</span></h1>
+<p class="hero-sub" id="heroSubText">Auto-updated news, mods, job guides, character intel, and Q&amp;A — all in one place.</p>
 <div class="hero-actions">
 <button class="btn-hero btn-hg" onclick="GTA6HQ.openModal('auth-modal')">Join the Crew — Free</button>
 <button class="btn-hero btn-hp" onclick="document.getElementById('guides').scrollIntoView({behavior:'smooth'})">Browse Guides</button>
@@ -887,7 +884,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="footer-grid">
 <div>
 <div class="footer-logo">GTA<span>6</span>HQ</div>
-<p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and character intel. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+<p class="footer-desc" id="footerDescText">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and character intel. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
 </div>
 <div>
 <div class="footer-col-title">Explore</div>
@@ -1073,6 +1070,11 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <label class="form-label">Description</label>
 <textarea class="form-input" id="newCharDesc" rows="3" placeholder="Short bio…"></textarea>
 </div>
+<div class="form-group">
+<label class="form-label">Image URL (optional)</label>
+<input class="form-input" type="text" id="newCharImgUrl" placeholder="https://… (leave blank to use generated art)"/>
+<div style="font-size:11px;color:var(--text3);margin-top:4px;">Only use images you own the rights to — this loads whatever URL you provide directly.</div>
+</div>
 <button class="btn-submit" style="background:var(--pink);" onclick="submitNewCharacter()">Publish Character</button>
 </div>
 </div>
@@ -1118,6 +1120,11 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="form-group"><label class="form-label">Version</label><input class="form-input" type="text" id="newModVer" placeholder="e.g., v1.0.0"/></div>
 <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newModDesc" rows="3" placeholder="What does this mod do?"></textarea></div>
 <div class="form-group"><label class="form-label">Download URL</label><input class="form-input" type="text" id="newModUrl" placeholder="https://…"/></div>
+<div class="form-group">
+<label class="form-label">Thumbnail Image URL (optional)</label>
+<input class="form-input" type="text" id="newModImgUrl" placeholder="https://… (leave blank to use an icon)"/>
+<div style="font-size:11px;color:var(--text3);margin-top:4px;">Only use images you own the rights to — this loads whatever URL you provide directly.</div>
+</div>
 <button class="btn-submit" style="background:var(--cyan);color:#062028;" onclick="GTA6HQ.submitNewMod()">Publish Mod</button>
 <div id="modSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
 </div>
@@ -1137,6 +1144,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <button class="tab active" onclick="GTA6HQ.switchDashTab('mods',this)">🔧 Mods</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('characters',this)">👥 Characters</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('jobs',this)">📖 Job Sync Log</button>
+<button class="tab" onclick="GTA6HQ.switchDashTab('site',this)">🎨 Site Settings</button>
 </div>
 <div id="dashPanel"></div>
 </div>
@@ -1175,6 +1183,10 @@ happen on YOUR end — inside the Firebase Console, not this file:
        match /characters/{charId} {
          allow read: if true;
          allow create, update, delete: if isAdmin();
+       }
+       match /site_content/{docId} {
+         allow read: if true;
+         allow write: if isAdmin();
        }
      }
    }
@@ -1407,10 +1419,11 @@ const cat = document.getElementById('newModCat').value;
 const ver = document.getElementById('newModVer').value.trim() || 'v1.0.0';
 const desc = document.getElementById('newModDesc').value.trim() || 'No description yet.';
 const url = document.getElementById('newModUrl').value.trim();
+const imageUrl = (document.getElementById('newModImgUrl')?.value || '').trim();
 if (!name) { if (statusEl) statusEl.textContent = 'Please enter a mod name.'; return; }
 const id = slugify(name);
 if (MODS.some(m => m.id === id)) { if (statusEl) statusEl.textContent = 'A mod with that name already exists — pick a different name to avoid a duplicate.'; return; }
-const newMod = { id, cat, name, desc, dl: '0', ver, icon: MOD_ICONS[cat] || '🧩', url: url || null };
+const newMod = { id, cat, name, desc, dl: '0', ver, icon: MOD_ICONS[cat] || '🧩', url: url || null, imageUrl: imageUrl || null };
 try {
 if (firebaseReady()) {
 // Firestore Security Rules (see setup comment) reject this write server-side unless
@@ -1428,6 +1441,7 @@ GTA6HQ.closeModal('add-mod-modal');
 notify('✅ Mod published!');
 document.getElementById('newModName').value = ''; document.getElementById('newModVer').value = '';
 document.getElementById('newModDesc').value = ''; document.getElementById('newModUrl').value = '';
+document.getElementById('newModImgUrl').value = '';
 } catch (e) {
 if (statusEl) statusEl.textContent = 'Publish failed — Firestore rejected the write (' + (e.message || 'permission error') + '). This is the security working as intended if you are not signed in as an approved admin.';
 }
@@ -1484,6 +1498,17 @@ const status = (window.GTA6HQ && typeof GTA6HQ.jobSyncStatus === 'function') ? G
 const verifiedJobs = ((window.GTA6HQ && GTA6HQ.getCustomJobs && GTA6HQ.getCustomJobs()) || []).filter(j => j.verified);
 panel.innerHTML = `<div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Checks remaining today: <strong style="color:var(--gold);">${status.remaining}</strong> ${status.cooling ? '(cooling down)' : ''}</div>` +
 (verifiedJobs.map(j => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><strong>${_esc(j.title)}</strong><div style="color:var(--text3);">via ${_esc(j.source || 'unknown source')}</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No verified guides synced yet.</div>');
+} else if (_dashTab === 'site') {
+const plainTagline = (SITE_CONTENT.heroTagline || '').replace(/<br\s*\/?>/gi, '\n');
+const fontChoices = Object.keys(FONT_OPTIONS).map(f => `<option value="${_esc(f)}" ${SITE_CONTENT.font === f ? 'selected' : ''}>${_esc(f)}</option>`).join('');
+panel.innerHTML = `
+<div class="form-group"><label class="form-label">Hero Tagline (one line per row)</label><textarea class="form-input" id="siteHeroTagline" rows="2">${_esc(plainTagline)}</textarea></div>
+<div class="form-group"><label class="form-label">Hero Subtitle</label><textarea class="form-input" id="siteHeroSub" rows="2">${_esc(SITE_CONTENT.heroSub || '')}</textarea></div>
+<div class="form-group"><label class="form-label">Ticker Messages (one per line)</label><textarea class="form-input" id="siteTickerMsgs" rows="5">${_esc((SITE_CONTENT.tickerMessages || []).join('\n'))}</textarea></div>
+<div class="form-group"><label class="form-label">Footer Description</label><textarea class="form-input" id="siteFooterDesc" rows="3">${_esc(SITE_CONTENT.footerDesc || '')}</textarea></div>
+<div class="form-group"><label class="form-label">Site-wide Heading Font</label><select class="form-input" id="siteFontPicker">${fontChoices}</select></div>
+<button class="btn-submit" style="background:var(--gold);" onclick="GTA6HQ.submitSiteSettings()">Save Site Settings</button>
+`;
 }
 } catch (e) {}
 }
@@ -1580,8 +1605,9 @@ if (!el) return;
 el.innerHTML = CHARACTERS.map(c => {
 const [c1, c2] = CHAR_COLORS[c.color] || CHAR_COLORS.pink;
 const initials = (c.first[0] || '') + (c.last[0] || '');
+const imgSrc = c.imageUrl ? _esc(c.imageUrl) : characterAvatarSvg(c1, c2, initials);
 return `<div class="character-card" onclick="openCharacterDetail('${c.id}')">
-<img src="${characterAvatarSvg(c1, c2, initials)}" alt="${_esc(c.first)} ${_esc(c.last)}" loading="lazy">
+<img src="${imgSrc}" alt="${_esc(c.first)} ${_esc(c.last)}" loading="lazy" onerror="this.onerror=null;this.src='${characterAvatarSvg(c1, c2, initials)}'">
 <div class="character-role-pill">${_esc(c.role)}</div>
 <div class="character-scrim"></div>
 <div class="character-overlay-name">${_esc(c.first)} <span class="surname">${_esc(c.last)}</span></div>
@@ -1596,9 +1622,10 @@ const c = CHARACTERS.find(x => x.id === id);
 if (!c) return;
 const [c1, c2] = CHAR_COLORS[c.color] || CHAR_COLORS.pink;
 const initials = (c.first[0] || '') + (c.last[0] || '');
+const imgSrc = c.imageUrl ? _esc(c.imageUrl) : characterAvatarSvg(c1, c2, initials);
 _setHTML('guideDetailTitle', `${_esc(c.first)} ${_esc(c.last)}`);
 _setHTML('guideDetailBody', `
-<img src="${characterAvatarSvg(c1, c2, initials)}" style="width:100%;border-radius:var(--radius);margin-bottom:14px;display:block;aspect-ratio:3/4;object-fit:cover;"/>
+<img src="${imgSrc}" onerror="this.onerror=null;this.src='${characterAvatarSvg(c1, c2, initials)}'" style="width:100%;border-radius:var(--radius);margin-bottom:14px;display:block;aspect-ratio:3/4;object-fit:cover;"/>
 <span class="tag tag-hot" style="margin-bottom:10px;display:inline-block;">${_esc(c.role)}</span>
 <p style="font-size:13px;color:var(--text2);line-height:1.6;">${_esc(c.description)}</p>
 `);
@@ -1617,10 +1644,11 @@ const last = document.getElementById('newCharLast').value.trim();
 const role = document.getElementById('newCharRole').value.trim() || 'Supporting Character';
 const color = document.getElementById('newCharColor').value;
 const description = document.getElementById('newCharDesc').value.trim() || 'No bio yet.';
+const imageUrl = (document.getElementById('newCharImgUrl')?.value || '').trim();
 if (!first || !last) { notify('Please enter a first name and surname.'); return; }
 const id = slugify(first + '-' + last);
 if (CHARACTERS.some(c => c.id === id)) { notify('A character with that name already exists — that would create a duplicate.'); return; }
-const newChar = { id, first, last, role, color, description };
+const newChar = { id, first, last, role, color, description, imageUrl: imageUrl || null };
 if (firebaseReady()) {
 // Enforced server-side: Firestore rejects this unless the signed-in UID has a matching
 // /admins/{uid} document. See the Security Rules in the setup comment above.
@@ -1637,6 +1665,7 @@ GTA6HQ.closeModal('add-character-modal');
 notify('✅ Character published!');
 document.getElementById('newCharFirst').value = ''; document.getElementById('newCharLast').value = '';
 document.getElementById('newCharRole').value = ''; document.getElementById('newCharDesc').value = '';
+document.getElementById('newCharImgUrl').value = '';
 } catch (e) { notify('Publish failed: ' + (e.message || 'permission error')); }
 }
 function saveCustomCharacters(list) {
@@ -1660,10 +1689,98 @@ renderAdminDashboard();
 notify('Character deleted.');
 } catch (e) { notify('Delete failed: ' + (e.message || 'permission error')); }
 }
+
+// ---------- SITE SETTINGS (hero text, ticker, footer, site-wide font) ----------
+const FONT_OPTIONS = {
+Oswald: "'Oswald', sans-serif",
+'Bebas Neue': "'Bebas Neue', sans-serif",
+Anton: "'Anton', sans-serif",
+Poppins: "'Poppins', sans-serif",
+Montserrat: "'Montserrat', sans-serif",
+'Russo One': "'Russo One', sans-serif"
+};
+const DEFAULT_SITE_CONTENT = {
+heroTagline: 'THE CREW<br>STARTS HERE',
+heroSub: 'Auto-updated news, mods, job guides, character intel, and Q&A — all in one place.',
+tickerMessages: [
+'🚀 GTA 6 confirmed for November 19, 2026 on PS5 & Xbox Series X|S',
+'⚠️ PC version NOT yet announced by Rockstar — console first',
+'🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map',
+'🎮 Dual protagonists Jason & Lucia confirmed — first female GTA lead',
+'🔧 New mod: Ultra Realism ENB v2.3 available in Mods section',
+'📱 Tag #GTA6HQ on Instagram to get featured in the community spotlight'
+],
+footerDesc: 'The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and character intel. Not affiliated with Rockstar Games or Take-Two Interactive.',
+font: 'Oswald'
+};
+let SITE_CONTENT = { ...DEFAULT_SITE_CONTENT };
+async function loadSiteContent() {
+if (firebaseReady()) {
+try {
+const rows = await window.FB.getCollection('site_content');
+const doc = rows.find(r => r.id === 'main');
+if (doc) { SITE_CONTENT = { ...DEFAULT_SITE_CONTENT, ...doc }; return; }
+} catch (e) { console.warn('[site] Firestore load failed, using local settings:', e.message); }
+}
+try {
+const raw = localStorage.getItem('gta6hq_site_content_v1');
+if (raw) SITE_CONTENT = { ...DEFAULT_SITE_CONTENT, ...JSON.parse(raw) };
+} catch (e) {}
+}
+function applySiteContent() {
+try {
+const taglineEl = document.getElementById('heroTaglineText');
+if (taglineEl) taglineEl.innerHTML = SITE_CONTENT.heroTagline || DEFAULT_SITE_CONTENT.heroTagline;
+const subEl = document.getElementById('heroSubText');
+if (subEl) subEl.textContent = SITE_CONTENT.heroSub || DEFAULT_SITE_CONTENT.heroSub;
+const footerEl = document.getElementById('footerDescText');
+if (footerEl) footerEl.textContent = SITE_CONTENT.footerDesc || DEFAULT_SITE_CONTENT.footerDesc;
+const tickerEl = document.getElementById('tickerTrack');
+if (tickerEl && Array.isArray(SITE_CONTENT.tickerMessages) && SITE_CONTENT.tickerMessages.length) {
+const msgs = SITE_CONTENT.tickerMessages;
+const doubled = [...msgs, ...msgs];
+tickerEl.innerHTML = doubled.map(m => `<span class="ticker-item">${_esc(m)}</span>`).join('');
+}
+const fontFamily = FONT_OPTIONS[SITE_CONTENT.font] || FONT_OPTIONS.Oswald;
+document.documentElement.style.setProperty('--font-d', fontFamily);
+} catch (e) { console.warn('[site] applySiteContent failed:', e.message); }
+}
+async function saveSiteContent(newContent) {
+SITE_CONTENT = { ...SITE_CONTENT, ...newContent };
+if (firebaseReady()) {
+// Enforced server-side the same way as mods/characters — only an approved admin UID
+// can write here, per the Security Rules in the setup comment above. Add a "site_content"
+// match block to those rules the same way as "mods"/"characters" if you haven't already.
+await window.FB.setDoc('site_content', 'main', SITE_CONTENT);
+} else {
+localStorage.setItem('gta6hq_site_content_v1', JSON.stringify(SITE_CONTENT));
+}
+applySiteContent();
+}
+async function submitSiteSettings() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+try {
+const tagline = (document.getElementById('siteHeroTagline')?.value || '').trim().replace(/\n/g, '<br>');
+const sub = (document.getElementById('siteHeroSub')?.value || '').trim();
+const tickerRaw = (document.getElementById('siteTickerMsgs')?.value || '').trim();
+const footer = (document.getElementById('siteFooterDesc')?.value || '').trim();
+const font = document.getElementById('siteFontPicker')?.value || 'Oswald';
+const tickerMessages = tickerRaw ? tickerRaw.split('\n').map(s => s.trim()).filter(Boolean) : DEFAULT_SITE_CONTENT.tickerMessages;
+await saveSiteContent({
+heroTagline: tagline || DEFAULT_SITE_CONTENT.heroTagline,
+heroSub: sub || DEFAULT_SITE_CONTENT.heroSub,
+tickerMessages,
+footerDesc: footer || DEFAULT_SITE_CONTENT.footerDesc,
+font
+});
+notify('✅ Site settings updated!');
+} catch (e) { notify('Save failed: ' + (e.message || 'permission error')); }
+}
 </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() { loadCharacters().then(renderCharacters); });
+document.addEventListener('DOMContentLoaded', function() { loadSiteContent().then(applySiteContent); });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
@@ -2221,7 +2338,12 @@ try {
 const el = document.getElementById('modsGrid');
 if (!el) return;
 const items = filter === 'all' ? MODS : MODS.filter(m => m.cat === filter);
-el.innerHTML = items.map(m => `<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;"><div class="mod-icon-box">${m.icon}</div><div><div class="mod-name">${_esc(m.name)}</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">${m.ver}</div></div></div><div class="mod-desc">${_esc(m.desc)}</div><div class="mod-footer"><span class="mod-dl">⬇️ ${m.dl}</span><button class="btn-dl" onclick="GTA6HQ.toggleLikeMod('${m.id}')">Download</button></div></div>`).join('');
+el.innerHTML = items.map(m => {
+const iconBox = m.imageUrl
+? `<div class="mod-icon-box" style="overflow:hidden;padding:0;"><img src="${_esc(m.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='${m.icon}'"></div>`
+: `<div class="mod-icon-box">${m.icon}</div>`;
+return `<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;">${iconBox}<div><div class="mod-name">${_esc(m.name)}</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">${m.ver}</div></div></div><div class="mod-desc">${_esc(m.desc)}</div><div class="mod-footer"><span class="mod-dl">⬇️ ${m.dl}</span><button class="btn-dl" onclick="GTA6HQ.toggleLikeMod('${m.id}')">Download</button></div></div>`;
+}).join('');
 } catch (e) {}
 }
 function renderQA(list) {
@@ -2293,7 +2415,8 @@ renderCharacters, openCharacterDetail, openAddCharacterModal, submitNewCharacter
 adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
 openAddModModal, submitNewMod, deleteMod,
 jobSyncStatus: () => _jobSyncStatus(),
-getCustomJobs: () => S.customJobs || []
+getCustomJobs: () => S.customJobs || [],
+submitSiteSettings
 };
 function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('.ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
 document.addEventListener('keydown', e => {
