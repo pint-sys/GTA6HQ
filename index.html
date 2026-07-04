@@ -3,10 +3,44 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="GTA6HQ — #1 Grand Theft Auto 6 community hub. Live news, videos, mods, guides, Q&A and secure token rewards. Release Nov 19 2026."/>
-<title>GTA6HQ — The #1 Grand Theft Auto 6 Community</title>
+<meta name="description" content="GTA6HQ — an independent GTA 6 community hub with auto-updated news, a mods database, job guides, character intel, and community Q&A. Not affiliated with Rockstar Games."/>
+<meta name="robots" content="index, follow"/>
+<meta name="theme-color" content="#0a0a0e"/>
+<link rel="canonical" href="https://gta6hq.vercel.app/"/>
+<title>GTA6HQ — Independent GTA 6 Community Hub | News, Mods &amp; Guides</title>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="GTA6HQ"/>
+<meta property="og:title" content="GTA6HQ — Independent GTA 6 Community Hub"/>
+<meta property="og:description" content="Auto-updated GTA 6 news, a mods database, job guides, character intel, and community Q&A — all in one place. Not affiliated with Rockstar Games."/>
+<meta property="og:url" content="https://gta6hq.vercel.app/"/>
+<meta property="og:locale" content="en_US"/>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="GTA6HQ — Independent GTA 6 Community Hub"/>
+<meta name="twitter:description" content="Auto-updated GTA 6 news, mods, job guides, character intel, and community Q&A."/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;600;700;800&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Anton&family=Poppins:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Russo+One&display=swap" rel="stylesheet"/>
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GTA6HQ",
+  "url": "https://gta6hq.vercel.app/",
+  "description": "Independent GTA 6 fan community hub with news, mods, job guides, and character intel.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "GTA6HQ",
+    "disambiguatingDescription": "Unofficial fan site. Not affiliated with Rockstar Games or Take-Two Interactive."
+  }
+}
+</script>
 <style>
 :root{
 --bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;--card:#1a1a23;--card2:#1e1e28;
@@ -22,6 +56,10 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.skip-link{position:absolute;top:-48px;left:8px;z-index:10000;background:var(--gold);color:#111;padding:10px 18px;border-radius:0 0 8px 8px;font-family:var(--font-u);font-weight:700;font-size:13px;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:0;}
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:2px;}
 body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;line-height:1.6;overflow-x:hidden;}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
@@ -531,6 +569,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </style>
 </head>
 <body>
+<a class="skip-link" href="#home">Skip to main content</a>
 <!-- TOPBAR -->
 <div class="topbar">
 <div style="display:flex;align-items:center;gap:14px;">
@@ -542,9 +581,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 <!-- NAV -->
-<nav>
+<nav aria-label="Main navigation">
 <div class="nav-inner">
-<a class="logo" href="#home">GTA<span>6</span>HQ</a>
+<a class="logo" href="#home" aria-label="GTA6HQ home">GTA<span>6</span>HQ</a>
 <div class="nav-links">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
@@ -555,8 +594,9 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <a href="#sysreq">PC Specs</a>
 </div>
 <div class="nav-right">
-<div class="search-wrap">
-<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text3);"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
+<div class="search-wrap" role="search">
+<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text3);" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
+<label for="globalSearch" class="sr-only">Search or enter a player ID</label>
 <input type="text" id="globalSearch" placeholder="Search or enter #PlayerID…" oninput="GTA6HQ.handleSearch(this.value)"/>
 </div>
 <button class="btn btn-outline" onclick="GTA6HQ.openModal('auth-modal')">Sign In</button>
@@ -701,7 +741,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- NEWS -->
 <section class="section container">
 <div class="section-header">
-<div class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></div>
+<h2 class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></h2>
 <button onclick="GTA6HQ.openNewsTab()" style="background:none;border:none;cursor:pointer;font-family:var(--font-u);font-size:13px;color:var(--gold);">All news →</button>
 </div>
 <div class="news-feature-grid" id="newsListHome"><div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news…</div></div>
@@ -713,7 +753,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- GUIDES (ENHANCED FOR GTA V & VI) -->
 <section class="section" id="guides">
 <div class="section-header">
-<div class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
+<h2 class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></h2>
 <button class="btn btn-gold" id="addJobBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
 </div>
 <!-- Progress Summary -->
@@ -728,7 +768,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- CHARACTERS -->
 <section class="section" id="characters">
 <div class="section-header">
-<div class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></div>
+<h2 class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></h2>
 <button class="btn btn-gold" id="addCharacterBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="openAddCharacterModal()">+ Add Character</button>
 </div>
 <div class="characters-grid" id="charactersGrid"></div>
@@ -736,7 +776,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- MODS -->
 <section class="section" id="mods">
 <div class="section-header">
-<div class="section-title">🔧 Mods Database</div>
+<h2 class="section-title">🔧 Mods Database</h2>
 <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>
 </div>
 <div class="mods-grid" id="modsGrid"></div>
@@ -747,7 +787,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- Q&A -->
 <section class="section" id="qa">
 <div class="section-header">
-<div class="section-title">❓ Questions &amp; Solutions</div>
+<h2 class="section-title">❓ Questions &amp; Solutions</h2>
 <button class="btn btn-gold" style="font-size:12px;padding:6px 14px;" onclick="GTA6HQ.openModal('ask-modal')">+ Ask Question</button>
 </div>
 <div class="id-search-row">
@@ -759,7 +799,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- SYS REQ -->
 <section class="section" id="sysreq">
 <div class="section-header">
-<div class="section-title">💻 GTA 6 System Requirements</div>
+<h2 class="section-title">💻 GTA 6 System Requirements</h2>
 <span class="auto-badge">⚡ Updated Jun 2026</span>
 </div>
 <div class="release-banner">
@@ -826,7 +866,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </section>
 <!-- POLICY -->
 <section class="section" id="policy">
-<div class="section-header"><div class="section-title">⚠️ Community Rules &amp; Ban Policy</div></div>
+<div class="section-header"><h2 class="section-title">⚠️ Community Rules &amp; Ban Policy</h2></div>
 <div class="policy-box">
 <div class="policy-title">⛔ 3-Strike System — Zero Tolerance</div>
 <div class="policy-rule"><span class="rule-num">S1</span><div><strong style="color:var(--text);">Warning.</strong> First violation removes the offending content and issues a formal warning. Strike expires in 30 days with good behavior.</div></div>
@@ -910,7 +950,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </footer>
 <!-- DISCORD FLOAT -->
-<a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord">💬</a>
+<a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord" aria-label="Join our Discord server">💬</a>
 
 <!-- NEWS TAB PAGE -->
 <div id="news-tab-page">
@@ -977,10 +1017,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="auth-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'auth-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title">Join GTA6HQ</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('auth-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('auth-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-tabs">
@@ -1005,10 +1045,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ASK MODAL -->
 <div class="modal-overlay" id="ask-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'ask-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title">Ask a Question</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('ask-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('ask-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" placeholder="How do I complete the Portsands Heist?"/></div>
@@ -1021,10 +1061,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- GUIDE DETAIL MODAL -->
 <div class="modal-overlay" id="guide-detail-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'guide-detail-modal')">
-<div class="modal" style="max-width:600px;">
+<div class="modal" role="dialog" aria-modal="true" style="max-width:600px;">
 <div class="modal-header">
 <div class="modal-title" id="guideDetailTitle">Job Details</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('guide-detail-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('guide-detail-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body" id="guideDetailBody"></div>
 </div>
@@ -1032,10 +1072,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADD JOB MODAL -->
 <div class="modal-overlay" id="add-job-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-job-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--green);">+ Add New Job Guide</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('add-job-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-job-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-group">
@@ -1074,10 +1114,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADD CHARACTER MODAL (admin only) -->
 <div class="modal-overlay" id="add-character-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-character-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--pink);">+ Add Character</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('add-character-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-character-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-group">
@@ -1118,10 +1158,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADMIN LOGIN MODAL (real Firebase auth, not a client-side password) -->
 <div class="modal-overlay" id="admin-login-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'admin-login-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--gold);">🔐 Admin Sign In</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('admin-login-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('admin-login-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div id="adminAuthModeNotice" style="display:none;background:rgba(255,60,110,.08);border:1px solid rgba(255,60,110,.25);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text2);margin-bottom:14px;">
@@ -1137,10 +1177,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADD MOD MODAL (admin only) -->
 <div class="modal-overlay" id="add-mod-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-mod-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--cyan);">+ Add Mod</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('add-mod-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-mod-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-group"><label class="form-label">Mod Name</label><input class="form-input" type="text" id="newModName" placeholder="e.g., Ultra Realism ENB"/></div>
@@ -1169,10 +1209,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADD SECTION MODAL (admin only) -->
 <div class="modal-overlay" id="add-section-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-section-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--green);">+ New Section</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div class="form-group"><label class="form-label">Section Name</label><input class="form-input" type="text" id="newSectionName" placeholder="e.g., Locations to Buy"/></div>
@@ -1185,10 +1225,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADD SECTION ITEM MODAL (admin only) -->
 <div class="modal-overlay" id="add-section-item-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-section-item-modal')">
-<div class="modal">
+<div class="modal" role="dialog" aria-modal="true">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--green);">+ Add Item</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-item-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-item-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <input type="hidden" id="newItemSectionId"/>
@@ -1205,10 +1245,10 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 
 <!-- ADMIN DASHBOARD MODAL -->
 <div class="modal-overlay" id="admin-dashboard-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'admin-dashboard-modal')">
-<div class="modal" style="max-width:720px;">
+<div class="modal" role="dialog" aria-modal="true" style="max-width:720px;">
 <div class="modal-header">
 <div class="modal-title" style="color:var(--gold);">🛠️ Admin Dashboard</div>
-<button class="modal-close" onclick="GTA6HQ.closeModal('admin-dashboard-modal')">×</button>
+<button class="modal-close" onclick="GTA6HQ.closeModal('admin-dashboard-modal')" aria-label="Close dialog">×</button>
 </div>
 <div class="modal-body">
 <div id="adminDashStatus" style="font-size:12px;color:var(--text3);margin-bottom:12px;"></div>
@@ -1711,12 +1751,12 @@ el.innerHTML = CHARACTERS.map(c => {
 const [c1, c2] = CHAR_COLORS[c.color] || CHAR_COLORS.pink;
 const initials = (c.first[0] || '') + (c.last[0] || '');
 const imgSrc = c.imageUrl ? _esc(c.imageUrl) : characterAvatarSvg(c1, c2, initials);
-return `<div class="character-card" onclick="openCharacterDetail('${c.id}')">
+return `<div class="character-card" role="button" tabindex="0" onclick="openCharacterDetail('${c.id}')">
 <img src="${imgSrc}" alt="${_esc(c.first)} ${_esc(c.last)}" loading="lazy" onerror="this.onerror=null;this.src='${characterAvatarSvg(c1, c2, initials)}'">
 <div class="character-role-pill">${_esc(c.role)}</div>
 <div class="character-scrim"></div>
 <div class="character-overlay-name">${_esc(c.first)} <span class="surname">${_esc(c.last)}</span></div>
-<div class="character-arrow">→</div>
+<div class="character-arrow" aria-hidden="true">→</div>
 </div>`;
 }).join('');
 } catch (e) { console.warn('[characters] renderCharacters failed:', e.message); }
@@ -1915,7 +1955,7 @@ if (!container) return;
 container.innerHTML = CUSTOM_SECTIONS.map(sec => `
 <section class="section" id="custom-${_esc(sec.id)}">
 <div class="section-header">
-<div class="section-title">${sec.icon || '📁'} ${_esc(sec.title)}</div>
+<h2 class="section-title">${sec.icon || '📁'} ${_esc(sec.title)}</h2>
 </div>
 <div class="custom-section-grid">
 ${(sec.items || []).map(it => `
@@ -2191,7 +2231,7 @@ function _guideCardHTML(g) {
 const isDone = S.completedJobs.includes(g.id);
 const gameBadge = g.game === 'gta6' ? '<span class="tag tag-hot">GTA 6</span>' : '<span class="tag tag-official">GTA V</span>';
 const verifiedBadge = g.verified ? `<span class="tag tag-official" title="Sourced and verified from ${_esc(g.source || 'the web')}">🌐 Verified</span>` : '';
-return `<div class="card guide-card ${isDone ? 'completed' : ''}" onclick="GTA6HQ.openGuideDetail('${g.id}')" style="cursor:pointer;">
+return `<div class="card guide-card ${isDone ? 'completed' : ''}" role="button" tabindex="0" onclick="GTA6HQ.openGuideDetail('${g.id}')" style="cursor:pointer;">
 <div class="card-thumb-ph"><img src="${jobThumbSvg(g)}" alt="${_esc(g.title)}" style="width:100%;height:100%;object-fit:cover;"/></div>
 <div class="card-body">
 <div class="card-tags">${gameBadge}<span class="tag tag-guide">${g.type}</span>${verifiedBadge}</div>
@@ -2674,7 +2714,7 @@ try {
 const el = document.getElementById('qaList');
 if (!el) return;
 const items = list || QA;
-el.innerHTML = items.map(q => `<div class="qa-item" onclick="GTA6HQ.openQuestionDetail(${q.id})" style="cursor:pointer;"><div class="qa-votes"><div class="vote-count">${q.votes}</div><div class="vote-label">votes</div>${q.solved ? '<div class="qa-solved">✓</div>' : ''}</div><div class="qa-content"><div class="qa-title">${_esc(q.title)}</div><div class="qa-excerpt">${_esc(q.excerpt)}</div><div class="qa-meta"><span class="answer-badge">${q.answers} answers</span><span>🕐 ${q.time}</span></div></div></div>`).join('');
+el.innerHTML = items.map(q => `<div class="qa-item" role="button" tabindex="0" onclick="GTA6HQ.openQuestionDetail(${q.id})" style="cursor:pointer;"><div class="qa-votes"><div class="vote-count">${q.votes}</div><div class="vote-label">votes</div>${q.solved ? '<div class="qa-solved">✓</div>' : ''}</div><div class="qa-content"><div class="qa-title">${_esc(q.title)}</div><div class="qa-excerpt">${_esc(q.excerpt)}</div><div class="qa-meta"><span class="answer-badge">${q.answers} answers</span><span>🕐 ${q.time}</span></div></div></div>`).join('');
 } catch (e) {}
 }
 function openQuestionDetail(id) {
@@ -2793,6 +2833,14 @@ try { setInterval(_updateSyncButton, 60000); } catch (e) {}
 setTimeout(() => { try { fetchLatestNews(); } catch (e) {} }, 200);
 setTimeout(() => { try { if (!S.loggedIn) notify('👋 Sign up free to join the GTA 6 crew!'); } catch (e) {} }, 2500);
 }
+// Makes any div-based card marked role="button" keyboard-operable (Enter/Space triggers its click),
+// since native <div onclick> elements aren't reachable via keyboard by default.
+document.addEventListener('keydown', function(e) {
+if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.getAttribute && e.target.getAttribute('role') === 'button') {
+e.preventDefault();
+e.target.click();
+}
+});
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
 </script>
