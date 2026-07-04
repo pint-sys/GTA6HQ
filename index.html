@@ -1149,8 +1149,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 ==============================================================================
  FIREBASE / RBAC SETUP
 ==============================================================================
-This uses your real gta6hq-befa7 project (same config as your existing
-firebase-config.js) via the modular Firebase SDK. Two things still need to
+This uses your real gta6hq-5b56a project via the modular Firebase SDK. Two things still need to
 happen on YOUR end — inside the Firebase Console, not this file:
 
 1) Paste these Firestore Security Rules into Firebase Console → Firestore
@@ -1198,10 +1197,12 @@ import { getAuth, signInWithEmailAndPassword, signOut,
          onAuthStateChanged }                from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
 const firebaseConfig = {
-  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
-  authDomain:    'gta6hq-befa7.firebaseapp.com',
-  projectId:     'gta6hq-befa7',
-  storageBucket: 'gta6hq-befa7.appspot.com',
+  apiKey:            'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
+  authDomain:        'gta6hq-5b56a.firebaseapp.com',
+  projectId:         'gta6hq-5b56a',
+  storageBucket:     'gta6hq-5b56a.firebasestorage.app',
+  messagingSenderId: '487411015433',
+  appId:             '1:487411015433:web:9059535ae9b45f78ccbdd8'
 };
 
 let db = null, auth = null;
