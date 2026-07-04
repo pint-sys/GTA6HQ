@@ -127,6 +127,16 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
 .mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
+.custom-section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.custom-item-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;transition:.2s;}
+.custom-item-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.custom-item-img{width:100%;aspect-ratio:16/10;background:var(--bg3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.custom-item-img img{width:100%;height:100%;object-fit:cover;}
+.custom-item-body{padding:14px;}
+.custom-item-title{font-weight:700;font-size:14px;margin-bottom:6px;}
+.custom-item-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
+.custom-item-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.custom-item-price{font-family:var(--font-u);font-size:13px;font-weight:700;color:var(--gold);}
 
 /* --- CHARACTERS SECTION STYLES (full-portrait, name-overlay cards — small) --- */
 .characters-grid {
@@ -750,6 +760,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="mods-grid" id="modsGrid"></div>
 </section>
+<!-- CUSTOM SECTIONS (admin-created, e.g. Locations, Shops, etc.) -->
+<div id="customSectionsContainer"></div>
 <!-- Q&A -->
 <section class="section" id="qa">
 <div class="section-header">
@@ -1131,6 +1143,42 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 
+<!-- ADD SECTION MODAL (admin only) -->
+<div class="modal-overlay" id="add-section-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-section-modal')">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--green);">+ New Section</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-modal')">×</button>
+</div>
+<div class="modal-body">
+<div class="form-group"><label class="form-label">Section Name</label><input class="form-input" type="text" id="newSectionName" placeholder="e.g., Locations to Buy"/></div>
+<div class="form-group"><label class="form-label">Icon (emoji)</label><input class="form-input" type="text" id="newSectionIcon" placeholder="📍" maxlength="4"/></div>
+<button class="btn-submit" style="background:var(--green);color:#04220f;" onclick="GTA6HQ.submitNewSection()">Create Section</button>
+<div id="sectionSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
+</div>
+</div>
+</div>
+
+<!-- ADD SECTION ITEM MODAL (admin only) -->
+<div class="modal-overlay" id="add-section-item-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-section-item-modal')">
+<div class="modal">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--green);">+ Add Item</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-section-item-modal')">×</button>
+</div>
+<div class="modal-body">
+<input type="hidden" id="newItemSectionId"/>
+<div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newItemTitle" placeholder="e.g., Vice Beach Real Estate"/></div>
+<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newItemDesc" rows="3" placeholder="What is this?"></textarea></div>
+<div class="form-group"><label class="form-label">Price / Tag (optional)</label><input class="form-input" type="text" id="newItemPrice" placeholder="e.g., $2,500,000"/></div>
+<div class="form-group"><label class="form-label">Link (optional)</label><input class="form-input" type="text" id="newItemLink" placeholder="https://…"/></div>
+<div class="form-group"><label class="form-label">Image URL (optional)</label><input class="form-input" type="text" id="newItemImgUrl" placeholder="https://…"/></div>
+<button class="btn-submit" style="background:var(--green);color:#04220f;" onclick="GTA6HQ.submitNewSectionItem()">Publish Item</button>
+<div id="sectionItemSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
+</div>
+</div>
+</div>
+
 <!-- ADMIN DASHBOARD MODAL -->
 <div class="modal-overlay" id="admin-dashboard-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'admin-dashboard-modal')">
 <div class="modal" style="max-width:720px;">
@@ -1143,6 +1191,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="tabs">
 <button class="tab active" onclick="GTA6HQ.switchDashTab('mods',this)">🔧 Mods</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('characters',this)">👥 Characters</button>
+<button class="tab" onclick="GTA6HQ.switchDashTab('sections',this)">➕ Custom Sections</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('jobs',this)">📖 Job Sync Log</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('site',this)">🎨 Site Settings</button>
 </div>
@@ -1484,15 +1533,33 @@ if (statusEl) statusEl.textContent = firebaseReady() ? '🔒 Backed by Firestore
 const panel = document.getElementById('dashPanel');
 if (!panel) return;
 if (_dashTab === 'mods') {
-panel.innerHTML = MODS.map(m => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:12px;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>` +
+(MODS.map(m => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
 <div style="flex:1;"><strong style="font-size:13px;">${_esc(m.name)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(m.cat)} · ${_esc(m.ver)}</div></div>
 <button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteMod('${m.id}')">Delete</button>
-</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No mods yet.</div>';
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No mods yet.</div>');
 } else if (_dashTab === 'characters') {
-panel.innerHTML = CHARACTERS.map(c => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:12px;" onclick="GTA6HQ.openAddCharacterModal()">+ Add Character</button>` +
+(CHARACTERS.map(c => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
 <div style="flex:1;"><strong style="font-size:13px;">${_esc(c.first)} ${_esc(c.last)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(c.role)}</div></div>
 <button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteCharacter('${c.id}')">Delete</button>
-</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No characters yet.</div>';
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No characters yet.</div>');
+} else if (_dashTab === 'sections') {
+const sectionsHtml = CUSTOM_SECTIONS.map(sec => `
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:12px;">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+<strong style="font-size:14px;">${sec.icon || '📁'} ${_esc(sec.title)}</strong>
+<div style="display:flex;gap:6px;">
+<button class="btn-dl" style="background:var(--green);color:#04220f;" onclick="GTA6HQ.openAddSectionItemModal('${sec.id}')">+ Add Item</button>
+<button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteSection('${sec.id}')">Delete Section</button>
+</div>
+</div>
+${(sec.items || []).map(it => `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--border);">
+<div style="flex:1;font-size:12px;">${_esc(it.title)}${it.price ? ' · <span style="color:var(--gold);">' + _esc(it.price) + '</span>' : ''}</div>
+<button class="btn-dl" style="background:var(--pink);font-size:11px;padding:3px 9px;" onclick="GTA6HQ.deleteSectionItem('${sec.id}','${it.id}')">Remove</button>
+</div>`).join('') || '<div style="color:var(--text3);font-size:12px;padding-top:6px;">No items yet.</div>'}
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;margin-bottom:12px;">No custom sections yet.</div>';
+panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:14px;" onclick="GTA6HQ.openAddSectionModal()">+ New Section</button>` + sectionsHtml;
 } else if (_dashTab === 'jobs') {
 const status = (window.GTA6HQ && typeof GTA6HQ.jobSyncStatus === 'function') ? GTA6HQ.jobSyncStatus() : { remaining: '?', cooling: false };
 const verifiedJobs = ((window.GTA6HQ && GTA6HQ.getCustomJobs && GTA6HQ.getCustomJobs()) || []).filter(j => j.verified);
@@ -1776,11 +1843,148 @@ font
 notify('✅ Site settings updated!');
 } catch (e) { notify('Save failed: ' + (e.message || 'permission error')); }
 }
+
+// ---------- CUSTOM SECTIONS (admin can create new content types, e.g. "Locations to Buy") ----------
+let CUSTOM_SECTIONS = [];
+async function loadCustomSections() {
+if (firebaseReady()) {
+try {
+CUSTOM_SECTIONS = await window.FB.getCollection('custom_sections');
+return;
+} catch (e) { console.warn('[sections] Firestore load failed, using local list:', e.message); }
+}
+try {
+const raw = localStorage.getItem('gta6hq_custom_sections_v1');
+CUSTOM_SECTIONS = raw ? JSON.parse(raw) : [];
+} catch (e) { CUSTOM_SECTIONS = []; }
+}
+function _saveCustomSectionsLocal() {
+try { localStorage.setItem('gta6hq_custom_sections_v1', JSON.stringify(CUSTOM_SECTIONS)); } catch (e) {}
+}
+async function _persistSection(sec) {
+if (firebaseReady()) {
+// Enforced server-side the same way as mods/characters/site_content — add a matching
+// /custom_sections/{sectionId} rule block to your Security Rules if you haven't already.
+await window.FB.setDoc('custom_sections', sec.id, sec);
+} else {
+_saveCustomSectionsLocal();
+}
+}
+function renderCustomSections() {
+try {
+const container = document.getElementById('customSectionsContainer');
+if (!container) return;
+container.innerHTML = CUSTOM_SECTIONS.map(sec => `
+<section class="section" id="custom-${_esc(sec.id)}">
+<div class="section-header">
+<div class="section-title">${sec.icon || '📁'} ${_esc(sec.title)}</div>
+</div>
+<div class="custom-section-grid">
+${(sec.items || []).map(it => `
+<div class="custom-item-card">
+<div class="custom-item-img">${it.imageUrl ? `<img src="${_esc(it.imageUrl)}" alt="${_esc(it.title)}" loading="lazy" onerror="this.parentElement.innerHTML='📍'">` : '📍'}</div>
+<div class="custom-item-body">
+<div class="custom-item-title">${_esc(it.title)}</div>
+${it.desc ? `<div class="custom-item-desc">${_esc(it.desc)}</div>` : ''}
+<div class="custom-item-footer">
+${it.price ? `<span class="custom-item-price">${_esc(it.price)}</span>` : '<span></span>'}
+${it.link ? `<a href="${_esc(it.link)}" target="_blank" rel="noopener noreferrer" class="see-all">View →</a>` : ''}
+</div>
+</div>
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">Nothing here yet.</div>'}
+</div>
+</section>`).join('');
+} catch (e) { console.warn('[sections] renderCustomSections failed:', e.message); }
+}
+function openAddSectionModal() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+GTA6HQ.openModal('add-section-modal');
+}
+async function submitNewSection() {
+const statusEl = document.getElementById('sectionSubmitStatus');
+if (!isAdmin()) { if (statusEl) statusEl.textContent = 'Admin sign-in required.'; return; }
+const title = document.getElementById('newSectionName').value.trim();
+const icon = document.getElementById('newSectionIcon').value.trim();
+if (!title) { if (statusEl) statusEl.textContent = 'Please enter a section name.'; return; }
+const id = slugify(title);
+if (CUSTOM_SECTIONS.some(s => s.id === id)) { if (statusEl) statusEl.textContent = 'A section with that name already exists.'; return; }
+const newSection = { id, title, icon: icon || '📁', items: [] };
+try {
+await _persistSection(newSection);
+await loadCustomSections();
+renderCustomSections();
+renderAdminDashboard();
+GTA6HQ.closeModal('add-section-modal');
+notify('✅ Section created!');
+document.getElementById('newSectionName').value = ''; document.getElementById('newSectionIcon').value = '';
+} catch (e) { if (statusEl) statusEl.textContent = 'Create failed: ' + (e.message || 'permission error'); }
+}
+async function deleteSection(id) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+if (!confirm('Delete this entire section and all its items?')) return;
+try {
+if (firebaseReady()) {
+await window.FB.deleteDoc('custom_sections', id);
+} else {
+CUSTOM_SECTIONS = CUSTOM_SECTIONS.filter(s => s.id !== id);
+_saveCustomSectionsLocal();
+}
+await loadCustomSections();
+renderCustomSections();
+renderAdminDashboard();
+notify('Section deleted.');
+} catch (e) { notify('Delete failed: ' + (e.message || 'permission error')); }
+}
+function openAddSectionItemModal(sectionId) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+document.getElementById('newItemSectionId').value = sectionId;
+GTA6HQ.openModal('add-section-item-modal');
+}
+async function submitNewSectionItem() {
+const statusEl = document.getElementById('sectionItemSubmitStatus');
+if (!isAdmin()) { if (statusEl) statusEl.textContent = 'Admin sign-in required.'; return; }
+const sectionId = document.getElementById('newItemSectionId').value;
+const section = CUSTOM_SECTIONS.find(s => s.id === sectionId);
+if (!section) { if (statusEl) statusEl.textContent = 'Section not found.'; return; }
+const title = document.getElementById('newItemTitle').value.trim();
+const desc = document.getElementById('newItemDesc').value.trim();
+const price = document.getElementById('newItemPrice').value.trim();
+const link = document.getElementById('newItemLink').value.trim();
+const imageUrl = document.getElementById('newItemImgUrl').value.trim();
+if (!title) { if (statusEl) statusEl.textContent = 'Please enter a title.'; return; }
+const item = { id: slugify(title) + '-' + Date.now(), title, desc, price: price || null, link: link || null, imageUrl: imageUrl || null };
+const updatedSection = { ...section, items: [...(section.items || []), item] };
+try {
+await _persistSection(updatedSection);
+await loadCustomSections();
+renderCustomSections();
+renderAdminDashboard();
+GTA6HQ.closeModal('add-section-item-modal');
+notify('✅ Item added!');
+document.getElementById('newItemTitle').value = ''; document.getElementById('newItemDesc').value = '';
+document.getElementById('newItemPrice').value = ''; document.getElementById('newItemLink').value = '';
+document.getElementById('newItemImgUrl').value = '';
+} catch (e) { if (statusEl) statusEl.textContent = 'Add failed: ' + (e.message || 'permission error'); }
+}
+async function deleteSectionItem(sectionId, itemId) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+const section = CUSTOM_SECTIONS.find(s => s.id === sectionId);
+if (!section) return;
+const updatedSection = { ...section, items: (section.items || []).filter(it => it.id !== itemId) };
+try {
+await _persistSection(updatedSection);
+await loadCustomSections();
+renderCustomSections();
+renderAdminDashboard();
+notify('Item removed.');
+} catch (e) { notify('Remove failed: ' + (e.message || 'permission error')); }
+}
 </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() { loadCharacters().then(renderCharacters); });
 document.addEventListener('DOMContentLoaded', function() { loadSiteContent().then(applySiteContent); });
+document.addEventListener('DOMContentLoaded', function() { loadCustomSections().then(renderCustomSections); });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
@@ -2416,7 +2620,9 @@ adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
 openAddModModal, submitNewMod, deleteMod,
 jobSyncStatus: () => _jobSyncStatus(),
 getCustomJobs: () => S.customJobs || [],
-submitSiteSettings
+submitSiteSettings,
+openAddSectionModal, submitNewSection, deleteSection,
+openAddSectionItemModal, submitNewSectionItem, deleteSectionItem
 };
 function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('.ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
 document.addEventListener('keydown', e => {
