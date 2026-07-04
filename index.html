@@ -675,8 +675,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 <div class="hero-stats">
 <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
-<div class="hero-stat"><div class="hero-stat-num">320+</div><div class="hero-stat-label">Mods</div></div>
-<div class="hero-stat"><div class="hero-stat-num">40+</div><div class="hero-stat-label">Job Guides</div></div>
+<div class="hero-stat"><div class="hero-stat-num" id="heroStatMods">--</div><div class="hero-stat-label">Mods</div></div>
+<div class="hero-stat"><div class="hero-stat-num" id="heroStatGuides">--</div><div class="hero-stat-label">Job Guides</div></div>
 </div>
 </div>
 <div>
@@ -714,28 +714,16 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <section class="section" id="guides">
 <div class="section-header">
 <div class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px;">⚡ GTA V & VI</span></div>
-<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
-</div>
-<!-- Filters & Search -->
-<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center;">
-<div class="tabs" id="guideGameTabs" style="margin-bottom:0;">
-<button class="tab active" onclick="GTA6HQ.filterGuides('all', this)">All Games</button>
-<button class="tab" onclick="GTA6HQ.filterGuides('gta6', this)">🌴 GTA 6</button>
-<button class="tab" onclick="GTA6HQ.filterGuides('gtav', this)">🌆 GTA V</button>
-</div>
-<div class="tabs" id="guideTypeTabs" style="margin-bottom:0;">
-<button class="tab active" onclick="GTA6HQ.filterGuideType('all', this)">All Types</button>
-</div>
-<input class="id-input" type="text" id="guideSearch" placeholder="Search jobs..." style="flex:1;min-width:200px;" oninput="GTA6HQ.renderEnhancedGuides()"/>
-<button class="btn-sid" id="syncJobsBtn" onclick="GTA6HQ.syncCommunityJobs()">🔄 Check for New Job Guides</button>
+<button class="btn btn-gold" id="addJobBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
 </div>
 <!-- Progress Summary -->
 <div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
 <span>🏆</span>
 <span><strong style="color:var(--green);">Your Progress:</strong> <span id="guideProgressText">0 / 0 Jobs Completed</span></span>
 </div>
-<!-- Grid -->
+<!-- Preview Grid -->
 <div class="news-grid" id="guidesGrid"></div>
+<button onclick="GTA6HQ.openGuidesTab()" style="width:100%;margin-top:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(0,230,118,.15)'" onmouseout="this.style.background='rgba(0,230,118,.07)'">📖 Browse All Job Guides →</button>
 </section>
 <!-- CHARACTERS -->
 <section class="section" id="characters">
@@ -751,14 +739,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="section-title">🔧 Mods Database</div>
 <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>
 </div>
-<div class="tabs" id="modTabs">
-<button class="tab active" onclick="GTA6HQ.filterMods('all',this)">All</button>
-<button class="tab" onclick="GTA6HQ.filterMods('gameplay',this)">Gameplay</button>
-<button class="tab" onclick="GTA6HQ.filterMods('visual',this)">Visual</button>
-<button class="tab" onclick="GTA6HQ.filterMods('vehicle',this)">Vehicles</button>
-<button class="tab" onclick="GTA6HQ.filterMods('weapon',this)">Weapons</button>
-</div>
 <div class="mods-grid" id="modsGrid"></div>
+<button onclick="GTA6HQ.openModsTab()" style="width:100%;margin-top:14px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(0,212,255,.15)'" onmouseout="this.style.background='rgba(0,212,255,.07)'">🔧 Browse All Mods →</button>
 </section>
 <!-- CUSTOM SECTIONS (admin-created, e.g. Locations, Shops, etc.) -->
 <div id="customSectionsContainer"></div>
@@ -946,6 +928,48 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 </div>
 <div class="tab-page-content"><div id="newsTabList"></div></div>
+</div>
+
+<!-- MODS TAB PAGE -->
+<div id="mods-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:3500;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div class="tab-page-hdr">
+<div class="tab-page-hdr-inner">
+<button class="tab-page-back" onclick="GTA6HQ.closeModsTab()">← Back</button>
+<div class="tab-page-title">🔧 All Mods</div>
+<button class="btn btn-gold" id="addModBtnTab" style="margin-left:auto;font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>
+</div>
+<div class="tab-page-subtabs" id="modTabs">
+<button class="ntab active" onclick="GTA6HQ.filterMods('all',this)">All</button>
+<button class="ntab" onclick="GTA6HQ.filterMods('gameplay',this)">Gameplay</button>
+<button class="ntab" onclick="GTA6HQ.filterMods('visual',this)">Visual</button>
+<button class="ntab" onclick="GTA6HQ.filterMods('vehicle',this)">Vehicles</button>
+<button class="ntab" onclick="GTA6HQ.filterMods('weapon',this)">Weapons</button>
+</div>
+</div>
+<div class="tab-page-content"><div class="mods-grid" id="modsTabGrid"></div></div>
+</div>
+
+<!-- GUIDES TAB PAGE -->
+<div id="guides-tab-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:3500;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div class="tab-page-hdr">
+<div class="tab-page-hdr-inner">
+<button class="tab-page-back" onclick="GTA6HQ.closeGuidesTab()">← Back</button>
+<div class="tab-page-title">📖 All Job Guides</div>
+<button class="btn-sid" id="syncJobsBtn" style="margin-left:auto;" onclick="GTA6HQ.syncCommunityJobs()">🔄 Check for New Job Guides</button>
+</div>
+<div class="tab-page-subtabs" id="guideGameTabs">
+<button class="ntab active" onclick="GTA6HQ.filterGuides('all', this)">All Games</button>
+<button class="ntab" onclick="GTA6HQ.filterGuides('gta6', this)">🌴 GTA 6</button>
+<button class="ntab" onclick="GTA6HQ.filterGuides('gtav', this)">🌆 GTA V</button>
+</div>
+<div class="tab-page-subtabs" id="guideTypeTabs">
+<button class="ntab active" onclick="GTA6HQ.filterGuideType('all', this)">All Types</button>
+</div>
+</div>
+<div class="tab-page-content">
+<input class="id-input" type="text" id="guideSearch" placeholder="Search jobs..." style="width:100%;margin-bottom:16px;" oninput="GTA6HQ.renderEnhancedGuides()"/>
+<div class="news-grid" id="guidesTabGrid"></div>
+</div>
 </div>
 
 <!-- NOTIFY TOAST -->
@@ -1345,6 +1369,10 @@ const addCharBtn = document.getElementById('addCharacterBtn');
 if (addCharBtn) addCharBtn.style.display = on ? 'inline-block' : 'none';
 const addModBtn = document.getElementById('addModBtn');
 if (addModBtn) addModBtn.style.display = on ? 'inline-block' : 'none';
+const addModBtnTab = document.getElementById('addModBtnTab');
+if (addModBtnTab) addModBtnTab.style.display = on ? 'inline-block' : 'none';
+const addJobBtn = document.getElementById('addJobBtn');
+if (addJobBtn) addJobBtn.style.display = on ? 'inline-block' : 'none';
 const link = document.getElementById('adminToggleLink');
 if (link) link.textContent = on ? (firebaseReady() ? 'Admin: Signed In (Sign Out)' : 'Admin: ON (demo, click to end)') : 'Admin Sign In';
 const dashLink = document.getElementById('adminDashLink');
@@ -1485,6 +1513,7 @@ custom.push(newMod);
 localStorage.setItem('gta6hq_mods_v1', JSON.stringify(custom));
 }
 await loadMods();
+renderModsPreview();
 renderMods('all');
 GTA6HQ.closeModal('add-mod-modal');
 notify('✅ Mod published!');
@@ -1507,6 +1536,7 @@ const custom = raw ? JSON.parse(raw) : [];
 localStorage.setItem('gta6hq_mods_v1', JSON.stringify(custom.filter(m => m.id !== id)));
 }
 await loadMods();
+renderModsPreview();
 renderMods('all');
 renderAdminDashboard();
 notify('Mod deleted.');
@@ -1562,9 +1592,17 @@ ${(sec.items || []).map(it => `<div style="display:flex;align-items:center;gap:1
 panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:14px;" onclick="GTA6HQ.openAddSectionModal()">+ New Section</button>` + sectionsHtml;
 } else if (_dashTab === 'jobs') {
 const status = (window.GTA6HQ && typeof GTA6HQ.jobSyncStatus === 'function') ? GTA6HQ.jobSyncStatus() : { remaining: '?', cooling: false };
-const verifiedJobs = ((window.GTA6HQ && GTA6HQ.getCustomJobs && GTA6HQ.getCustomJobs()) || []).filter(j => j.verified);
-panel.innerHTML = `<div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Checks remaining today: <strong style="color:var(--gold);">${status.remaining}</strong> ${status.cooling ? '(cooling down)' : ''}</div>` +
-(verifiedJobs.map(j => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><strong>${_esc(j.title)}</strong><div style="color:var(--text3);">via ${_esc(j.source || 'unknown source')}</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No verified guides synced yet.</div>');
+const allJobs = ((window.GTA6HQ && GTA6HQ.getCustomJobs && GTA6HQ.getCustomJobs()) || []);
+const verifiedJobs = allJobs.filter(j => j.verified);
+const defaultJobsList = (window.GTA6HQ && GTA6HQ.getDefaultJobs) ? GTA6HQ.getDefaultJobs() : [];
+const allForList = [...defaultJobsList, ...allJobs];
+panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:12px;" onclick="GTA6HQ.openAddJobModal()">+ Add New Job</button>
+<div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Automated checks remaining today: <strong style="color:var(--gold);">${status.remaining}</strong> ${status.cooling ? '(cooling down)' : ''}</div>
+<div style="font-family:var(--font-d);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin:10px 0 4px;">All Job Guides (${allForList.length})</div>` +
+(allForList.map(j => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+<div style="flex:1;"><strong>${_esc(j.title)}</strong>${j.verified ? ` <span style="color:var(--text3);">via ${_esc(j.source || 'web')}</span>` : ''}</div>
+${defaultJobsList.some(d => d.id === j.id) ? '<span style="color:var(--text3);font-size:11px;">Default</span>' : `<button class="btn-dl" style="background:var(--pink);font-size:11px;padding:3px 9px;" onclick="GTA6HQ.deleteJobGuide('${j.id}')">Delete</button>`}
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No job guides yet.</div>');
 } else if (_dashTab === 'site') {
 const plainTagline = (SITE_CONTENT.heroTagline || '').replace(/<br\s*\/?>/gi, '\n');
 const fontChoices = Object.keys(FONT_OPTIONS).map(f => `<option value="${_esc(f)}" ${SITE_CONTENT.font === f ? 'selected' : ''}>${_esc(f)}</option>`).join('');
@@ -2133,33 +2171,23 @@ function populateGuideTypes() {
 try {
 const tabsContainer = document.getElementById('guideTypeTabs');
 if (!tabsContainer) return;
-const allBtn = tabsContainer.querySelector('.tab');
+const allBtn = tabsContainer.querySelector('.ntab');
 tabsContainer.innerHTML = '';
 tabsContainer.appendChild(allBtn);
 const allJobs = [...DEFAULT_JOBS, ...(S.customJobs || [])];
 const types = [...new Set(allJobs.map(j => j.type))].sort();
 types.forEach(type => {
 const btn = document.createElement('button');
-btn.className = 'tab';
+btn.className = 'ntab';
 btn.textContent = type;
 btn.onclick = function() { GTA6HQ.filterGuideType(type, this); };
 tabsContainer.appendChild(btn);
 });
 } catch (e) {}
 }
-function filterGuides(game, btn) { try { currentGuideGame = game; document.querySelectorAll('#guideGameTabs .tab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderEnhancedGuides(); } catch (e) {} }
-function filterGuideType(type, btn) { try { currentGuideType = type; document.querySelectorAll('#guideTypeTabs .tab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderEnhancedGuides(); } catch (e) {} }
-function renderEnhancedGuides() {
-try {
-const el = document.getElementById('guidesGrid');
-if (!el) return;
-const searchTerm = (document.getElementById('guideSearch')?.value || '').toLowerCase();
-let jobs = [...DEFAULT_JOBS, ...(S.customJobs || [])];
-if (currentGuideGame !== 'all') jobs = jobs.filter(j => j.game === currentGuideGame);
-if (currentGuideType !== 'all') jobs = jobs.filter(j => j.type === currentGuideType);
-if (searchTerm) jobs = jobs.filter(j => j.title.toLowerCase().includes(searchTerm) || j.type.toLowerCase().includes(searchTerm));
-if (!jobs.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);">No guides found.</div>'; return; }
-el.innerHTML = jobs.map(g => {
+function filterGuides(game, btn) { try { currentGuideGame = game; document.querySelectorAll('#guideGameTabs .ntab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderEnhancedGuides(); } catch (e) {} }
+function filterGuideType(type, btn) { try { currentGuideType = type; document.querySelectorAll('#guideTypeTabs .ntab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderEnhancedGuides(); } catch (e) {} }
+function _guideCardHTML(g) {
 const isDone = S.completedJobs.includes(g.id);
 const gameBadge = g.game === 'gta6' ? '<span class="tag tag-hot">GTA 6</span>' : '<span class="tag tag-official">GTA V</span>';
 const verifiedBadge = g.verified ? `<span class="tag tag-official" title="Sourced and verified from ${_esc(g.source || 'the web')}">🌐 Verified</span>` : '';
@@ -2174,10 +2202,50 @@ return `<div class="card guide-card ${isDone ? 'completed' : ''}" onclick="GTA6H
 <button class="like-btn" onclick="event.stopPropagation(); GTA6HQ.toggleGuideComplete('${g.id}')">${isDone ? '✔ Completed' : '✅ Mark Complete'}</button>
 </div>
 </div>`;
-}).join('');
+}
+const GUIDES_PREVIEW_COUNT = 6;
+function renderGuidesPreview() {
+try {
+const el = document.getElementById('guidesGrid');
+if (!el) return;
+const jobs = [...DEFAULT_JOBS, ...(S.customJobs || [])].slice(0, GUIDES_PREVIEW_COUNT);
+el.innerHTML = jobs.length ? jobs.map(_guideCardHTML).join('') : '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);">No guides yet.</div>';
 const total = [...DEFAULT_JOBS, ...(S.customJobs || [])].length;
 const done = S.completedJobs.length;
 _setText('guideProgressText', `${done} / ${total} Jobs Completed`);
+_updateHeroStats();
+} catch (e) {}
+}
+function renderEnhancedGuides() {
+try {
+const el = document.getElementById('guidesTabGrid');
+if (!el) return;
+const searchTerm = (document.getElementById('guideSearch')?.value || '').toLowerCase();
+let jobs = [...DEFAULT_JOBS, ...(S.customJobs || [])];
+if (currentGuideGame !== 'all') jobs = jobs.filter(j => j.game === currentGuideGame);
+if (currentGuideType !== 'all') jobs = jobs.filter(j => j.type === currentGuideType);
+if (searchTerm) jobs = jobs.filter(j => j.title.toLowerCase().includes(searchTerm) || j.type.toLowerCase().includes(searchTerm));
+if (!jobs.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);">No guides found.</div>'; return; }
+el.innerHTML = jobs.map(_guideCardHTML).join('');
+const total = [...DEFAULT_JOBS, ...(S.customJobs || [])].length;
+const done = S.completedJobs.length;
+_setText('guideProgressText', `${done} / ${total} Jobs Completed`);
+} catch (e) {}
+}
+function openGuidesTab() {
+try {
+const page = document.getElementById('guides-tab-page');
+if (!page) return;
+page.style.display = 'block'; page.scrollTop = 0;
+document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
+renderEnhancedGuides();
+} catch (e) {}
+}
+function closeGuidesTab() {
+try {
+const page = document.getElementById('guides-tab-page');
+if (page) page.style.display = 'none';
+document.documentElement.style.overflow = ''; document.body.style.overflow = '';
 } catch (e) {}
 }
 function openGuideDetail(id) {
@@ -2216,12 +2284,13 @@ function toggleGuideComplete(id) {
 try {
 if (S.completedJobs.includes(id)) { S.completedJobs = S.completedJobs.filter(i => i !== id); notify('Guide unmarked.'); }
 else { S.completedJobs.push(id); notify('✅ Job marked complete!'); }
-persistState(); renderEnhancedGuides();
+persistState(); renderEnhancedGuides(); renderGuidesPreview();
 } catch (e) {}
 }
-function openAddJobModal() { try { openModal('add-job-modal'); } catch (e) {} }
+function openAddJobModal() { if (!isAdmin()) { notify('Admin sign-in required.'); return; } try { openModal('add-job-modal'); } catch (e) {} }
 function submitNewJob() {
 try {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
 const title = document.getElementById('newJobTitle').value.trim();
 const type = document.getElementById('newJobType').value.trim();
 const diff = document.getElementById('newJobDiff').value;
@@ -2232,10 +2301,20 @@ if (!title || !type || !stepsRaw) { notify('Please fill in Title, Type, and Step
 const steps = stepsRaw.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s);
 const newJob = { id: 'custom_' + Date.now(), game, title, type, diff, reward: reward || 'Unknown', emoji: '📝', steps };
 if (!S.customJobs) S.customJobs = [];
-S.customJobs.unshift(newJob); persistState(); closeModal('add-job-modal'); populateGuideTypes(); renderEnhancedGuides();
+S.customJobs.unshift(newJob); persistState(); closeModal('add-job-modal'); populateGuideTypes(); renderEnhancedGuides(); renderGuidesPreview();
 notify('✅ Job guide published!');
 document.getElementById('newJobTitle').value = ''; document.getElementById('newJobType').value = '';
 document.getElementById('newJobReward').value = ''; document.getElementById('newJobSteps').value = '';
+} catch (e) {}
+}
+async function deleteJobGuide(id) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+if (DEFAULT_JOBS.some(j => j.id === id)) { notify('Default job guides can\'t be deleted, only custom/synced ones.'); return; }
+if (!confirm('Delete this job guide?')) return;
+try {
+S.customJobs = (S.customJobs || []).filter(j => j.id !== id);
+persistState(); populateGuideTypes(); renderEnhancedGuides(); renderGuidesPreview(); renderAdminDashboard();
+notify('Job guide deleted.');
 } catch (e) {}
 }
 const JOB_SYNC_DAILY_LIMIT = 2;
@@ -2249,6 +2328,14 @@ const remaining = Math.max(0, JOB_SYNC_DAILY_LIMIT - (S.jobSyncCount || 0));
 const sinceLast = S.lastJobSyncTime ? Date.now() - S.lastJobSyncTime : Infinity;
 const cooling = sinceLast < JOB_SYNC_MIN_GAP_MS;
 return { remaining, cooling, waitMs: JOB_SYNC_MIN_GAP_MS - sinceLast };
+}
+function _updateHeroStats() {
+try {
+const modsEl = document.getElementById('heroStatMods');
+if (modsEl) modsEl.textContent = String(MODS.length);
+const guidesEl = document.getElementById('heroStatGuides');
+if (guidesEl) guidesEl.textContent = String([...DEFAULT_JOBS, ...(S.customJobs || [])].length);
+} catch (e) {}
 }
 function _updateSyncButton() {
 try {
@@ -2330,7 +2417,7 @@ S.lastJobSyncTime = Date.now();
 if (found.length > 0) {
 if (!S.customJobs) S.customJobs = [];
 S.customJobs.unshift(...found);
-persistState(); populateGuideTypes(); renderEnhancedGuides();
+persistState(); populateGuideTypes(); renderEnhancedGuides(); renderGuidesPreview();
 notify(`✅ Found and verified ${found.length} job guide${found.length > 1 ? 's' : ''} shared online.`);
 } else {
 persistState();
@@ -2537,17 +2624,49 @@ const cls = cat === 'official' ? 'official' : cat === 'rumor' ? 'rumor' : 'updat
 const label = cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update';
 return (_tagCache[cat] = `<span class="nl-tag ${cls}">${label}</span>`);
 }
-function renderMods(filter = 'all') {
-try {
-const el = document.getElementById('modsGrid');
-if (!el) return;
-const items = filter === 'all' ? MODS : MODS.filter(m => m.cat === filter);
-el.innerHTML = items.map(m => {
+function _modCardHTML(m) {
 const iconBox = m.imageUrl
 ? `<div class="mod-icon-box" style="overflow:hidden;padding:0;"><img src="${_esc(m.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='${m.icon}'"></div>`
 : `<div class="mod-icon-box">${m.icon}</div>`;
-return `<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;">${iconBox}<div><div class="mod-name">${_esc(m.name)}</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">${m.ver}</div></div></div><div class="mod-desc">${_esc(m.desc)}</div><div class="mod-footer"><span class="mod-dl">⬇️ ${m.dl}</span><button class="btn-dl" onclick="GTA6HQ.toggleLikeMod('${m.id}')">Download</button></div></div>`;
-}).join('');
+const hasFile = !!m.url;
+const dlBtn = hasFile
+? `<button class="btn-dl" onclick="GTA6HQ.toggleLikeMod('${m.id}')">⬇️ Download</button>`
+: `<button class="btn-dl" style="background:var(--text3);cursor:not-allowed;" onclick="GTA6HQ.toggleLikeMod('${m.id}')">No File Yet</button>`;
+return `<div class="mod-card"><div style="display:flex;align-items:center;gap:10px;">${iconBox}<div><div class="mod-name">${_esc(m.name)}</div><div style="font-size:10px;color:var(--text3);font-family:var(--font-u);">${m.ver}</div></div></div><div class="mod-desc">${_esc(m.desc)}</div><div class="mod-footer"><span class="mod-dl">${hasFile ? '⬇️ ' + m.dl : 'Demo entry'}</span>${dlBtn}</div></div>`;
+}
+const MODS_PREVIEW_COUNT = 6;
+function renderModsPreview() {
+try {
+const el = document.getElementById('modsGrid');
+if (!el) return;
+const items = MODS.slice(0, MODS_PREVIEW_COUNT);
+el.innerHTML = items.length ? items.map(_modCardHTML).join('') : '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);">No mods yet.</div>';
+_updateHeroStats();
+} catch (e) {}
+}
+function renderMods(filter = 'all') {
+try {
+const el = document.getElementById('modsTabGrid');
+if (!el) return;
+const items = filter === 'all' ? MODS : MODS.filter(m => m.cat === filter);
+el.innerHTML = items.length ? items.map(_modCardHTML).join('') : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);">No mods in this category yet.</div>';
+} catch (e) {}
+}
+function openModsTab() {
+try {
+const page = document.getElementById('mods-tab-page');
+if (!page) return;
+page.style.display = 'block'; page.scrollTop = 0;
+document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
+renderMods('all');
+document.querySelectorAll('#modTabs .ntab').forEach((b, i) => b.classList.toggle('active', i === 0));
+} catch (e) {}
+}
+function closeModsTab() {
+try {
+const page = document.getElementById('mods-tab-page');
+if (page) page.style.display = 'none';
+document.documentElement.style.overflow = ''; document.body.style.overflow = '';
 } catch (e) {}
 }
 function renderQA(list) {
@@ -2555,7 +2674,25 @@ try {
 const el = document.getElementById('qaList');
 if (!el) return;
 const items = list || QA;
-el.innerHTML = items.map(q => `<div class="qa-item"><div class="qa-votes"><div class="vote-count">${q.votes}</div><div class="vote-label">votes</div>${q.solved ? '<div class="qa-solved">✓</div>' : ''}</div><div class="qa-content"><div class="qa-title">${_esc(q.title)}</div><div class="qa-excerpt">${_esc(q.excerpt)}</div><div class="qa-meta"><span class="answer-badge">${q.answers} answers</span><span>🕐 ${q.time}</span></div></div></div>`).join('');
+el.innerHTML = items.map(q => `<div class="qa-item" onclick="GTA6HQ.openQuestionDetail(${q.id})" style="cursor:pointer;"><div class="qa-votes"><div class="vote-count">${q.votes}</div><div class="vote-label">votes</div>${q.solved ? '<div class="qa-solved">✓</div>' : ''}</div><div class="qa-content"><div class="qa-title">${_esc(q.title)}</div><div class="qa-excerpt">${_esc(q.excerpt)}</div><div class="qa-meta"><span class="answer-badge">${q.answers} answers</span><span>🕐 ${q.time}</span></div></div></div>`).join('');
+} catch (e) {}
+}
+function openQuestionDetail(id) {
+try {
+const q = QA.find(x => x.id === id);
+if (!q) return;
+_setHTML('guideDetailTitle', `❓ ${q.title}`);
+_setHTML('guideDetailBody', `
+<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+${q.solved ? '<span class="tag tag-guide">✓ Solved</span>' : '<span class="tag tag-question">Open Question</span>'}
+<span class="tag tag-official">${q.answers} answers</span>
+</div>
+<p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;">${_esc(q.excerpt)}</p>
+<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text3);">
+This is a demo Q&A entry — full threaded answers aren't wired up to a live backend yet. Once your community answer system is connected, real replies will show here.
+</div>
+`);
+GTA6HQ.openModal('guide-detail-modal');
 } catch (e) {}
 }
 function renderEvents() { try { const el = document.getElementById('eventsList'); if (!el) return; el.innerHTML = EVENTS.map(e => `<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">${e.icon}</span><div><div style="font-size:12px;font-weight:600;">${_esc(e.name)}</div><div style="font-size:11px;color:var(--text3);font-family:var(--font-u);">${e.time}</div></div></div>`).join(''); } catch (e) {} }
@@ -2572,10 +2709,10 @@ function toggleLikeMod(id) {
 try {
 const m = MODS.find(x => x.id === id);
 if (m && m.url) { window.open(m.url, '_blank', 'noopener,noreferrer'); }
-else { notify('⬇️ Download started.'); }
+else { notify('⚠️ No download link has been added for this mod yet — this is a demo/showcase entry.'); }
 } catch (e) {}
 }
-function filterMods(filter, btn) { try { document.querySelectorAll('#modTabs .tab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderMods(filter); } catch (e) {} }
+function filterMods(filter, btn) { try { document.querySelectorAll('#modTabs .ntab').forEach(t => t.classList.remove('active')); if (btn) btn.classList.add('active'); renderMods(filter); } catch (e) {} }
 function searchQA() {
 try {
 const v = (document.getElementById('qaSearch')?.value || '').toLowerCase().trim();
@@ -2615,11 +2752,15 @@ toggleLike, toggleLikeMod, filterMods, searchQA, lookupPlayer,
 checkPC, handleSearch,
 filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
 toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes,
+deleteJobGuide, renderGuidesPreview, openGuidesTab, closeGuidesTab,
+renderModsPreview, openModsTab, closeModsTab,
+openQuestionDetail,
 renderCharacters, openCharacterDetail, openAddCharacterModal, submitNewCharacter, deleteCharacter,
 adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
 openAddModModal, submitNewMod, deleteMod,
 jobSyncStatus: () => _jobSyncStatus(),
 getCustomJobs: () => S.customJobs || [],
+getDefaultJobs: () => DEFAULT_JOBS,
 submitSiteSettings,
 openAddSectionModal, submitNewSection, deleteSection,
 openAddSectionItemModal, submitNewSectionItem, deleteSectionItem
@@ -2634,9 +2775,9 @@ if (np && np.style.display === 'block') { GTA6HQ.closeNewsTab(); }
 });
 function init() {
 try { renderNewsHome(); } catch (e) {}
-try { populateGuideTypes(); renderEnhancedGuides(); } catch (e) {}
+try { populateGuideTypes(); renderGuidesPreview(); } catch (e) {}
 try { _updateSyncButton(); } catch (e) {}
-try { loadMods().then(() => renderMods('all')); } catch (e) {}
+try { loadMods().then(() => renderModsPreview()); } catch (e) {}
 try { loadCharacters().then(renderCharacters); } catch (e) {}
 try { renderQA(); } catch (e) {}
 try { renderSidebarNews(); } catch (e) {}
