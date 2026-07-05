@@ -360,6 +360,10 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .nf-eyebrow .cat-official { color: var(--gold); }
 .nf-eyebrow .cat-rumor { color: var(--pink); }
 .nf-eyebrow .cat-update { color: var(--green); }
+.nf-eyebrow .cat-characters { color: var(--purple); }
+.nf-eyebrow .cat-vehicles { color: var(--cyan); }
+.nf-eyebrow .cat-map { color: var(--gold2); }
+.nf-eyebrow .cat-gameplay { color: var(--pink2); }
 .nf-eyebrow .sep { color: var(--text3); font-weight: 400; }
 .nf-card-title { font-family: var(--font-b); font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 8px; }
 .nf-card.featured .nf-card-title { font-size: 19px; }
@@ -687,6 +691,10 @@ z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
 .nl-tag.official{background:rgba(240,180,41,.15);color:var(--gold);}
 .nl-tag.rumor{background:rgba(255,60,110,.12);color:var(--pink);}
 .nl-tag.update{background:rgba(0,230,118,.1);color:var(--green);}
+.nl-tag.characters{background:rgba(168,85,247,.14);color:var(--purple);}
+.nl-tag.vehicles{background:rgba(0,212,255,.12);color:var(--cyan);}
+.nl-tag.map{background:rgba(200,146,14,.16);color:var(--gold2);}
+.nl-tag.gameplay{background:rgba(200,32,78,.14);color:var(--pink2);}
 .nl-title{font-size:13px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
 .nl-title a{color:inherit;text-decoration:none;}
 .nl-title a:hover{color:var(--gold);}
@@ -1175,7 +1183,11 @@ Explore
 <button class="ntab active" onclick="GTA6HQ.filterNewsTab('all',this)">All</button>
 <button class="ntab" onclick="GTA6HQ.filterNewsTab('official',this)">Official</button>
 <button class="ntab" onclick="GTA6HQ.filterNewsTab('rumor',this)">Rumors</button>
-<button class="ntab" onclick="GTA6HQ.filterNewsTab('update',this)">Updates</button>
+<button class="ntab" onclick="GTA6HQ.filterNewsTab('gameplay',this)">Gameplay</button>
+<button class="ntab" onclick="GTA6HQ.filterNewsTab('characters',this)">Characters</button>
+<button class="ntab" onclick="GTA6HQ.filterNewsTab('vehicles',this)">Vehicles</button>
+<button class="ntab" onclick="GTA6HQ.filterNewsTab('map',this)">Map</button>
+<button class="ntab" onclick="GTA6HQ.filterNewsTab('update',this)">Community</button>
 </div>
 </div>
 <div class="tab-page-content"><div id="newsTabList"></div></div>
@@ -3069,6 +3081,24 @@ const RSS_SOURCES = [
 const GTA6_KW = ['gta 6','gta vi','grand theft auto 6','grand theft auto vi','gta6','gtavi','rockstar','vice city','leonida','lucia','jason'];
 const NEWS_BLOK = ['scam','fake','giveaway','free hack','generator','cheats','leaked download'];
 const NEWS_EMJ = ['🔥','','🎮','','🗺️','⚡','🚗','🎯','📡','🚀','🎬','💰','🔫','🏆','🏙️'];
+// Genuine keyword-based categorization (not fabricated tags) — priority order matters since
+// an article can match more than one bucket; source-reliability categories are checked first,
+// then topic categories.
+const NEWS_CAT_KEYWORDS = {
+official: ['official', 'rockstar confirm', 'rockstar has confirmed', 'press release', 'newswire', 'announced'],
+rumor: ['leak', 'rumor', 'rumour', 'alleged', 'reportedly', 'insider', 'unconfirmed'],
+characters: ['lucia', 'jason', 'character', 'protagonist', 'voice actor', 'cast'],
+vehicles: ['vehicle', ' car ', 'motorcycle', 'boat', 'aircraft', 'plane', 'supercar'],
+map: [' map', 'leonida', 'vice city', 'world size', 'location', 'island', 'city map'],
+gameplay: ['gameplay', 'mechanic', 'mission', 'heist', 'combat', 'graphics', 'engine', 'framerate', 'performance', 'trailer']
+};
+function _classifyNewsCategory(tl, body) {
+const text = tl + ' ' + body;
+for (const cat of ['official', 'rumor', 'characters', 'vehicles', 'map', 'gameplay']) {
+if (NEWS_CAT_KEYWORDS[cat].some(k => text.includes(k))) return cat;
+}
+return 'update';
+}
 async function fetchLatestNews(force) {
 force = force || false;
 try {
@@ -3126,8 +3156,8 @@ if (excerpt.length > 220) excerpt = excerpt.substring(0, 220) + '…';
 var pub = new Date(item.pubDate || now);
 var diffH = Math.round((now - pub) / 3600000);
 var time = diffH < 1 ? 'Just now' : diffH < 24 ? diffH + 'h ago' : Math.floor(diffH / 24) + 'd ago';
-var cat = (tl.includes('official') || tl.includes('rockstar') || tl.includes('confirm') || tl.includes('trailer') || tl.includes('release')) ? 'official' : (tl.includes('leak') || tl.includes('rumor') || tl.includes('alleged') || tl.includes('report')) ? 'rumor' : 'update';
-items.push({ id: 'rss' + items.length, cat: cat, tag: cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update', emoji: NEWS_EMJ[items.length % NEWS_EMJ.length], title: title, excerpt: excerpt, time: time, url: url, source: source, likes: 0 });
+var cat = _classifyNewsCategory(tl, body);
+items.push({ id: 'rss' + items.length, cat: cat, tag: _catLabel(cat), emoji: NEWS_EMJ[items.length % NEWS_EMJ.length], title: title, excerpt: excerpt, time: time, url: url, source: source, likes: 0 });
 }
 } catch(e) {}
 }
@@ -3148,8 +3178,10 @@ out.push({ id: raw.id ?? out.length, cat: raw.cat || 'update', tag: raw.tag || '
 }
 return out;
 }
-function _catLabel(cat) { return cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update'; }
-function _catClass(cat) { return cat === 'official' ? 'cat-official' : cat === 'rumor' ? 'cat-rumor' : 'cat-update'; }
+const NEWS_CAT_LABELS = { official: 'Official', rumor: 'Rumor', characters: 'Characters', vehicles: 'Vehicles', map: 'Map', gameplay: 'Gameplay', update: 'Community' };
+const NEWS_CAT_CLASSES = { official: 'cat-official', rumor: 'cat-rumor', characters: 'cat-characters', vehicles: 'cat-vehicles', map: 'cat-map', gameplay: 'cat-gameplay', update: 'cat-update' };
+function _catLabel(cat) { return NEWS_CAT_LABELS[cat] || 'Community'; }
+function _catClass(cat) { return NEWS_CAT_CLASSES[cat] || 'cat-update'; }
 function _newsCardHTML(n, variant) {
 const hasUrl = n.url && n.url !== '#';
 const img = _safeImgAttr(n.image);
@@ -3206,26 +3238,27 @@ return `<div class="nf-item" ${sideAction} style="cursor:${dest ? 'pointer' : 'd
 }).join('');
 } catch (e) {}
 }
-function filterNewsTab(filter, btn) { try { document.querySelectorAll('.ntab').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderNewsTab(filter); } catch (e) {} }
+function filterNewsTab(filter, btn) { try { document.querySelectorAll('#news-tab-page .ntab').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderNewsTab(filter); } catch (e) {} }
 function updateNewsTabs() {
 try {
-const tabs = document.querySelectorAll('.ntab');
+const tabs = document.querySelectorAll('#news-tab-page .ntab');
 if (!tabs.length) return;
-const off = NEWS.filter(n => n.cat === 'official').length;
-const rum = NEWS.filter(n => n.cat === 'rumor').length;
-const upd = NEWS.filter(n => n.cat === 'update').length;
-if (tabs[0]) tabs[0].textContent = `All (${NEWS.length})`;
-if (tabs[1]) tabs[1].textContent = `Official (${off})`;
-if (tabs[2]) tabs[2].textContent = `Rumors (${rum})`;
-if (tabs[3]) tabs[3].textContent = `Updates (${upd})`;
+const order = ['all', 'official', 'rumor', 'gameplay', 'characters', 'vehicles', 'map', 'update'];
+const baseLabels = { all: 'All', official: 'Official', rumor: 'Rumors', gameplay: 'Gameplay', characters: 'Characters', vehicles: 'Vehicles', map: 'Map', update: 'Community' };
+tabs.forEach((tab, i) => {
+const key = order[i];
+if (!key) return;
+const count = key === 'all' ? NEWS.length : NEWS.filter(n => n.cat === key).length;
+tab.textContent = `${baseLabels[key]} (${count})`;
+});
 } catch (e) {}
 }
 function _afterFetch(force) { try { updateNewsTabs(); renderNewsHome(); renderSidebarNews(); const newsTab = document.getElementById('news-tab-page'); if (newsTab && newsTab.style.display !== 'none') renderNewsTab(); if (force) notify('📰 News refreshed!'); } catch (e) {} }
 const _tagCache = {};
 function _catTag(cat) {
 if (_tagCache[cat]) return _tagCache[cat];
-const cls = cat === 'official' ? 'official' : cat === 'rumor' ? 'rumor' : 'update';
-const label = cat === 'official' ? 'Official' : cat === 'rumor' ? 'Rumor' : 'Update';
+const cls = NEWS_CAT_CLASSES[cat] ? NEWS_CAT_CLASSES[cat].replace('cat-', '') : 'update';
+const label = _catLabel(cat);
 return (_tagCache[cat] = `<span class="nl-tag ${cls}">${label}</span>`);
 }
 function _modCardHTML(m) {
@@ -3433,7 +3466,7 @@ submitSiteSettings,
 openAddSectionModal, submitNewSection, deleteSection,
 openAddSectionItemModal, submitNewSectionItem, deleteSectionItem
 };
-function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('.ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
+function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('#news-tab-page .ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
 document.addEventListener('keydown', e => {
 if (e.key !== 'Escape') return;
 try {
