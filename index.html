@@ -611,6 +611,23 @@ width:34px;height:34px;background:transparent;border:1px solid var(--border2);bo
 .offline-banner{position:fixed;top:0;left:0;right:0;background:var(--pink);color:#fff;text-align:center;padding:9px 16px;font-family:var(--font-u);font-size:13px;font-weight:600;z-index:10002;transform:translateY(-100%);transition:transform .25s ease;}
 .offline-banner.show{transform:translateY(0);}
 
+/* --- SKELETON LOADING STATES --- */
+@keyframes skeleton-shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+.skeleton{
+background:linear-gradient(90deg, var(--bg3) 25%, var(--card2) 50%, var(--bg3) 75%);
+background-size:200% 100%;animation:skeleton-shimmer 1.6s ease-in-out infinite;
+border-radius:var(--radius);
+}
+.skel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.skel-thumb{width:100%;aspect-ratio:16/10;}
+.skel-line{height:12px;margin:10px 14px;}
+.skel-line.short{width:60%;}
+.skel-line.tiny{height:9px;width:40%;margin-top:6px;}
+.fade-in-content{animation:fade-in-up .35s ease both;}
+@keyframes fade-in-up{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.img-fade{opacity:0;transition:opacity .3s ease;}
+.img-fade.loaded{opacity:1;}
+
 /* Back to top button */
 .back-to-top{
 position:fixed;bottom:22px;right:80px;width:42px;height:42px;border-radius:50%;
@@ -864,7 +881,7 @@ Explore
 <h2 class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px;">⚡ Live</span></h2>
 <button onclick="GTA6HQ.openNewsTab()" style="background:none;border:none;cursor:pointer;font-family:var(--font-u);font-size:13px;color:var(--gold);">All news →</button>
 </div>
-<div class="news-feature-grid" id="newsListHome"><div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news…</div></div>
+<div class="news-feature-grid" id="newsListHome"><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
 <button onclick="GTA6HQ.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
 </section>
 <!-- GALLERY -->
@@ -881,7 +898,7 @@ Explore
 <button class="tab" onclick="filterGallery('vehicle',this)">Vehicles</button>
 <button class="tab" onclick="filterGallery('environment',this)">Environment</button>
 </div>
-<div class="gallery-grid" id="galleryGrid"></div>
+<div class="gallery-grid" id="galleryGrid"><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div><div class="skeleton" style="aspect-ratio:4/3;border-radius:8px;"></div></div>
 </section>
 <!-- PAGE GRID -->
 <div class="page-grid">
@@ -898,7 +915,7 @@ Explore
 <span><strong style="color:var(--green);">Your Progress:</strong> <span id="guideProgressText">0 / 0 Jobs Completed</span></span>
 </div>
 <!-- Preview Grid -->
-<div class="news-grid" id="guidesGrid"></div>
+<div class="news-grid" id="guidesGrid"><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
 <button onclick="GTA6HQ.openGuidesTab()" style="width:100%;margin-top:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(0,230,118,.15)'" onmouseout="this.style.background='rgba(0,230,118,.07)'">📖 Browse All Job Guides →</button>
 </section>
 <!-- CHARACTERS -->
@@ -907,7 +924,7 @@ Explore
 <h2 class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px;">⚡ Confirmed</span></h2>
 <button class="btn btn-gold" id="addCharacterBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="openAddCharacterModal()">+ Add Character</button>
 </div>
-<div class="characters-grid" id="charactersGrid"></div>
+<div class="characters-grid" id="charactersGrid"><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
 </section>
 <!-- MODS -->
 <section class="section" id="mods">
@@ -915,7 +932,7 @@ Explore
 <h2 class="section-title">🔧 Mods Database</h2>
 <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="GTA6HQ.openAddModModal()">+ Add Mod</button>
 </div>
-<div class="mods-grid" id="modsGrid"></div>
+<div class="mods-grid" id="modsGrid"><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div><div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
 <button onclick="GTA6HQ.openModsTab()" style="width:100%;margin-top:14px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(0,212,255,.15)'" onmouseout="this.style.background='rgba(0,212,255,.07)'">🔧 Browse All Mods →</button>
 </section>
 <!-- CUSTOM SECTIONS (admin-created, e.g. Locations, Shops, etc.) -->
@@ -930,7 +947,7 @@ Explore
 <input class="id-input" type="text" id="qaSearch" placeholder="Search questions or enter #GTA6HQ-XXXXX player ID…"/>
 <button class="btn-sid" onclick="GTA6HQ.searchQA()">Search</button>
 </div>
-<div class="qa-list" id="qaList"></div>
+<div class="qa-list" id="qaList"><div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center;"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%;"></div><div class="skeleton skel-line tiny" style="margin:0;"></div></div></div><div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center;"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%;"></div><div class="skeleton skel-line tiny" style="margin:0;"></div></div></div><div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center;"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%;"></div><div class="skeleton skel-line tiny" style="margin:0;"></div></div></div></div>
 </section>
 <!-- SYS REQ -->
 <section class="section" id="sysreq">
@@ -1596,6 +1613,28 @@ window.dispatchEvent(new Event('fb-ready'));
 // Small, original stylized "game-art" style avatars (SVG, not real photos, not reproductions of any copyrighted artwork)
 // and job-guide thumbnails, generated locally so no external/real-world images are used.
 function svgDataUri(svg) { return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg); }
+function _skeletonCards(count) {
+let html = '';
+for (let i = 0; i < count; i++) {
+html += `<div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>`;
+}
+return html;
+}
+function _skeletonListItems(count) {
+let html = '';
+for (let i = 0; i < count; i++) {
+html += `<div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center;"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%;"></div><div class="skeleton skel-line tiny" style="margin:0;"></div></div></div>`;
+}
+return html;
+}
+function _triggerFadeIn(el) {
+try {
+if (!el) return;
+el.classList.remove('fade-in-content');
+void el.offsetWidth; // force reflow so the animation restarts
+el.classList.add('fade-in-content');
+} catch (e) {}
+}
 function _esc(str) { return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function _setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
 let _notifyTimerGlobal = null;
@@ -1970,13 +2009,14 @@ const [c1, c2] = CHAR_COLORS[c.color] || CHAR_COLORS.pink;
 const initials = (c.first[0] || '') + (c.last[0] || '');
 const imgSrc = c.imageUrl ? _esc(c.imageUrl) : characterAvatarSvg(c1, c2, initials);
 return `<div class="character-card" role="button" tabindex="0" onclick="openCharacterDetail('${c.id}')">
-<img src="${imgSrc}" alt="${_esc(c.first)} ${_esc(c.last)}" loading="lazy" onerror="this.onerror=null;this.src='${characterAvatarSvg(c1, c2, initials)}'">
+<img class="img-fade" src="${imgSrc}" alt="${_esc(c.first)} ${_esc(c.last)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='${characterAvatarSvg(c1, c2, initials)}'">
 <div class="character-role-pill">${_esc(c.role)}</div>
 <div class="character-scrim"></div>
 <div class="character-overlay-name">${_esc(c.first)} <span class="surname">${_esc(c.last)}</span></div>
 <div class="character-arrow" aria-hidden="true">→</div>
 </div>`;
 }).join('');
+_triggerFadeIn(el);
 } catch (e) { console.warn('[characters] renderCharacters failed:', e.message); }
 }
 function openCharacterDetail(id) {
@@ -2345,12 +2385,13 @@ el.innerHTML = items.length ? items.map((g, i) => {
 const src = g.imageUrl ? _esc(g.imageUrl) : galleryPlaceholderSvg(g.id, g.category);
 const fallback = galleryPlaceholderSvg(g.id, g.category);
 return `<div class="gallery-tile" onclick="openLightbox('${g.id}')">
-<img src="${src}" alt="${_esc(g.title)}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'">
+<img class="img-fade" src="${src}" alt="${_esc(g.title)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='${fallback}'">
 <div class="gallery-tile-scrim"></div>
 <div class="gallery-tile-cat">${_esc(g.category)}</div>
 <div class="gallery-tile-title">${_esc(g.title)}</div>
 </div>`;
 }).join('') : '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);">No images in this category yet.</div>';
+_triggerFadeIn(el);
 } catch (e) { console.warn('[gallery] renderGallery failed:', e.message); }
 }
 function filterGallery(cat, btn) {
@@ -2725,6 +2766,7 @@ const total = [...DEFAULT_JOBS, ...(S.customJobs || [])].length;
 const done = S.completedJobs.length;
 _setText('guideProgressText', `${done} / ${total} Jobs Completed`);
 _updateHeroStats();
+_triggerFadeIn(el);
 } catch (e) {}
 }
 function renderEnhancedGuides() {
@@ -3084,6 +3126,7 @@ if (items[1]) html += _newsCardHTML(items[1], 'mini');
 if (items[2]) html += _newsCardHTML(items[2], 'mini');
 if (items[3]) html += _newsCardHTML(items[3], 'wide');
 el.innerHTML = html;
+_triggerFadeIn(el);
 } catch (e) {}
 }
 function renderNewsTab(filter) {
@@ -3153,6 +3196,7 @@ if (!el) return;
 const items = MODS.slice(0, MODS_PREVIEW_COUNT);
 el.innerHTML = items.length ? items.map(_modCardHTML).join('') : '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);">No mods yet.</div>';
 _updateHeroStats();
+_triggerFadeIn(el);
 } catch (e) {}
 }
 function renderMods(filter = 'all') {
@@ -3186,6 +3230,7 @@ const el = document.getElementById('qaList');
 if (!el) return;
 const items = list || QA;
 el.innerHTML = items.map(q => `<div class="qa-item" role="button" tabindex="0" onclick="GTA6HQ.openQuestionDetail(${q.id})" style="cursor:pointer;"><div class="qa-votes"><div class="vote-count">${q.votes}</div><div class="vote-label">votes</div>${q.solved ? '<div class="qa-solved">✓</div>' : ''}</div><div class="qa-content"><div class="qa-title">${_esc(q.title)}</div><div class="qa-excerpt">${_esc(q.excerpt)}</div><div class="qa-meta"><span class="answer-badge">${q.answers} answers</span><span>🕐 ${q.time}</span></div></div></div>`).join('');
+_triggerFadeIn(el);
 } catch (e) {}
 }
 function openQuestionDetail(id) {
