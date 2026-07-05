@@ -637,6 +637,23 @@ border-radius:var(--radius);
 .img-fade{opacity:0;transition:opacity .3s ease;}
 .img-fade.loaded{opacity:1;}
 
+/* --- SEARCH RESULTS DROPDOWN --- */
+.search-results-panel{
+position:absolute;top:calc(100% + 10px);left:0;width:340px;max-height:420px;overflow-y:auto;
+background:var(--card);border:1px solid var(--border2);border-radius:var(--radius2);
+box-shadow:0 16px 40px rgba(0,0,0,.5);display:none;z-index:2500;
+}
+.search-results-panel.open{display:block;}
+.search-group-label{font-family:var(--font-u);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:10px 14px 6px;}
+.search-result-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;transition:background .1s;}
+.search-result-item:hover, .search-result-item:focus-visible{background:rgba(255,255,255,.05);}
+.search-result-icon{width:28px;height:28px;border-radius:6px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.search-result-text{flex:1;min-width:0;}
+.search-result-title{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.search-result-title mark{background:rgba(240,180,41,.35);color:var(--gold);border-radius:2px;padding:0 1px;}
+.search-result-meta{font-size:11px;color:var(--text3);}
+.search-no-results{padding:16px 14px;font-size:12px;color:var(--text3);text-align:center;}
+
 /* Back to top button */
 .back-to-top{
 position:fixed;bottom:22px;right:80px;width:42px;height:42px;border-radius:50%;
@@ -731,10 +748,11 @@ z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
 <a href="#faq">FAQ</a>
 </div>
 <div class="nav-right">
-<div class="search-wrap" role="search">
+<div class="search-wrap" role="search" style="position:relative;">
 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text3);" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
-<label for="globalSearch" class="sr-only">Search or enter a player ID</label>
-<input type="text" id="globalSearch" placeholder="Search or enter #PlayerID…" oninput="GTA6HQ.handleSearch(this.value)"/>
+<label for="globalSearch" class="sr-only">Search news, characters, mods, guides, and gallery</label>
+<input type="text" id="globalSearch" placeholder="Search or enter #PlayerID…" autocomplete="off" oninput="GTA6HQ.handleSearch(this.value)" onfocus="GTA6HQ.handleSearch(this.value)"/>
+<div class="search-results-panel" id="searchResultsPanel" role="listbox"></div>
 </div>
 <button class="btn btn-outline" onclick="GTA6HQ.openModal('auth-modal')">Sign In</button>
 <button class="btn btn-gold" onclick="GTA6HQ.openModal('auth-modal')">Join Free</button>
@@ -2539,6 +2557,18 @@ banner.classList.toggle('show', !navigator.onLine);
 window.addEventListener('online', _updateOfflineBanner);
 window.addEventListener('offline', _updateOfflineBanner);
 document.addEventListener('DOMContentLoaded', _updateOfflineBanner);
+// Dismiss the live search dropdown on outside click or Escape
+document.addEventListener('click', function(e) {
+try {
+const wrap = document.querySelector('.search-wrap');
+const panel = document.getElementById('searchResultsPanel');
+if (panel && wrap && !wrap.contains(e.target)) panel.classList.remove('open');
+} catch (err) {}
+});
+document.addEventListener('keydown', function(e) {
+if (e.key !== 'Escape') return;
+try { const panel = document.getElementById('searchResultsPanel'); if (panel) panel.classList.remove('open'); } catch (err) {}
+});
 </script>
 <script>
 function toggleMobileNav() {
@@ -3314,7 +3344,66 @@ const [res, color] = score >= 8 ? ['🟢 <strong>Ready for Ultra/4K</strong> —
 if (resultEl) resultEl.innerHTML = `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:${color};line-height:1.6;">${res}<br><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block;">⚠️ Based on community predictions — official requirements not yet announced.</span></div>`;
 } catch (e) {}
 }
-function handleSearch(v) { try { if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) { setTimeout(() => _showPlayerCard({ name: 'GTA6Fan', id: v, posts: Math.floor(Math.random() * 200) + 10, rank: 'Member' }, document.getElementById('playerResult')), 300); } } catch (e) {} }
+function _highlightMatch(text, q) {
+try {
+const idx = text.toLowerCase().indexOf(q.toLowerCase());
+if (idx === -1) return _esc(text);
+const before = _esc(text.slice(0, idx));
+const match = _esc(text.slice(idx, idx + q.length));
+const after = _esc(text.slice(idx + q.length));
+return `${before}<mark>${match}</mark>${after}`;
+} catch (e) { return _esc(text); }
+}
+function _closeSearchResults() { try { document.getElementById('searchResultsPanel').classList.remove('open'); } catch (e) {} }
+let _lastSearchGroups = [];
+function _runSearchAction(gi, ii) {
+try { _lastSearchGroups[gi].items[ii].action(); _closeSearchResults(); } catch (e) {}
+}
+function _renderSearchResults(query) {
+try {
+const panel = document.getElementById('searchResultsPanel');
+if (!panel) return;
+const q = query.trim().toLowerCase();
+if (q.length < 2) { panel.classList.remove('open'); return; }
+const groups = [];
+const newsMatches = NEWS.filter(n => n.title.toLowerCase().includes(q)).slice(0, 3);
+if (newsMatches.length) groups.push({ label: 'News', icon: '📰', items: newsMatches.map(n => ({ title: n.title, meta: n.source || n.time || '', action: () => { if (n.url && n.url !== '#') window.open(n.url, '_blank', 'noopener,noreferrer'); else document.getElementById('news').scrollIntoView({ behavior: 'smooth' }); } })) });
+const charMatches = CHARACTERS.filter(c => (c.first + ' ' + c.last).toLowerCase().includes(q) || c.role.toLowerCase().includes(q)).slice(0, 3);
+if (charMatches.length) groups.push({ label: 'Characters', icon: '👤', items: charMatches.map(c => ({ title: c.first + ' ' + c.last, meta: c.role, action: () => { document.getElementById('characters').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => openCharacterDetail(c.id), 400); } })) });
+const modMatches = MODS.filter(m => m.name.toLowerCase().includes(q)).slice(0, 3);
+if (modMatches.length) groups.push({ label: 'Mods', icon: '🔧', items: modMatches.map(m => ({ title: m.name, meta: m.cat, action: () => { document.getElementById('mods').scrollIntoView({ behavior: 'smooth' }); } })) });
+const allJobs = [...DEFAULT_JOBS, ...(S.customJobs || [])];
+const jobMatches = allJobs.filter(j => j.title.toLowerCase().includes(q)).slice(0, 3);
+if (jobMatches.length) groups.push({ label: 'Job Guides', icon: '📖', items: jobMatches.map(j => ({ title: j.title, meta: j.type, action: () => { document.getElementById('guides').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => openGuideDetail(j.id), 400); } })) });
+const galMatches = GALLERY.filter(g => g.title.toLowerCase().includes(q)).slice(0, 3);
+if (galMatches.length) groups.push({ label: 'Gallery', icon: '🖼️', items: galMatches.map(g => ({ title: g.title, meta: g.category, action: () => { document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => openLightbox(g.id), 400); } })) });
+_lastSearchGroups = groups;
+if (!groups.length) {
+panel.innerHTML = '<div class="search-no-results">No matches found.</div>';
+panel.classList.add('open');
+return;
+}
+let html = '';
+groups.forEach((g, gi) => {
+html += `<div class="search-group-label">${g.icon} ${_esc(g.label)}</div>`;
+g.items.forEach((item, ii) => {
+html += `<div class="search-result-item" role="option" tabindex="0" onclick="GTA6HQ.runSearchAction(${gi},${ii})" onkeydown="if(event.key==='Enter')GTA6HQ.runSearchAction(${gi},${ii})"><div class="search-result-icon">${g.icon}</div><div class="search-result-text"><div class="search-result-title">${_highlightMatch(item.title, q)}</div><div class="search-result-meta">${_esc(item.meta || '')}</div></div></div>`;
+});
+});
+panel.innerHTML = html;
+panel.classList.add('open');
+} catch (e) {}
+}
+function handleSearch(v) {
+try {
+if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) {
+_closeSearchResults();
+setTimeout(() => _showPlayerCard({ name: 'GTA6Fan', id: v, posts: Math.floor(Math.random() * 200) + 10, rank: 'Member' }, document.getElementById('playerResult')), 300);
+} else {
+_renderSearchResults(v);
+}
+} catch (e) {}
+}
 function _esc(str) { return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function _setText(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
 function _setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
@@ -3338,6 +3427,8 @@ openAddModModal, submitNewMod, deleteMod,
 jobSyncStatus: () => _jobSyncStatus(),
 getCustomJobs: () => S.customJobs || [],
 getDefaultJobs: () => DEFAULT_JOBS,
+getNews: () => NEWS,
+runSearchAction: (gi, ii) => _runSearchAction(gi, ii),
 submitSiteSettings,
 openAddSectionModal, submitNewSection, deleteSection,
 openAddSectionItemModal, submitNewSectionItem, deleteSectionItem
