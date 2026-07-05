@@ -17,6 +17,15 @@
 <meta property="og:url" content="https://gta6hq.vercel.app/"/>
 <meta property="og:locale" content="en_US"/>
 
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="GTA6HQ"/>
+
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="GTA6HQ — Independent GTA 6 Community Hub"/>
@@ -2505,6 +2514,17 @@ document.addEventListener('DOMContentLoaded', function() { loadGallery().then(re
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
+</script>
+
+<!-- PWA: register service worker for basic offline app-shell support -->
+<script>
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', function() {
+navigator.serviceWorker.register('/service-worker.js').catch(function(err) {
+console.warn('[pwa] Service worker registration failed:', err.message);
+});
+});
+}
 </script>
 
 <!-- NAV / SCROLL UI BEHAVIOR -->
