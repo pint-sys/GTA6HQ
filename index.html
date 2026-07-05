@@ -608,6 +608,8 @@ width:34px;height:34px;background:transparent;border:1px solid var(--border2);bo
 
 /* Scroll progress bar */
 .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--gold));z-index:10001;width:0%;transition:width .1s linear;}
+.offline-banner{position:fixed;top:0;left:0;right:0;background:var(--pink);color:#fff;text-align:center;padding:9px 16px;font-family:var(--font-u);font-size:13px;font-weight:600;z-index:10002;transform:translateY(-100%);transition:transform .25s ease;}
+.offline-banner.show{transform:translateY(0);}
 
 /* Back to top button */
 .back-to-top{
@@ -675,6 +677,7 @@ z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
+<div class="offline-banner" id="offlineBanner" role="status" aria-live="polite">📡 You're offline — some content (news, mods, live data) won't update until your connection is back.</div>
 <a class="skip-link" href="#home">Skip to main content</a>
 <!-- TOPBAR -->
 <div class="topbar">
@@ -2464,6 +2467,18 @@ document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); })
 </script>
 
 <!-- NAV / SCROLL UI BEHAVIOR -->
+<script>
+function _updateOfflineBanner() {
+try {
+const banner = document.getElementById('offlineBanner');
+if (!banner) return;
+banner.classList.toggle('show', !navigator.onLine);
+} catch (e) {}
+}
+window.addEventListener('online', _updateOfflineBanner);
+window.addEventListener('offline', _updateOfflineBanner);
+document.addEventListener('DOMContentLoaded', _updateOfflineBanner);
+</script>
 <script>
 function toggleMobileNav() {
 try {
