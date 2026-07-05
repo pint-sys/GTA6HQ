@@ -41,6 +41,39 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is GTA6HQ an official Rockstar Games website?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. GTA6HQ is an independent, unofficial fan community site. We're not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive." }
+    },
+    {
+      "@type": "Question",
+      "name": "When does GTA 6 release?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Rockstar has confirmed November 19, 2026 for PlayStation 5 and Xbox Series X|S." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is GTA 6 coming to PC?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Not yet announced. Rockstar has historically released PC ports 12–18 months after the console launch, but nothing official has been confirmed for GTA 6 PC." }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do the news articles on this site come from?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The News section automatically pulls from established gaming outlets filtered for GTA 6-related coverage, refreshed automatically throughout the day." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I contribute job guides or ask questions?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, anyone can post a question in the Q&A section. Job guide submissions are curated by the admin team, alongside guides automatically verified from public sources." }
+    }
+  ]
+}
+</script>
 <style>
 :root{
 --bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;--card:#1a1a23;--card2:#1e1e28;
@@ -175,6 +208,35 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .custom-item-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
 .custom-item-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .custom-item-price{font-family:var(--font-u);font-size:13px;font-weight:700;color:var(--gold);}
+
+/* --- GALLERY --- */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.gallery-tile{position:relative;aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.2s;}
+.gallery-tile:hover{border-color:var(--gold);transform:translateY(-3px);}
+.gallery-tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.gallery-tile:hover img{transform:scale(1.06);}
+.gallery-tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.82) 100%);}
+.gallery-tile-cat{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:var(--gold);font-family:var(--font-u);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 7px;border-radius:4px;}
+.gallery-tile-title{position:absolute;left:10px;right:10px;bottom:8px;font-family:var(--font-u);font-size:12px;font-weight:600;color:#fff;}
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:6000;display:none;align-items:center;justify-content:center;padding:24px;}
+.lightbox-overlay.open{display:flex;}
+.lightbox-content{max-width:900px;width:100%;text-align:center;}
+.lightbox-content img{max-width:100%;max-height:72vh;border-radius:var(--radius2);object-fit:contain;background:var(--bg3);}
+.lightbox-caption{margin-top:14px;color:var(--text2);font-family:var(--font-u);font-size:13px;}
+.lightbox-close{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lightbox-prev{left:18px;}
+.lightbox-next{right:18px;}
+
+/* --- FAQ ACCORDION --- */
+.faq-list{display:flex;flex-direction:column;gap:10px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.faq-item summary{padding:14px 18px;cursor:pointer;font-family:var(--font-b);font-weight:700;font-size:14px;color:var(--text);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'+';font-size:20px;color:var(--gold);flex-shrink:0;transition:transform .2s;}
+.faq-item[open] summary::after{transform:rotate(45deg);}
+.faq-item summary:hover{color:var(--gold);}
+.faq-answer{padding:0 18px 16px;font-size:13px;color:var(--text2);line-height:1.6;}
 
 /* --- CHARACTERS SECTION STYLES (full-portrait, name-overlay cards — small) --- */
 .characters-grid {
@@ -631,11 +693,13 @@ z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
 <div class="nav-links" id="navLinks">
 <a href="#home" class="active">Home</a>
 <a href="#news">News</a>
+<a href="#gallery">Gallery</a>
 <a href="#mods">Mods</a>
 <a href="#guides">Guides</a>
 <a href="#characters">Characters</a>
 <a href="#qa">Q&amp;A</a>
 <a href="#sysreq">PC Specs</a>
+<a href="#faq">FAQ</a>
 </div>
 <div class="nav-right">
 <div class="search-wrap" role="search">
@@ -656,11 +720,13 @@ z-index:3;animation:bounce-down 2s infinite;text-decoration:none;
 <div class="page-tabs-inner">
 <a class="ptl active" href="#home">🏠 Home</a>
 <a class="ptl" href="#news">📰 News</a>
+<a class="ptl" href="#gallery">🖼️ Gallery</a>
 <a class="ptl" href="#mods">🔧 Mods</a>
 <a class="ptl" href="#guides">📖 Guides</a>
 <a class="ptl" href="#characters">👥 Characters</a>
 <a class="ptl" href="#qa">❓ Q&amp;A</a>
 <a class="ptl" href="#sysreq">💻 PC Specs</a>
+<a class="ptl" href="#faq">💬 FAQ</a>
 <a class="ptl" href="#policy">⚠️ Rules</a>
 </div>
 </div>
@@ -798,6 +864,22 @@ Explore
 <div class="news-feature-grid" id="newsListHome"><div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);font-family:var(--font-u);font-size:13px;">⏳ Loading news…</div></div>
 <button onclick="GTA6HQ.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--radius);font-family:var(--font-u);font-size:13px;font-weight:700;cursor:pointer;" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
 </section>
+<!-- GALLERY -->
+<section class="section container" id="gallery">
+<div class="section-header">
+<h2 class="section-title">🖼️ Gallery</h2>
+<button class="btn btn-gold" id="addGalleryBtn" style="font-size:12px;padding:6px 14px;display:none;" onclick="openAddGalleryModal()">+ Add Image</button>
+</div>
+<div class="tabs" id="galleryTabs">
+<button class="tab active" onclick="filterGallery('all',this)">All</button>
+<button class="tab" onclick="filterGallery('screenshot',this)">Screenshots</button>
+<button class="tab" onclick="filterGallery('artwork',this)">Artwork</button>
+<button class="tab" onclick="filterGallery('wallpaper',this)">Wallpapers</button>
+<button class="tab" onclick="filterGallery('vehicle',this)">Vehicles</button>
+<button class="tab" onclick="filterGallery('environment',this)">Environment</button>
+</div>
+<div class="gallery-grid" id="galleryGrid"></div>
+</section>
 <!-- PAGE GRID -->
 <div class="page-grid">
 <div>
@@ -913,6 +995,36 @@ Explore
 </div>
 <button class="btn btn-gold" style="width:100%;border-radius:var(--radius);padding:10px;" onclick="GTA6HQ.checkPC()">Check My PC</button>
 <div id="pcResult" style="margin-top:14px;"></div>
+</div>
+</section>
+<!-- FAQ -->
+<section class="section" id="faq">
+<div class="section-header"><h2 class="section-title">💬 Frequently Asked Questions</h2></div>
+<div class="faq-list">
+<details class="faq-item" open>
+<summary>Is GTA6HQ an official Rockstar Games website?</summary>
+<div class="faq-answer">No. GTA6HQ is an independent, unofficial fan community site. We're not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive.</div>
+</details>
+<details class="faq-item">
+<summary>When does GTA 6 release?</summary>
+<div class="faq-answer">Rockstar has confirmed November 19, 2026 for PlayStation 5 and Xbox Series X|S. See the countdown at the top of the page for the exact time remaining.</div>
+</details>
+<details class="faq-item">
+<summary>Is GTA 6 coming to PC?</summary>
+<div class="faq-answer">Not yet announced. Rockstar has historically released PC ports 12–18 months after the console launch, but nothing official has been confirmed for GTA 6 PC as of this writing.</div>
+</details>
+<details class="faq-item">
+<summary>Where do the news articles on this site come from?</summary>
+<div class="faq-answer">Our News section automatically pulls from established gaming outlets (IGN, Eurogamer, PC Gamer, Kotaku, Rock Paper Shotgun, GameSpot) filtered for GTA 6-related coverage, refreshed automatically throughout the day.</div>
+</details>
+<details class="faq-item">
+<summary>Can I contribute job guides or ask questions?</summary>
+<div class="faq-answer">Yes — anyone can post a question in the Q&A section. Job guide submissions are currently curated by our admin team to keep quality and accuracy high, alongside guides automatically verified from public sources.</div>
+</details>
+<details class="faq-item">
+<summary>How do I report a bug or suggest a feature?</summary>
+<div class="faq-answer">Join our Discord server (link in the sidebar and footer) — that's the fastest way to reach the team running this site.</div>
+</details>
 </div>
 </section>
 <!-- POLICY -->
@@ -1259,6 +1371,44 @@ Explore
 </div>
 </div>
 
+<!-- ADD GALLERY IMAGE MODAL (admin only) -->
+<div class="modal-overlay" id="add-gallery-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-gallery-modal')">
+<div class="modal" role="dialog" aria-modal="true">
+<div class="modal-header">
+<div class="modal-title" style="color:var(--cyan);">+ Add Gallery Image</div>
+<button class="modal-close" onclick="GTA6HQ.closeModal('add-gallery-modal')" aria-label="Close dialog">×</button>
+</div>
+<div class="modal-body">
+<div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newGalTitle" placeholder="e.g., Vice City Skyline at Sunset"/></div>
+<div class="form-group">
+<label class="form-label">Category</label>
+<select class="form-input" id="newGalCat">
+<option value="screenshot">Screenshot</option>
+<option value="artwork">Artwork</option>
+<option value="wallpaper">Wallpaper</option>
+<option value="vehicle">Vehicle</option>
+<option value="environment">Environment</option>
+</select>
+</div>
+<div class="form-group"><label class="form-label">Image URL</label><input class="form-input" type="text" id="newGalImgUrl" placeholder="https://…"/></div>
+<div style="font-size:11px;color:var(--text3);margin-bottom:10px;">Only use images you own the rights to — this loads whatever URL you provide directly.</div>
+<button class="btn-submit" style="background:var(--cyan);color:#062028;" onclick="submitNewGalleryImage()">Publish Image</button>
+<div id="gallerySubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3);"></div>
+</div>
+</div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightboxOnOverlay(event)">
+<button class="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">×</button>
+<button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)" aria-label="Previous image">‹</button>
+<div class="lightbox-content" onclick="event.stopPropagation()">
+<img id="lightboxImg" src="" alt=""/>
+<div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+<button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)" aria-label="Next image">›</button>
+</div>
+
 <!-- ADD SECTION MODAL (admin only) -->
 <div class="modal-overlay" id="add-section-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'add-section-modal')">
 <div class="modal" role="dialog" aria-modal="true">
@@ -1307,6 +1457,7 @@ Explore
 <div class="tabs">
 <button class="tab active" onclick="GTA6HQ.switchDashTab('mods',this)">🔧 Mods</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('characters',this)">👥 Characters</button>
+<button class="tab" onclick="GTA6HQ.switchDashTab('gallery',this)">🖼️ Gallery</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('sections',this)">➕ Custom Sections</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('jobs',this)">📖 Job Sync Log</button>
 <button class="tab" onclick="GTA6HQ.switchDashTab('site',this)">🎨 Site Settings</button>
@@ -1352,6 +1503,10 @@ happen on YOUR end — inside the Firebase Console, not this file:
        match /site_content/{docId} {
          allow read: if true;
          allow write: if isAdmin();
+       }
+       match /gallery/{imageId} {
+         allow read: if true;
+         allow create, update, delete: if isAdmin();
        }
      }
    }
@@ -1465,6 +1620,8 @@ const addModBtnTab = document.getElementById('addModBtnTab');
 if (addModBtnTab) addModBtnTab.style.display = on ? 'inline-block' : 'none';
 const addJobBtn = document.getElementById('addJobBtn');
 if (addJobBtn) addJobBtn.style.display = on ? 'inline-block' : 'none';
+const addGalleryBtn = document.getElementById('addGalleryBtn');
+if (addGalleryBtn) addGalleryBtn.style.display = on ? 'inline-block' : 'none';
 const link = document.getElementById('adminToggleLink');
 if (link) link.textContent = on ? (firebaseReady() ? 'Admin: Signed In (Sign Out)' : 'Admin: ON (demo, click to end)') : 'Admin Sign In';
 const dashLink = document.getElementById('adminDashLink');
@@ -1666,6 +1823,12 @@ panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6p
 <div style="flex:1;"><strong style="font-size:13px;">${_esc(c.first)} ${_esc(c.last)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(c.role)}</div></div>
 <button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteCharacter('${c.id}')">Delete</button>
 </div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No characters yet.</div>');
+} else if (_dashTab === 'gallery') {
+panel.innerHTML = `<button class="btn btn-gold" style="font-size:12px;padding:6px 14px;margin-bottom:12px;" onclick="GTA6HQ.openAddGalleryModal()">+ Add Image</button>` +
+(GALLERY.map(g => `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+<div style="flex:1;"><strong style="font-size:13px;">${_esc(g.title)}</strong><div style="font-size:11px;color:var(--text3);">${_esc(g.category)}</div></div>
+${DEFAULT_GALLERY.some(d => d.id === g.id) ? '<span style="color:var(--text3);font-size:11px;">Default</span>' : `<button class="btn-dl" style="background:var(--pink);" onclick="GTA6HQ.deleteGalleryImage('${g.id}')">Delete</button>`}
+</div>`).join('') || '<div style="color:var(--text3);font-size:13px;">No images yet.</div>');
 } else if (_dashTab === 'sections') {
 const sectionsHtml = CUSTOM_SECTIONS.map(sec => `
 <div style="border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:12px;">
@@ -2109,12 +2272,192 @@ renderAdminDashboard();
 notify('Item removed.');
 } catch (e) { notify('Remove failed: ' + (e.message || 'permission error')); }
 }
+
+// ---------- GALLERY (Firestore-backed with admin-only writes; original generated placeholder art by default) ----------
+function galleryPlaceholderSvg(seed, category) {
+// Original generated "mood" tile — sunset/skyline/palm compositions in different color keys per
+// category, so the gallery has visual variety without using any real or copyrighted image.
+const palettes = {
+screenshot: ['#1a2a4a', '#c3406b', '#f0894a'],
+artwork: ['#2a1440', '#a855f7', '#ff3c6e'],
+wallpaper: ['#0f1f3a', '#00d4ff', '#0a0a0e'],
+vehicle: ['#241010', '#f0b429', '#1a0a0a'],
+environment: ['#0f2a1f', '#00e676', '#0a1a12']
+};
+const [c1, c2, c3] = palettes[category] || palettes.screenshot;
+const seedNum = Array.from(String(seed)).reduce((a, ch) => a + ch.charCodeAt(0), 0);
+const sunY = 140 + (seedNum % 60);
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="${c1}"/><stop offset="0.6" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/>
+</linearGradient></defs>
+<rect width="400" height="300" fill="url(#gg)"/>
+<circle cx="${120 + (seedNum % 180)}" cy="${sunY}" r="36" fill="#ffe6b0" opacity="0.8"/>
+<g fill="#08060c" opacity="0.75">
+<rect x="0" y="220" width="30" height="80"/><rect x="34" y="195" width="22" height="105"/>
+<rect x="330" y="205" width="26" height="95"/><rect x="365" y="180" width="20" height="120"/>
+<rect x="0" y="260" width="400" height="40"/>
+</g>
+<g opacity="0.4" stroke="#ffffff" stroke-width="1">
+<line x1="0" y1="270" x2="400" y2="270"/><line x1="0" y1="282" x2="400" y2="282"/>
+</g>
+</svg>`;
+return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+const DEFAULT_GALLERY = [
+{ id: 'sunset-skyline-1', title: 'Leonida Sunset Skyline', category: 'environment' },
+{ id: 'vice-city-shoreline', title: 'Vice City Shoreline', category: 'screenshot' },
+{ id: 'neon-nightlife', title: 'Neon Nightlife District', category: 'artwork' },
+{ id: 'classic-muscle-car', title: 'Classic Muscle Car Concept', category: 'vehicle' },
+{ id: 'downtown-wallpaper', title: 'Downtown Wallpaper', category: 'wallpaper' },
+{ id: 'swampland-view', title: 'Grassrivers Swampland', category: 'environment' }
+];
+let GALLERY = [...DEFAULT_GALLERY];
+let currentGalleryFilter = 'all';
+let _lightboxIndex = 0;
+async function loadGallery() {
+if (firebaseReady()) {
+try {
+const remote = await window.FB.getCollection('gallery');
+const byId = new Map(DEFAULT_GALLERY.map(g => [g.id, g]));
+remote.forEach(g => byId.set(g.id, g));
+GALLERY = [...byId.values()];
+return;
+} catch (e) { console.warn('[gallery] Firestore load failed, using local list:', e.message); }
+}
+try {
+const raw = localStorage.getItem('gta6hq_gallery_v1');
+const custom = raw ? JSON.parse(raw) : [];
+const byId = new Map(DEFAULT_GALLERY.map(g => [g.id, g]));
+(Array.isArray(custom) ? custom : []).forEach(g => byId.set(g.id, g));
+GALLERY = [...byId.values()];
+} catch (e) { GALLERY = [...DEFAULT_GALLERY]; }
+}
+function renderGallery() {
+try {
+const el = document.getElementById('galleryGrid');
+if (!el) return;
+const items = currentGalleryFilter === 'all' ? GALLERY : GALLERY.filter(g => g.category === currentGalleryFilter);
+el.innerHTML = items.length ? items.map((g, i) => {
+const src = g.imageUrl ? _esc(g.imageUrl) : galleryPlaceholderSvg(g.id, g.category);
+const fallback = galleryPlaceholderSvg(g.id, g.category);
+return `<div class="gallery-tile" onclick="openLightbox('${g.id}')">
+<img src="${src}" alt="${_esc(g.title)}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'">
+<div class="gallery-tile-scrim"></div>
+<div class="gallery-tile-cat">${_esc(g.category)}</div>
+<div class="gallery-tile-title">${_esc(g.title)}</div>
+</div>`;
+}).join('') : '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);">No images in this category yet.</div>';
+} catch (e) { console.warn('[gallery] renderGallery failed:', e.message); }
+}
+function filterGallery(cat, btn) {
+try {
+currentGalleryFilter = cat;
+document.querySelectorAll('#galleryTabs .tab').forEach(t => t.classList.remove('active'));
+if (btn) btn.classList.add('active');
+renderGallery();
+} catch (e) {}
+}
+function _currentGalleryItems() {
+return currentGalleryFilter === 'all' ? GALLERY : GALLERY.filter(g => g.category === currentGalleryFilter);
+}
+function openLightbox(id) {
+try {
+const items = _currentGalleryItems();
+const idx = items.findIndex(g => g.id === id);
+if (idx === -1) return;
+_lightboxIndex = idx;
+_renderLightbox();
+document.getElementById('lightbox-overlay').classList.add('open');
+} catch (e) {}
+}
+function _renderLightbox() {
+try {
+const items = _currentGalleryItems();
+const g = items[_lightboxIndex];
+if (!g) return;
+const src = g.imageUrl ? _esc(g.imageUrl) : galleryPlaceholderSvg(g.id, g.category);
+const fallback = galleryPlaceholderSvg(g.id, g.category);
+const img = document.getElementById('lightboxImg');
+img.src = src; img.alt = g.title;
+img.onerror = function() { this.onerror = null; this.src = fallback; };
+document.getElementById('lightboxCaption').textContent = `${g.title} — ${g.category}`;
+} catch (e) {}
+}
+function lightboxNav(dir) {
+try {
+const items = _currentGalleryItems();
+if (!items.length) return;
+_lightboxIndex = (_lightboxIndex + dir + items.length) % items.length;
+_renderLightbox();
+} catch (e) {}
+}
+function closeLightbox() { try { document.getElementById('lightbox-overlay').classList.remove('open'); } catch (e) {} }
+function closeLightboxOnOverlay(event) { if (event.target === document.getElementById('lightbox-overlay')) closeLightbox(); }
+document.addEventListener('keydown', function(e) {
+try {
+const lb = document.getElementById('lightbox-overlay');
+if (!lb || !lb.classList.contains('open')) return;
+if (e.key === 'Escape') closeLightbox();
+if (e.key === 'ArrowLeft') lightboxNav(-1);
+if (e.key === 'ArrowRight') lightboxNav(1);
+} catch (err) {}
+});
+function openAddGalleryModal() {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+GTA6HQ.openModal('add-gallery-modal');
+}
+async function submitNewGalleryImage() {
+const statusEl = document.getElementById('gallerySubmitStatus');
+if (!isAdmin()) { if (statusEl) statusEl.textContent = 'Admin sign-in required.'; return; }
+const title = document.getElementById('newGalTitle').value.trim();
+const category = document.getElementById('newGalCat').value;
+const imageUrl = document.getElementById('newGalImgUrl').value.trim();
+if (!title) { if (statusEl) statusEl.textContent = 'Please enter a title.'; return; }
+const id = slugify(title);
+if (GALLERY.some(g => g.id === id)) { if (statusEl) statusEl.textContent = 'An image with that title already exists.'; return; }
+const newImg = { id, title, category, imageUrl: imageUrl || null };
+try {
+if (firebaseReady()) {
+await window.FB.setDoc('gallery', id, newImg);
+} else {
+const raw = localStorage.getItem('gta6hq_gallery_v1');
+const custom = raw ? JSON.parse(raw) : [];
+custom.push(newImg);
+localStorage.setItem('gta6hq_gallery_v1', JSON.stringify(custom));
+}
+await loadGallery();
+renderGallery();
+GTA6HQ.closeModal('add-gallery-modal');
+notify('✅ Image published!');
+document.getElementById('newGalTitle').value = ''; document.getElementById('newGalImgUrl').value = '';
+} catch (e) { if (statusEl) statusEl.textContent = 'Publish failed: ' + (e.message || 'permission error'); }
+}
+async function deleteGalleryImage(id) {
+if (!isAdmin()) { notify('Admin sign-in required.'); return; }
+if (DEFAULT_GALLERY.some(g => g.id === id)) { notify('Default gallery images can\'t be deleted, only ones you\'ve added.'); return; }
+if (!confirm('Delete this image?')) return;
+try {
+if (firebaseReady()) {
+await window.FB.deleteDoc('gallery', id);
+} else {
+const raw = localStorage.getItem('gta6hq_gallery_v1');
+const custom = raw ? JSON.parse(raw) : [];
+localStorage.setItem('gta6hq_gallery_v1', JSON.stringify(custom.filter(g => g.id !== id)));
+}
+await loadGallery();
+renderGallery();
+renderAdminDashboard();
+notify('Image deleted.');
+} catch (e) { notify('Delete failed: ' + (e.message || 'permission error')); }
+}
 </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() { loadCharacters().then(renderCharacters); });
 document.addEventListener('DOMContentLoaded', function() { loadSiteContent().then(applySiteContent); });
 document.addEventListener('DOMContentLoaded', function() { loadCustomSections().then(renderCustomSections); });
+document.addEventListener('DOMContentLoaded', function() { loadGallery().then(renderGallery); });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() { _refreshAdminUI(); });
@@ -2148,7 +2491,7 @@ if (btn) btn.setAttribute('aria-expanded', 'false');
 });
 // Scroll progress bar + back-to-top visibility + scroll-spy active nav highlighting
 (function() {
-const SPY_SECTION_IDS = ['home', 'news', 'mods', 'guides', 'characters', 'qa', 'sysreq', 'policy'];
+const SPY_SECTION_IDS = ['home', 'news', 'gallery', 'mods', 'guides', 'characters', 'qa', 'sysreq', 'faq', 'policy'];
 let ticking = false;
 function updateOnScroll() {
 try {
@@ -2909,6 +3252,7 @@ deleteJobGuide, renderGuidesPreview, openGuidesTab, closeGuidesTab,
 renderModsPreview, openModsTab, closeModsTab,
 openQuestionDetail,
 renderCharacters, openCharacterDetail, openAddCharacterModal, submitNewCharacter, deleteCharacter,
+openAddGalleryModal, submitNewGalleryImage, deleteGalleryImage,
 adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
 openAddModModal, submitNewMod, deleteMod,
 jobSyncStatus: () => _jobSyncStatus(),
