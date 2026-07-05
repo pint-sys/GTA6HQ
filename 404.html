@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<title>404 — Page Not Found | GTA6HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+--bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;--card:#1a1a23;--border:#2a2a38;--border2:#333345;
+--gold:#f0b429;--gold2:#c8920e;--pink:#ff3c6e;--text:#f0f0f8;--text2:#a0a0c0;--text3:#6a6a88;
+--font-d:'Oswald',sans-serif;--font-u:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+background:#150a24;color:var(--text);font-family:var(--font-u);min-height:100vh;
+display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
+}
+.scene{position:absolute;inset:0;z-index:0;}
+.scene svg{width:100%;height:100%;display:block;}
+.overlay{position:absolute;inset:0;z-index:1;background:rgba(10,10,14,.62);}
+.content{position:relative;z-index:2;text-align:center;padding:40px 20px;max-width:560px;}
+.code{font-family:var(--font-d);font-size:clamp(90px,18vw,160px);font-weight:700;line-height:1;color:var(--gold);text-shadow:0 0 40px rgba(240,180,41,.35);letter-spacing:2px;}
+.title{font-family:var(--font-d);font-size:clamp(20px,4vw,28px);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:10px 0 14px;}
+.title .accent{color:var(--pink);}
+.desc{color:var(--text2);font-size:15px;line-height:1.6;margin-bottom:28px;}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn{padding:12px 26px;border-radius:4px;font-family:var(--font-d);font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:.15s;border:2px solid transparent;display:inline-block;}
+.btn-gold{background:var(--gold);color:#0a0a0e;}
+.btn-gold:hover{background:var(--gold2);}
+.btn-outline{border-color:var(--pink);color:var(--pink);background:transparent;}
+.btn-outline:hover{background:var(--pink);color:#fff;}
+.footnote{margin-top:28px;font-size:12px;color:var(--text3);}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+</style>
+</head>
+<body>
+<div class="scene">
+<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#150a24"/>
+<stop offset="0.4" stop-color="#3a1240"/>
+<stop offset="0.68" stop-color="#c3406b"/>
+<stop offset="0.85" stop-color="#f0894a"/>
+<stop offset="1" stop-color="#f7b24a"/>
+</linearGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<circle cx="800" cy="640" r="80" fill="#ffe6b0" opacity="0.85"/>
+<g fill="#1a0e28" opacity="0.6">
+<rect x="60" y="560" width="34" height="260"/><rect x="110" y="520" width="26" height="300"/>
+<rect x="1430" y="540" width="30" height="280"/><rect x="1480" y="500" width="24" height="320"/>
+</g>
+<g fill="#170c26" opacity="0.75"><rect x="0" y="680" width="1600" height="220"/></g>
+</svg>
+</div>
+<div class="overlay"></div>
+<div class="content">
+<div class="code">404</div>
+<h1 class="title">LOST IN <span class="accent">LEONIDA</span></h1>
+<p class="desc">This street doesn't exist — not even in the leaked maps. The page you're looking for may have been moved, renamed, or never existed at all.</p>
+<div class="actions">
+<a class="btn btn-gold" href="/">Back to GTA6HQ</a>
+<a class="btn btn-outline" href="/#news">Latest News</a>
+</div>
+<p class="footnote">GTA6HQ is an independent fan site — not affiliated with Rockstar Games or Take-Two Interactive.</p>
+</div>
+</body>
+</html>
