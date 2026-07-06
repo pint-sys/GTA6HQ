@@ -3372,3 +3372,99 @@ const allJobs = [...DEFAULT_JOBS, ...(S.customJobs || [])];
 const jobMatches = allJobs.filter(j => j.title.toLowerCase().includes(q)).slice(0, 3);
 if (jobMatches.length) groups.push({ label: 'Job Guides', icon: '📖', items: jobMatches.map(j => ({ title: j.title, meta: j.type, action: () => { document.getElementById('guides').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => openGuideDetail(j.id), 400); } })) });
 const galMatches = GALLERY.filter(g => g.title.toLowerCase().includes(q)).slice(0, 3);
+  if (galMatches.length) groups.push({ label: 'Gallery', icon: '🖼️', items: galMatches.map(g => ({ title: g.title, meta: g.category, action: () => { document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => openLightbox(g.id), 400); } })) });
+_lastSearchGroups = groups;
+if (!groups.length) {
+panel.innerHTML = '<div class="search-no-results">No matches found.</div>';
+panel.classList.add('open');
+return;
+}
+let html = '';
+groups.forEach((g, gi) => {
+html += `<div class="search-group-label">${g.icon} ${_esc(g.label)}</div>`;
+g.items.forEach((item, ii) => {
+html += `<div class="search-result-item" role="option" tabindex="0" onclick="GTA6HQ.runSearchAction(${gi},${ii})" onkeydown="if(event.key==='Enter')GTA6HQ.runSearchAction(${gi},${ii})"><div class="search-result-icon">${g.icon}</div><div class="search-result-text"><div class="search-result-title">${_highlightMatch(item.title, q)}</div><div class="search-result-meta">${_esc(item.meta || '')}</div></div></div>`;
+});
+});
+panel.innerHTML = html;
+panel.classList.add('open');
+} catch (e) {}
+}
+function handleSearch(v) {
+try {
+if ((v.startsWith('#') || /^[0-9]{4,}/.test(v)) && v.length > 4) {
+_closeSearchResults();
+setTimeout(() => _showPlayerCard({ name: 'GTA6Fan', id: v, posts: Math.floor(Math.random() * 200) + 10, rank: 'Member' }, document.getElementById('playerResult')), 300);
+} else {
+_renderSearchResults(v);
+}
+} catch (e) {}
+}
+function _esc(str) { return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function _setText(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
+function _setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+function _setStyle(id, prop, val) { const el = document.getElementById(id); if (el) el.style[prop] = val; }
+window.GTA6HQ = {
+fetchLatestNews: (force) => fetchLatestNews(force),
+filterNewsTab, openNewsTab, closeNewsTab: function() { try { const page = document.getElementById('news-tab-page'); if (page) page.style.display = 'none'; document.documentElement.style.overflow = ''; document.body.style.overflow = ''; } catch (e) {} },
+openModal, closeModal, closeModalOnOverlay,
+switchAuthTab, loginUser, registerUser, submitQuestion,
+toggleLike, toggleLikeMod, filterMods, searchQA, lookupPlayer,
+checkPC, handleSearch,
+filterGuides, filterGuideType, renderEnhancedGuides, openGuideDetail,
+toggleGuideComplete, openAddJobModal, submitNewJob, syncCommunityJobs, populateGuideTypes,
+deleteJobGuide, renderGuidesPreview, openGuidesTab, closeGuidesTab,
+renderModsPreview, openModsTab, closeModsTab,
+openQuestionDetail,
+renderCharacters, openCharacterDetail, openAddCharacterModal, submitNewCharacter, deleteCharacter,
+openAddGalleryModal, submitNewGalleryImage, deleteGalleryImage,
+adminLinkClick, adminSignIn, adminSignOut, openAdminDashboard, switchDashTab,
+openAddModModal, submitNewMod, deleteMod,
+jobSyncStatus: () => _jobSyncStatus(),
+getCustomJobs: () => S.customJobs || [],
+getDefaultJobs: () => DEFAULT_JOBS,
+getNews: () => NEWS,
+runSearchAction: (gi, ii) => _runSearchAction(gi, ii),
+submitSiteSettings,
+openAddSectionModal, submitNewSection, deleteSection,
+openAddSectionItemModal, submitNewSectionItem, deleteSectionItem
+};
+function openNewsTab() { try { const page = document.getElementById('news-tab-page'); if (!page) return; page.style.display = 'block'; page.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; renderNewsTab('all'); document.querySelectorAll('#news-tab-page .ntab').forEach((b, i) => b.classList.toggle('active', i === 0)); } catch (e) {} }
+document.addEventListener('keydown', e => {
+if (e.key !== 'Escape') return;
+try {
+const np = document.getElementById('news-tab-page');
+if (np && np.style.display === 'block') { GTA6HQ.closeNewsTab(); }
+} catch (_) {}
+});
+function init() {
+try { renderNewsHome(); } catch (e) {}
+try { populateGuideTypes(); renderGuidesPreview(); } catch (e) {}
+try { _updateSyncButton(); } catch (e) {}
+try { loadMods().then(() => renderModsPreview()); } catch (e) {}
+try { loadCharacters().then(renderCharacters); } catch (e) {}
+try { renderQA(); } catch (e) {}
+try { renderSidebarNews(); } catch (e) {}
+try { renderEvents(); } catch (e) {}
+try { renderSysReq(); } catch (e) {}
+try { _refreshAdminUI(); } catch (e) {}
+try { updateCountdown(); } catch (e) {}
+try { setInterval(updateCountdown, 1000); } catch (e) {}
+try { setInterval(renderSidebarNews, 60000); } catch (e) {}
+try { setInterval(function() { fetchLatestNews(true); }, 32 * 60 * 60 * 1000); } catch (e) {}
+try { setInterval(function() { syncCommunityJobs(); }, 12 * 60 * 60 * 1000); } catch (e) {}
+try { setInterval(_updateSyncButton, 60000); } catch (e) {}
+setTimeout(() => { try { fetchLatestNews(); } catch (e) {} }, 200);
+setTimeout(() => { try { if (!S.loggedIn) notify('👋 Sign up free to join the GTA 6 crew!'); } catch (e) {} }, 2500);
+}
+document.addEventListener('keydown', function(e) {
+if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.getAttribute && e.target.getAttribute('role') === 'button') {
+e.preventDefault();
+e.target.click();
+}
+});
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>
