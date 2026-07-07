@@ -1569,20 +1569,28 @@ purple: ['#a855f7', '#6a1fb8'], green: ['#00e676', '#00834a']
 };
 const DEFAULT_CHARACTERS = [
 { id: 'jason', first: 'Jason', last: 'Duval', role: 'Main Protagonist', color: 'cyan',
+imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop',
 description: "Lucia's partner in crime. Jason gets swept into a string of heists and schemes across the state of Leonida as their story unfolds." },
 { id: 'lucia', first: 'Lucia', last: 'Caminos', role: 'Main Protagonist', color: 'pink',
+imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop',
 description: "The series' first female protagonist. Lucia is a Latina woman pulled into Leonida's criminal underworld — one half of a Bonnie-and-Clyde-style duo." },
 { id: 'cal', first: 'Cal', last: 'Hampton', role: 'Supporting Character', color: 'gold',
+imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
 description: "A loud, laid-back local mixed up in Leonida's hustles — part of the wider cast of characters Jason and Lucia cross paths with." },
 { id: 'drequan', first: "Dre'Quan", last: 'Priest', role: 'Supporting Character', color: 'purple',
+imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop',
 description: "Part of Leonida's criminal circles, connected to the wider network of jobs and schemes running through Vice City." },
 { id: 'raul', first: 'Raul', last: 'Bautista', role: 'Antagonist', color: 'green',
+imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop',
 description: 'An older, sharply-dressed figure with ties to organized crime in Leonida — one of the antagonists Lucia and Jason must navigate around.' },
 { id: 'real', first: 'Real', last: 'Dimez', role: 'Supporting Character', color: 'pink',
+imageUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop',
 description: "A duo tied to Leonida's nightlife and social scene, appearing throughout the wider cast of the story." },
 { id: 'boobie', first: 'Boobie', last: 'Ike', role: 'Supporting Character', color: 'gold',
+imageUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=600&fit=crop',
 description: "A well-connected figure in Leonida's underworld, often surrounded by his own crew and business dealings." },
 { id: 'brian', first: 'Brian', last: 'Heder', role: 'Supporting Character', color: 'cyan',
+imageUrl: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=400&h=600&fit=crop',
 description: "An older associate drawn into the criminal dealings around Vice City and the wider state of Leonida." }
 ];
 async function loadCharacters() {
@@ -2280,7 +2288,12 @@ const CONSOLES = [
 const SEED_NEWS = [
 { id:'s1', cat:'official', tag:'Official', emoji:'🚀', url:null, source:'', title:'GTA 6 Locked for November 19, 2026 — Two Delays Finally Settled', excerpt:'Rockstar confirmed Nov 19 2026 for PS5 and Xbox Series X|S. PC date remains unannounced. Live articles loading below…', time:'Loading live news…' },
 { id:'s2', cat:'official', tag:'Official', emoji:'🎮', url:null, source:'', title:"Dual Protagonists Jason & Lucia Confirmed — Lucia is Series' First Female Lead", excerpt:"Two trailers confirmed both characters. Lucia navigates Vice City's underworld as the series' first female lead.", time:'Loading live news…' },
-{ id:'s3', cat:'rumor', tag:'Rumor', emoji:'🗺️', url:null, source:'', title:'Leaked Map Shows 3× GTA V Scale — Grassrivers, Vice City, Leonida Keys', excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.', time:'Loading live news…' }
+{ id:'s3', cat:'rumor', tag:'Rumor', emoji:'🗺️', url:null, source:'', title:'Leaked Map Shows 3× GTA V Scale — Grassrivers, Vice City, Leonida Keys', excerpt:'State of Leonida reportedly includes swamplands, island chains, small towns, ports, and a mountain national park.', time:'Loading live news…' },
+{ id:'s4', cat:'gameplay', tag:'Gameplay', emoji:'🎬', url:null, source:'', title:'New Gameplay Footage Shows Dynamic Weather System and Hurricane Mechanics', excerpt:'Recent leaks reveal GTA 6 will feature a revolutionary weather system with hurricanes that affect gameplay.', time:'Loading live news…' },
+{ id:'s5', cat:'vehicles', tag:'Vehicles', emoji:'🚗', url:null, source:'', title:'Over 150 Vehicles Confirmed Including Electric and Classic Cars', excerpt:'Rockstar promises the most diverse vehicle lineup in series history with electric vehicles and 80s classics.', time:'Loading live news…' },
+{ id:'s6', cat:'characters', tag:'Characters', emoji:'👥', url:null, source:'', title:'Voice Actors Revealed: Hollywood Stars Join GTA 6 Cast', excerpt:'Multiple A-list actors reportedly signed on for motion capture and voice work.', time:'Loading live news…' },
+{ id:'s7', cat:'map', tag:'Map', emoji:'🏙️', url:null, source:'', title:'Vice City Remastered: Every District Mapped and Analyzed', excerpt:'Detailed breakdown of all Vice City districts including Little Haiti, Vice Beach, and downtown.', time:'Loading live news…' },
+{ id:'s8', cat:'official', tag:'Official', emoji:'🎵', url:null, source:'', title:'GTA 6 Soundtrack to Feature Over 20 Radio Stations', excerpt:'Leaked documents suggest the most ambitious radio lineup with stations for every music genre.', time:'Loading live news…' }
 ];
 let _notifyTimer = null;
 function notify(msg) {
@@ -2655,7 +2668,7 @@ await _fetchRSS(now, force);
 }
 async function _fetchRSS(now, force) {
 try {
-const seen = new Set(), items = [], MAX = 30;
+const seen = new Set(), items = [], MAX = 50;
 for (var fi = 0; fi < RSS_SOURCES.length; fi++) {
 if (items.length >= MAX) break;
 try {
@@ -2742,17 +2755,24 @@ ${n.excerpt ? `<div class="nf-card-excerpt">${_esc(n.excerpt)}</div>` : ''}
 <div class="nf-read">${hasUrl ? 'Read →' : ''}</div>
 </div>
 </div>`;
-}
 function renderNewsHome() {
 try {
 const el = document.getElementById('newsListHome');
 if (!el) return;
-const items = NEWS.slice(0, 4);
+const items = NEWS.slice(0, 8); // Changed from 4 to 8 items
 if (!items.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text3);font-family:var(--font-u);font-size:13px;">No news available.</div>'; return; }
-let html = _newsCardHTML(items[0], 'featured');
+
+// Create a grid layout for more items
+let html = '';
+if (items[0]) html += _newsCardHTML(items[0], 'featured');
 if (items[1]) html += _newsCardHTML(items[1], 'mini');
 if (items[2]) html += _newsCardHTML(items[2], 'mini');
 if (items[3]) html += _newsCardHTML(items[3], 'wide');
+if (items[4]) html += _newsCardHTML(items[4], 'mini');
+if (items[5]) html += _newsCardHTML(items[5], 'mini');
+if (items[6]) html += _newsCardHTML(items[6], 'wide');
+if (items[7]) html += _newsCardHTML(items[7], 'mini');
+
 el.innerHTML = html;
 _triggerFadeIn(el);
 } catch (e) {}
