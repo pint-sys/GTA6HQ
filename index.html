@@ -3071,7 +3071,7 @@ function _newsCardHTML(n, variant) {
     <div class="nf-read">${hasUrl ? 'Read →' : ''}</div>
     </div>
     </div>`;
-}  // ← ADD THIS CLOSING BRACE
+}// ← ADD THIS CLOSING BRACE
 
 function renderNewsHome() {
 try {
@@ -3082,7 +3082,7 @@ if (!items.length) { el.innerHTML = '<div style="grid-column:1/-1;text-align:cen
 
 // Create a grid layout for more items
 let html = '';
-if (items[0]) html += _newsCardHTML(items[0], 'featured');
+if (items[0]) html += _newsCardHTML(items[0], 'mini');
 if (items[1]) html += _newsCardHTML(items[1], 'mini');
 if (items[2]) html += _newsCardHTML(items[2], 'mini');
 if (items[3]) html += _newsCardHTML(items[3], 'wide');
