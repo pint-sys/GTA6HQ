@@ -3058,20 +3058,21 @@ const NEWS_CAT_CLASSES = { official: 'cat-official', rumor: 'cat-rumor', charact
 function _catLabel(cat) { return NEWS_CAT_LABELS[cat] || 'Community'; }
 function _catClass(cat) { return NEWS_CAT_CLASSES[cat] || 'cat-update'; }
 function _newsCardHTML(n, variant) {
-const hasUrl = n.url && n.url !== '#';
-const img = _safeImgAttr(n.image);
-const eyebrow = `<div class="nf-eyebrow"><span class="${_catClass(n.cat)}">${_catLabel(n.cat)}</span><span class="sep">·</span><span>Editorial</span></div>`;
-const openAttr = hasUrl ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(n.url)}"` : '';
-return `<div class="nf-card ${variant}" ${openAttr}>
-<div class="nf-card-img"><img src="${img}" alt="" loading="lazy" onerror="window._imgErr(this)"></div>
-<div class="nf-card-body">
-${eyebrow}
-<div class="nf-card-title">${_esc(n.title)}</div>
-${n.excerpt ? `<div class="nf-card-excerpt">${_esc(n.excerpt)}</div>` : ''}
-<div class="nf-read">${hasUrl ? 'Read →' : ''}</div>
-</div>
-</div>`;
-}
+    const hasUrl = n.url && n.url !== '#';
+    const img = _safeImgAttr(n.image);
+    const eyebrow = `<div class="nf-eyebrow"><span class="${_catClass(n.cat)}">${_catLabel(n.cat)}</span><span class="sep">·</span><span>Editorial</span></div>`;
+    const openAttr = hasUrl ? `onclick="window.open(this.dataset.url,'_blank','noopener,noreferrer')" data-url="${_esc(n.url)}"` : '';
+    return `<div class="nf-card ${variant}" ${openAttr}>
+    <div class="nf-card-img"><img src="${img}" alt="" loading="lazy" onerror="window._imgErr(this)"></div>
+    <div class="nf-card-body">
+    ${eyebrow}
+    <div class="nf-card-title">${_esc(n.title)}</div>
+    ${n.excerpt ? `<div class="nf-card-excerpt">${_esc(n.excerpt)}</div>` : ''}
+    <div class="nf-read">${hasUrl ? 'Read →' : ''}</div>
+    </div>
+    </div>`;
+}  // ← ADD THIS CLOSING BRACE
+
 function renderNewsHome() {
 try {
 const el = document.getElementById('newsListHome');
