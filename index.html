@@ -589,6 +589,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div class="hero-actions">
 <button class="btn-hero btn-hg" onclick="GTA6HQ.openModal('auth-modal')">Join the Crew — Free</button>
 <button class="btn-hero btn-hp" onclick="document.getElementById('guides').scrollIntoView({behavior:'smooth'})">Browse Guides</button>
+<button class="tab" onclick="GTA6HQ.openReviewAnswers()">📋 Review Answers</button>
 </div>
 <div class="hero-stats">
 <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
@@ -675,6 +676,43 @@ Explore
 <div class="section-header">
 <h2 class="section-title">❓ Questions &amp; Solutions</h2>
 <button class="btn btn-gold" style="font-size:12px;padding:6px 14px;" onclick="GTA6HQ.openModal('ask-modal')">+ Ask Question</button>
+</div>
+  <!-- ANSWER SUBMISSION MODAL -->
+<div class="modal-overlay" id="answer-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'answer-modal')">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:600px;">
+    <div class="modal-header">
+      <div class="modal-title">Submit Answer</div>
+      <button class="modal-close" onclick="GTA6HQ.closeModal('answer-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:var(--radius);padding:12px;margin-bottom:16px;font-size:12px;color:var(--text2);">
+        ⚠️ <strong>Your answer will be reviewed</strong> before being published. This helps maintain quality and accuracy.
+      </div>
+      <input type="hidden" id="answerQuestionId"/>
+      <div class="form-group">
+        <label class="form-label">Your Answer</label>
+        <textarea class="form-input" id="answerText" rows="6" placeholder="Provide a detailed answer to help other players..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Name (optional)</label>
+        <input class="form-input" type="text" id="answerAuthor" placeholder="Your username"/>
+      </div>
+      <button class="btn-submit" onclick="GTA6HQ.submitAnswer()">Submit Answer for Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN ANSWER REVIEW MODAL -->
+<div class="modal-overlay" id="review-answers-modal" onclick="GTA6HQ.closeModalOnOverlay(event,'review-answers-modal')">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:800px;">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--gold);">📋 Pending Answer Reviews</div>
+      <button class="modal-close" onclick="GTA6HQ.closeModal('review-answers-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body" id="reviewAnswersList">
+      <div style="text-align:center;padding:40px;color:var(--text3);">Loading pending answers...</div>
+    </div>
+  </div>
 </div>
 <div class="id-search-row">
 <input class="id-input" type="text" id="qaSearch" placeholder="Search questions or enter #GTA6HQ-XXXXX player ID…"/>
@@ -2252,11 +2290,68 @@ const DEFAULT_JOBS = [
 ];
 let currentGuideGame = 'all';
 let currentGuideType = 'all';
+// Replace the QA array with this:
 const QA = [
-{ id: 1, votes: 247, solved: true, title: 'How do you unlock the helicopter at the start of GTA 6?', excerpt: 'Stuck at the Port district and need to get across fast without unlocking the bridge.', answers: 8, time: '4h ago' },
-{ id: 2, votes: 189, solved: false, title: 'What is the fastest car available before the first open-world segment?', excerpt: 'Looking for speed builds that work in early missions without much grind.', answers: 12, time: '6h ago' },
-{ id: 3, votes: 134, solved: true, title: 'Where is the safe house after completing the third main mission?', excerpt: "The game didn't give me a marker and I'm lost in Vice City downtown.", answers: 5, time: '12h ago' },
-{ id: 4, votes: 98, solved: false, title: 'Does GTA 6 have a co-op story mode or is it solo only?', excerpt: "Heard rumors about 2-player story but can't find official confirmation.", answers: 3, time: '1d ago' }
+  { 
+    id: 1, 
+    votes: 247, 
+    solved: false, 
+    title: 'How do you unlock the helicopter at the start of GTA 6?', 
+    excerpt: 'Stuck at the Port district and need to get across fast without unlocking the bridge.', 
+    answers: [], 
+    time: '2h ago',
+    author: 'PlayerOne'
+  },
+  { 
+    id: 2, 
+    votes: 189, 
+    solved: false, 
+    title: 'What is the fastest car available before the first open-world segment?', 
+    excerpt: 'Looking for speed builds that work in early missions without much grind.', 
+    answers: [], 
+    time: '5h ago',
+    author: 'SpeedDemon'
+  },
+  { 
+    id: 3, 
+    votes: 134, 
+    solved: false, 
+    title: 'Where is the safe house after completing the third main mission?', 
+    excerpt: "The game didn't give me a marker and I'm lost in Vice City downtown.", 
+    answers: [], 
+    time: '8h ago',
+    author: 'LostPlayer'
+  },
+  { 
+    id: 4, 
+    votes: 98, 
+    solved: false, 
+    title: 'Does GTA 6 have a co-op story mode or is it solo only?', 
+    excerpt: "Heard rumors about 2-player story but can't find official confirmation.", 
+    answers: [], 
+    time: '12h ago',
+    author: 'CoopGamer'
+  },
+  { 
+    id: 5, 
+    votes: 312, 
+    solved: false, 
+    title: 'What are the best weapons to prioritize early game?', 
+    excerpt: 'Which weapons should I focus on getting first in GTA 6?', 
+    answers: [], 
+    time: '1d ago',
+    author: 'WeaponMaster'
+  },
+  { 
+    id: 6, 
+    votes: 276, 
+    solved: false, 
+    title: 'How does the wanted level system work in GTA 6?', 
+    excerpt: 'Is it similar to GTA 5 or has it changed?', 
+    answers: [], 
+    time: '1d ago',
+    author: 'WantedStar'
+  }
 ];
 const EVENTS = [
 { icon: '🚀', name: 'GTA 6 Release — Console', time: 'Nov 19, 2026' },
@@ -2406,6 +2501,227 @@ document.documentElement.style.overflow = 'hidden'; document.body.style.overflow
 renderEnhancedGuides();
 } catch (e) {}
 }
+// Storage for pending answers (in real app, use database)
+let pendingAnswers = JSON.parse(localStorage.getItem('gta6hq_pending_answers') || '[]');
+let publishedAnswers = JSON.parse(localStorage.getItem('gta6hq_published_answers') || '[]');
+
+function openAnswerModal(questionId) {
+  if (!S.loggedIn) { 
+    notify('Please sign in to submit an answer.'); 
+    GTA6HQ.openModal('auth-modal');
+    return; 
+  }
+  document.getElementById('answerQuestionId').value = questionId;
+  document.getElementById('answerText').value = '';
+  document.getElementById('answerAuthor').value = S.username;
+  GTA6HQ.openModal('answer-modal');
+}
+
+GTA6HQ.submitAnswer = function() {
+  const questionId = parseInt(document.getElementById('answerQuestionId').value);
+  const answerText = document.getElementById('answerText').value.trim();
+  const author = document.getElementById('answerAuthor').value.trim() || S.username;
+  
+  if (!answerText) {
+    notify('Please enter your answer.');
+    return;
+  }
+  
+  const newAnswer = {
+    id: 'ans_' + Date.now(),
+    questionId: questionId,
+    text: answerText,
+    author: author,
+    votes: 0,
+    status: 'pending', // pending, approved, rejected
+    submittedAt: new Date().toISOString(),
+    userId: S.userId
+  };
+  
+  pendingAnswers.push(newAnswer);
+  localStorage.setItem('gta6hq_pending_answers', JSON.stringify(pendingAnswers));
+  
+  GTA6HQ.closeModal('answer-modal');
+  notify('✅ Answer submitted for review! Thank you for contributing.');
+  
+  // Refresh the question display
+  renderQA();
+};
+
+function renderAnswers(questionId) {
+  const questionAnswers = publishedAnswers.filter(a => a.questionId === questionId && a.status === 'approved');
+  const question = QA.find(q => q.id === questionId);
+  
+  if (!questionAnswers.length) {
+    return '<div style="padding:12px;color:var(--text3);font-size:13px;">No answers yet. Be the first to answer!</div>';
+  }
+  
+  return questionAnswers.map(ans => `
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:12px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:12px;">
+          ${ans.author.charAt(0).toUpperCase()}
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:13px;">${_esc(ans.author)}</div>
+          <div style="font-size:11px;color:var(--text3);">${new Date(ans.submittedAt).toLocaleDateString()}</div>
+        </div>
+        <button class="like-btn" onclick="voteAnswer('${ans.id}')">
+          <span>▲</span> ${ans.votes}
+        </button>
+      </div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;">${_esc(ans.text)}</div>
+      ${question && question.solved && question.answers.includes(ans.id) ? '<div style="margin-top:8px;padding:6px 10px;background:rgba(0,230,118,.12);border-radius:4px;font-size:11px;color:var(--green);font-weight:600;display:inline-block;">✓ Accepted Answer</div>' : ''}
+    </div>
+  `).join('');
+}
+
+function voteAnswer(answerId) {
+  if (!S.loggedIn) {
+    notify('Please sign in to vote.');
+    GTA6HQ.openModal('auth-modal');
+    return;
+  }
+  
+  const answer = publishedAnswers.find(a => a.id === answerId);
+  if (answer) {
+    answer.votes++;
+    localStorage.setItem('gta6hq_published_answers', JSON.stringify(publishedAnswers));
+    renderQA();
+    notify('✓ Voted!');
+  }
+}
+
+// Admin function to review answers
+function openReviewAnswers() {
+  if (!isAdmin()) {
+    notify('Admin access required.');
+    return;
+  }
+  
+  const listEl = document.getElementById('reviewAnswersList');
+  const pending = pendingAnswers.filter(a => a.status === 'pending');
+  
+  if (!pending.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3);">No pending answers to review.</div>';
+  } else {
+    listEl.innerHTML = pending.map(ans => `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="tag tag-question">Question #${ans.questionId}</span>
+          <span style="font-size:12px;color:var(--text3);">by ${_esc(ans.author)}</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:auto;">${new Date(ans.submittedAt).toLocaleString()}</span>
+        </div>
+        <div style="background:var(--bg2);padding:12px;border-radius:var(--radius);margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.6;">
+          ${_esc(ans.text)}
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-sid" style="background:var(--green);color:#000;" onclick="approveAnswer('${ans.id}')">✓ Approve</button>
+          <button class="btn-sid" style="background:var(--pink);" onclick="rejectAnswer('${ans.id}')">✗ Reject</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  GTA6HQ.openModal('review-answers-modal');
+}
+
+function approveAnswer(answerId) {
+  const index = pendingAnswers.findIndex(a => a.id === answerId);
+  if (index > -1) {
+    const answer = pendingAnswers[index];
+    answer.status = 'approved';
+    publishedAnswers.push(answer);
+    pendingAnswers.splice(index, 1);
+    
+    localStorage.setItem('gta6hq_pending_answers', JSON.stringify(pendingAnswers));
+    localStorage.setItem('gta6hq_published_answers', JSON.stringify(publishedAnswers));
+    
+    // Update question answer count
+    const question = QA.find(q => q.id === answer.questionId);
+    if (question) {
+      if (!question.answers) question.answers = [];
+      question.answers.push(answerId);
+    }
+    
+    notify('✓ Answer approved and published!');
+    openReviewAnswers();
+    renderQA();
+  }
+}
+
+function rejectAnswer(answerId) {
+  const index = pendingAnswers.findIndex(a => a.id === answerId);
+  if (index > -1) {
+    pendingAnswers.splice(index, 1);
+    localStorage.setItem('gta6hq_pending_answers', JSON.stringify(pendingAnswers));
+    notify('Answer rejected.');
+    openReviewAnswers();
+  }
+}
+
+// Update renderQA to show answer button and count
+function renderQA(list) {
+  try {
+    const el = document.getElementById('qaList');
+    if (!el) return;
+    const items = list || QA;
+    el.innerHTML = items.map(q => {
+      const answerCount = publishedAnswers.filter(a => a.questionId === q.id && a.status === 'approved').length;
+      return `<div class="qa-item" role="button" tabindex="0" onclick="GTA6HQ.openQuestionDetail(${q.id})" style="cursor:pointer;">
+        <div class="qa-votes">
+          <div class="vote-count">${q.votes}</div>
+          <div class="vote-label">votes</div>
+          ${q.solved ? '<div class="qa-solved">✓</div>' : ''}
+        </div>
+        <div class="qa-content">
+          <div class="qa-title">${_esc(q.title)}</div>
+          <div class="qa-excerpt">${_esc(q.excerpt)}</div>
+          <div class="qa-meta">
+            <span class="answer-badge">${answerCount} answers</span>
+            <button class="btn-sid" style="font-size:11px;padding:4px 10px;" onclick="event.stopPropagation();openAnswerModal(${q.id})">+ Answer</button>
+            <span>🕐 ${q.time}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    _triggerFadeIn(el);
+  } catch (e) {}
+}
+
+// Update openQuestionDetail to show answers
+function openQuestionDetail(id) {
+  try {
+    const q = QA.find(x => x.id === id);
+    if (!q) return;
+    
+    _setHTML('guideDetailTitle', `❓ ${q.title}`);
+    _setHTML('guideDetailBody', `
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        ${q.solved ? '<span class="tag tag-guide">✓ Solved</span>' : '<span class="tag tag-question">Open Question</span>'}
+        <span class="tag tag-official">${q.author || 'Anonymous'}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;">${_esc(q.excerpt)}</p>
+      
+      <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px;">
+        <h3 style="font-family:var(--font-d);font-size:14px;color:var(--gold);margin-bottom:12px;">Answers (${publishedAnswers.filter(a => a.questionId === id && a.status === 'approved').length})</h3>
+        ${renderAnswers(id)}
+      </div>
+      
+      <button class="btn-submit" style="margin-top:20px;" onclick="GTA6HQ.closeModal('guide-detail-modal');openAnswerModal(${q.id})">
+        Submit Your Answer
+      </button>
+    `);
+    GTA6HQ.openModal('guide-detail-modal');
+  } catch (e) {}
+}
+
+// Add to window.GTA6HQ object
+window.GTA6HQ = {
+  // ... existing functions ...
+  submitAnswer: GTA6HQ.submitAnswer,
+  openReviewAnswers: openReviewAnswers
+}; 
 function closeGuidesTab() {
 try {
 const page = document.getElementById('guides-tab-page');
