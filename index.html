@@ -1534,6 +1534,19 @@ window.G={
     notify('📰 Refreshing news...');
     await refreshNews(force===undefined?true:!!force);
   },
+  openNewsDetail:(id)=>{
+    const a=CURRENT_NEWS.find(x=>x.id===id); if(!a)return;
+    $('guideDetailTitle').innerHTML=`${a.emoji||'📰'} ${esc(a.title)}`;
+    setHTML('guideDetailBody',`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <span class="nl-tag ${a.category||'update'}">${(a.category||'news').toUpperCase()}</span>
+        <span style="color:var(--text3);font-size:12px">${a.time||''}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.7">${esc(a.excerpt||'No summary available for this article yet.')}</p>
+      ${a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener" class="btn-submit" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Read Full Article ↗</a>`:'<div style="margin-top:16px;font-size:12px;color:var(--text3)">Full source link not available for this article.</div>'}
+    `);
+    openModal('guide-detail-modal');
+  },
 };
 
 // expose for inline onclick attrs
@@ -1561,6 +1574,14 @@ const NEWS_MAX_AGE_MS=24*60*60*1000;  // never show cached news older than 24 ho
 let CURRENT_NEWS=NEWS_DATA.slice();    // what's actually rendered right now (falls back to static list)
 let newsTabActiveCat='all';            // remembers which filter tab is open in the full News overlay
 
+function firestoreTimestampToDate(ts){
+  if(!ts) return null;
+  if(typeof ts.toDate==='function') return ts.toDate();          // real Firestore Timestamp instance
+  if(typeof ts==='number') return new Date(ts);                   // already a JS millis number
+  if(typeof ts.seconds==='number') return new Date(ts.seconds*1000); // plain {seconds,nanoseconds} object
+  const d=new Date(ts);
+  return isNaN(d.getTime())?null:d;
+}
 function loadNewsCache(){
   try{
     const raw=localStorage.getItem(NEWS_CACHE_KEY);
@@ -1597,7 +1618,19 @@ async function refreshNews(force){
   try{
     const live=await fetchLiveNews();
     if(live && live.length){
-      const mapped=live.map(a=>({...a,emoji:a.emoji||'📰',time:a.timestamp?new Date(a.timestamp).toLocaleDateString():'Recent'}));
+      const mapped=live.map(a=>{
+        const d=firestoreTimestampToDate(a.timestamp);
+        return{
+          id:a.id,
+          title:a.title||'Untitled',
+          excerpt:a.excerpt||'',
+          category:a.category||'update',
+          emoji:a.emoji||'📰',
+          url:a.url||null,
+          time:d?d.toLocaleDateString():(a.time||'Recent'),
+          _sortMs:d?d.getTime():0
+        };
+      }).sort((x,y)=>y._sortMs-x._sortMs);
       applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
       if(force) notify('✅ News updated!');
       return;
@@ -1612,7 +1645,7 @@ function renderNewsTabList(cat){
   const el=document.getElementById('newsTabList'); if(!el) return;
   const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
   el.innerHTML=filtered.length?filtered.map(a=>`
-      <div class="ntp-item">
+      <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
         <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
         <div class="ntp-body">
           <div class="ntp-title">${esc(a.title)}</div>
@@ -1682,7 +1715,7 @@ function renderNews(items){
   const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
   el.innerHTML=items.map((a,i)=>{
     const cls=i===0?'featured':i===3?'wide':'mini';
-    return`<div class="nf-card ${cls}">
+    return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
       <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
       <div class="nf-card-body">
         <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
