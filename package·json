@@ -1,6 +1,11 @@
 {
-  "name": "gta6hq-news-pipeline",
+  "name": "gta6hq",
   "version": "1.0.0",
+  "description": "GTA 6 Community Hub",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "rss-parser": "^3.13.0"
   }
