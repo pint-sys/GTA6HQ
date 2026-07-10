@@ -29,9 +29,8 @@ function detectCategory(text) {
   return 'community';
 }
 
-// Vercel requires this specific format for API routes
 module.exports = async function handler(req, res) {
-  console.log('🔍 Fetching GTA 6 news...');
+  console.log(' Fetching GTA 6 news...');
   let allArticles = [];
 
   for (const feed of FEEDS) {
@@ -39,8 +38,7 @@ module.exports = async function handler(req, res) {
       const source = new URL(feed).hostname.replace('www.', '');
       const parsedFeed = await parser.parseURL(feed);
       
-      // Limit to 5 per source to prevent Vercel's 10-second timeout
-      for (const item of parsedFeed.items.slice(0, 5)) { 
+      for (const item of parsedFeed.items.slice(0, 5)) {
         const combined = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
         
         if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
@@ -60,7 +58,7 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // Save to Firestore using native fetch (faster)
+  // Save to Firestore
   const savePromises = allArticles.map(async (article) => {
     const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
     
@@ -82,7 +80,6 @@ module.exports = async function handler(req, res) {
 
   await Promise.all(savePromises);
 
-  // Tell Vercel the job is done
   res.status(200).json({ 
     success: true, 
     message: `Updated ${allArticles.length} articles.` 
