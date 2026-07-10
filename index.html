@@ -1499,10 +1499,46 @@ window.G={
   switchAuthTab,loginUser,registerUser,submitQuestion:()=>{closeModal('ask-modal');notify('Question posted!');},
   searchQA,checkPC,handleSearch:()=>{},lookupPlayer,
   openReviewAnswers,submitAnswer,
-  openNewsTab:()=>openTab('news-tab-page'),closeNewsTab:()=>closeTab('news-tab-page'),
+  openNewsTab:()=>{
+    openTab('news-tab-page');
+    const el=$('newsTabList'); if(!el)return;
+    const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
+    el.innerHTML=NEWS_DATA.map(a=>`
+      <div class="ntp-item">
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div class="ntp-body">
+          <div class="ntp-title">${esc(a.title)}</div>
+          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
+          <div class="ntp-meta">
+            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
+            <span style="color:var(--text3)">${a.time}</span>
+          </div>
+        </div>
+      </div>`).join('');
+  },
+  closeNewsTab:()=>closeTab('news-tab-page'),
   openGuidesTab:()=>openTab('guides-tab-page'),closeGuidesTab:()=>closeTab('guides-tab-page'),
   openModsTab:()=>openTab('mods-tab-page'),closeModsTab:()=>closeTab('mods-tab-page'),
-  filterNewsTab:()=>{},filterGuides:()=>{},filterGuideType:()=>{},renderEnhancedGuides:()=>{},filterMods:()=>{},
+  filterNewsTab:(cat,btn)=>{
+    document.querySelectorAll('.tab-page-subtabs .ntab').forEach(t=>t.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    const el=$('newsTabList'); if(!el)return;
+    const filtered=cat==='all'?NEWS_DATA:NEWS_DATA.filter(a=>a.category===cat);
+    const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
+    el.innerHTML=filtered.length?filtered.map(a=>`
+      <div class="ntp-item">
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div class="ntp-body">
+          <div class="ntp-title">${esc(a.title)}</div>
+          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
+          <div class="ntp-meta">
+            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
+            <span style="color:var(--text3)">${a.time}</span>
+          </div>
+        </div>
+      </div>`).join(''):'<div style="padding:40px;text-align:center;color:var(--text3)">No articles in this category yet.</div>';
+  },
+  filterGuides:()=>{},filterGuideType:()=>{},renderEnhancedGuides:()=>{},filterMods:()=>{},
   openAddJobModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-job-modal');},
   submitNewJob:()=>{notify('Job guide submitted!');closeModal('add-job-modal');},
   syncCommunityJobs:()=>notify('🔍 Checking for job guides…'),
@@ -1518,7 +1554,7 @@ window.G={
   openAddSectionModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
   submitNewSection:()=>notify('Section created!'),
   submitNewSectionItem:()=>notify('Item added!'),
-  fetchLatestNews:()=>notify('📰 News refreshed!'),
+  fetchLatestNews:async()=>{notify('📰 Refreshing news...');try{const live=await fetchLiveNews();if(live&&live.length>0){renderNews(live.map(a=>({...a,emoji:'📰',time:a.timestamp?new Date(a.timestamp).toLocaleDateString():'Recent'})));notify('✅ News updated!');}else{notify('📰 No new articles found.');}}catch(e){notify('⚠️ Could not refresh news.');}},
 };
 
 // expose for inline onclick attrs
@@ -1529,7 +1565,277 @@ window.approveAnswer=approveAnswer;
 window.rejectAnswer=rejectAnswer;
 window.closeModal=closeModal;
 
-document.addEventListener('DOMContentLoaded',renderQA);
+// ─ Static Data ─────────────────────────────────────────
+
+const NEWS_DATA = [
+  {id:'n1',title:'GTA 6 Release Date Confirmed: November 19, 2026',excerpt:'Rockstar Games officially locked in the date after two delays. Pre-orders now open on PlayStation and Xbox stores.',category:'official',time:'2h ago',emoji:'🚀'},
+  {id:'n2',title:'Lucia & Jason Gameplay Deep Dive — New Details Emerge',excerpt:'Leaked playtesting footage reveals how switching between dual protagonists works mid-mission.',category:'characters',time:'5h ago',emoji:'🎮'},
+  {id:'n3',title:'State of Leonida Map — Full Breakdown of Every Region',excerpt:'Data miners have pieced together the complete map: Vice City, Grassrivers, Keys, and Everglades zones confirmed.',category:'map',time:'8h ago',emoji:'🗺️'},
+  {id:'n4',title:'GTA 6 PC Version — What We Know So Far',excerpt:'Rockstar has yet to announce PC, but historical patterns and job listings suggest it\'s in development.',category:'rumor',time:'1d ago',emoji:'💻'},
+];
+
+const GALLERY_DATA = [
+  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
+  {id:'g2',title:'Lucia — Character Artwork',cat:'artwork',emoji:'🎨'},
+  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',emoji:'🏎️'},
+  {id:'g4',title:'Vice Beach 4K Wallpaper',cat:'wallpaper',emoji:'🌊'},
+  {id:'g5',title:'Supercar Lineup — Leaked',cat:'vehicle',emoji:'🚗'},
+  {id:'g6',title:'Florida Keys Environment',cat:'environment',emoji:'🌴'},
+];
+
+const MODS_DATA = [
+  {id:'m1',name:'Ultra Realism ENB v2.3',cat:'visual',icon:'🌅',desc:'Cinematic lighting overhaul with ray-traced reflections and volumetric fog. Based on RAGE 9 shaders.',dl:'12.4K'},
+  {id:'m2',name:'Vice City Redux Sounds',cat:'gameplay',icon:'🔊',desc:'Complete audio overhaul — 80s radio, ambient city sounds, and reworked weapon audio.',dl:'8.7K'},
+  {id:'m3',name:'Supercar Pack Vol.1',cat:'vehicle',icon:'🏎️',desc:'Adds 12 real-world supercars with custom handling, interiors, and damage models.',dl:'21.2K'},
+  {id:'m4',name:'Tactical Weapon Pack',cat:'weapon',icon:'🔫',desc:'Military-grade weapons with realistic reload animations and ballistic simulation.',dl:'15.9K'},
+  {id:'m5',name:'Photo Mode Pro',cat:'visual',icon:'📷',desc:'Advanced photo mode with depth of field, color grading, and filter presets.',dl:'6.3K'},
+  {id:'m6',name:'FPS Boost Optimizer',cat:'gameplay',icon:'⚡',desc:'Config tweaks and shader optimizations for lower-end GPUs. Gains of 20–35% reported.',dl:'44.1K'},
+];
+
+const CHARACTERS_DATA = [
+  {id:'c1',first:'Lucia',last:'Caminos',role:'Protagonist',color:'pink',emoji:'👩'},
+  {id:'c2',first:'Jason',last:'Duval',role:'Protagonist',color:'gold',emoji:'👨'},
+  {id:'c3',first:'Calvin',last:'Andrews',role:'Antagonist',color:'purple',emoji:'🕵️'},
+  {id:'c4',first:'Raul',last:'Djinn',role:'Crime Boss',color:'cyan',emoji:'💼'},
+  {id:'c5',first:'Summer',last:'Torres',role:'Ally',color:'green',emoji:'🌿'},
+  {id:'c6',first:'Rico',last:'Vega',role:'Informant',color:'gold',emoji:'🎯'},
+];
+
+const GUIDES_DATA = [
+  {id:'j1',game:'gta6',title:'Portsands Bank Heist',type:'Heist',diff:'Hard',reward:'$850,000',emoji:'🏦',steps:['Scope out the bank entrance and guard rotation','Steal a police vehicle for disguise','Breach the vault using Lucia\'s hacking skill','Escape via the marina — boat is pre-staged']},
+  {id:'j2',game:'gtav',title:'Fleeca Job — Two-Man',type:'Heist',diff:'Easy',reward:'$57,500',emoji:'💰',steps:['Complete the scope out as driver','Use Lester\'s drill on the vault','Drive calmly — no wanted level needed']},
+  {id:'j3',game:'gta6',title:'Vice City Arms Deal',type:'Side Hustle',diff:'Medium',reward:'$320,000',emoji:'🔫',steps:['Meet contact at the docks at night','Intercept rival cartel convoy','Deliver crates to the safehouse undetected']},
+];
+
+const SYS_REQ = [
+  {tier:'Minimum',cls:'minimum',target:'1080p / 30fps / Low',specs:{OS:'Windows 10 64-bit',CPU:'Intel i7-8700K / AMD Ryzen 5 3600',GPU:'NVIDIA RTX 2070 / AMD RX 5700 XT',RAM:'16 GB',Storage:'150 GB NVMe SSD',VRAM:'8 GB'}},
+  {tier:'Recommended',cls:'recommended',target:'1440p / 60fps / High',specs:{OS:'Windows 11 64-bit',CPU:'Intel i9-12900K / AMD Ryzen 7 5800X3D',GPU:'NVIDIA RTX 3080 / AMD RX 6800 XT',RAM:'32 GB',Storage:'150 GB NVMe SSD',VRAM:'10 GB'}},
+  {tier:'Ultra / 4K',cls:'ultra',target:'4K / 60fps+ / Ultra RT',specs:{OS:'Windows 11 64-bit',CPU:'Intel i9-13900K / AMD Ryzen 9 7950X',GPU:'NVIDIA RTX 4080 / AMD RX 7900 XTX',RAM:'32 GB DDR5',Storage:'150 GB PCIe 4.0 NVMe',VRAM:'16 GB'}}
+];
+
+const CONSOLES = [
+  {name:'PlayStation 5',icon:'🎮',specs:'AMD Zen 2 CPU · RDNA 2 GPU · 16 GB GDDR6\n4K / 60fps · Ray tracing · DualSense haptics'},
+  {name:'Xbox Series X',icon:'🎮',specs:'AMD Zen 2 CPU · RDNA 2 GPU · 16 GB GDDR6\n4K / 60fps · Ray tracing · Quick Resume'},
+];
+
+const EVENTS_DATA = [
+  {date:'Nov 19, 2026',title:'GTA 6 Launch Day 🚀',note:'PS5 & Xbox Series X|S'},
+  {date:'TBA 2027',title:'GTA 6 PC Release 💻',note:'Unconfirmed — based on history'},
+  {date:'TBA',title:'GTA Online 6 Beta 🌐',note:'Rockstar historically launches ~3 months after'},
+];
+
+// ─ Render Functions ─────────────────────────────────────
+
+function renderNews(items){
+  const el=$('newsListHome'); if(!el)return;
+  const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
+  el.innerHTML=items.map((a,i)=>{
+    const cls=i===0?'featured':i===3?'wide':'mini';
+    return`<div class="nf-card ${cls}">
+      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
+      <div class="nf-card-body">
+        <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
+        <div class="nf-card-title">${esc(a.title)}</div>
+        <div class="nf-card-excerpt">${esc(a.excerpt)}</div>
+        <div class="nf-read">Read more →</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderGallery(cat='all'){
+  const el=$('galleryGrid'); if(!el)return;
+  const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
+  el.innerHTML=items.map(g=>`
+    <div class="gallery-tile">
+      <div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji}</div>
+      <div class="gallery-tile-scrim"></div>
+      <div class="gallery-tile-cat">${g.cat}</div>
+      <div class="gallery-tile-title">${esc(g.title)}</div>
+    </div>`).join('');
+}
+
+function renderMods(cat='all'){
+  const el=$('modsGrid'); if(!el)return;
+  const items=cat==='all'?MODS_DATA:MODS_DATA.filter(m=>m.cat===cat);
+  el.innerHTML=items.map(m=>`
+    <div class="mod-card">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="mod-icon-box">${m.icon}</div>
+        <div class="mod-name">${esc(m.name)}</div>
+      </div>
+      <div class="mod-desc">${esc(m.desc)}</div>
+      <div class="mod-footer">
+        <div class="mod-dl">⬇️ ${m.dl} downloads</div>
+        <button class="btn-dl">Download</button>
+      </div>
+    </div>`).join('');
+  // also update tab grid
+  const tab=$('modsTabGrid'); if(tab)tab.innerHTML=el.innerHTML;
+}
+
+function renderCharacters(){
+  const el=$('charactersGrid'); if(!el)return;
+  const colors={pink:'var(--pink)',gold:'var(--gold)',cyan:'var(--cyan)',purple:'var(--purple)',green:'var(--green)'};
+  el.innerHTML=CHARACTERS_DATA.map(c=>`
+    <div class="character-card">
+      <div style="position:absolute;inset:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${c.emoji}</div>
+      <div class="character-scrim"></div>
+      <div class="character-role-pill">${c.role}</div>
+      <div class="character-overlay-name">${esc(c.first)}<span class="surname" style="color:${colors[c.color]||'var(--pink)'}">${esc(c.last)}</span></div>
+      <div class="character-arrow" style="background:${colors[c.color]||'var(--pink)'}">›</div>
+    </div>`).join('');
+}
+
+function renderGuides(game='all',type='all'){
+  const searchVal=($('guideSearch')?.value||'').toLowerCase();
+  let items=GUIDES_DATA.filter(j=>{
+    if(game!=='all'&&j.game!==game)return false;
+    if(type!=='all'&&j.type.toLowerCase()!==type)return false;
+    if(searchVal&&!j.title.toLowerCase().includes(searchVal))return false;
+    return true;
+  });
+  const completed=S.completedJobs||[];
+  const html=items.map(j=>{
+    const done=completed.includes(j.id);
+    return`<div class="card guide-card ${done?'completed':''}" id="guide-${j.id}">
+      <div class="card-thumb-ph" style="background:var(--bg3);font-size:42px;display:flex;align-items:center;justify-content:center">${j.emoji}</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
+          <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
+          <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
+        </div>
+        <div class="card-title">${esc(j.title)}</div>
+        <div class="card-meta"><span style="color:var(--gold);font-weight:700">${j.reward}</span></div>
+      </div>
+      <div class="card-actions">
+        <button class="like-btn" onclick="G.openGuideDetail('${j.id}')">📖 View Steps</button>
+        <button class="like-btn ${done?'liked':''}" onclick="G.toggleGuideComplete('${j.id}',this)">${done?'✅ Done':'☐ Mark Done'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  const g=$('guidesGrid'); if(g)g.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
+  const t=$('guidesTabGrid'); if(t)t.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
+  // update progress
+  const prog=$('guideProgressText');
+  if(prog)prog.textContent=`${completed.filter(id=>GUIDES_DATA.find(j=>j.id===id)).length} / ${GUIDES_DATA.length} Jobs Completed`;
+  // update stat
+  const stat=$('heroStatGuides'); if(stat)stat.textContent=GUIDES_DATA.length;
+}
+
+function renderSysReq(){
+  const g=$('sysReqGrid'); if(!g)return;
+  g.innerHTML=SYS_REQ.map(r=>`
+    <div class="req-card">
+      <div class="req-header">
+        <div class="req-tier-name ${r.cls}">${r.tier}</div>
+        <span style="font-size:11px;color:var(--text3);font-family:var(--fu)">${r.target}</span>
+      </div>
+      <div class="req-body">
+        ${Object.entries(r.specs).map(([k,v])=>`
+          <div class="req-row">
+            <div class="req-label">${k}</div>
+            <div class="req-val"><strong>${v}</strong></div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  const c=$('consoleGrid'); if(!c)return;
+  c.innerHTML=CONSOLES.map(con=>`
+    <div class="console-card">
+      <div class="console-icon">${con.icon}</div>
+      <div class="console-name">${con.name}</div>
+      <div class="console-spec">${con.specs}</div>
+    </div>`).join('');
+}
+
+function renderSidebar(){
+  // News feed
+  const nf=$('newsFeed'); if(nf){
+    nf.innerHTML=NEWS_DATA.map(a=>`
+      <div class="nf-item">
+        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3)">${a.emoji}</div>
+        <div class="nf-info">
+          <div class="nf-title">${esc(a.title)}</div>
+          <div class="nf-time">${a.time}</div>
+        </div>
+      </div>`).join('');
+  }
+  // Events
+  const ev=$('eventsList'); if(ev){
+    ev.innerHTML=EVENTS_DATA.map(e=>`
+      <div style="padding:9px 0;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--fu);font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">${e.date}</div>
+        <div style="font-size:13px;font-weight:600">${e.title}</div>
+        <div style="font-size:11px;color:var(--text3)">${e.note}</div>
+      </div>`).join('');
+    // remove last border
+    const last=ev.querySelector('div:last-child'); if(last)last.style.borderBottom='none';
+  }
+  // Mods stat
+  const ms=$('heroStatMods'); if(ms)ms.textContent=MODS_DATA.length;
+}
+
+// Extend G with guide helpers
+G.filterMods=(cat,btn)=>{
+  document.querySelectorAll('#modTabs .ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderMods(cat);
+};
+G.filterGuides=(game,btn)=>{
+  document.querySelectorAll('#guideGameTabs .ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderGuides(game);
+};
+G.renderEnhancedGuides=()=>renderGuides();
+G.toggleGuideComplete=(id,btn)=>{
+  if(!S.completedJobs)S.completedJobs=[];
+  const i=S.completedJobs.indexOf(id);
+  if(i>-1)S.completedJobs.splice(i,1); else S.completedJobs.push(id);
+  save(); renderGuides();
+  notify(S.completedJobs.includes(id)?'✅ Marked complete!':'☐ Unmarked');
+};
+G.openGuideDetail=(id)=>{
+  const j=GUIDES_DATA.find(x=>x.id===id); if(!j)return;
+  $('guideDetailTitle').textContent=`${j.emoji} ${j.title}`;
+  setHTML('guideDetailBody',`
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
+      <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
+      <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
+      <span style="color:var(--gold);font-weight:700;font-size:14px;margin-left:auto">${j.reward}</span>
+    </div>
+    <h3 style="font-family:var(--fd);font-size:14px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Steps</h3>
+    ${j.steps.map((s,i)=>`<div class="guide-step"><strong>Step ${i+1}</strong>${esc(s)}</div>`).join('')}
+    <button class="btn-submit" style="margin-top:16px" onclick="G.toggleGuideComplete('${j.id}');G.closeModal('guide-detail-modal')">
+      ${(S.completedJobs||[]).includes(j.id)?'☐ Mark Incomplete':'✅ Mark as Complete'}
+    </button>`);
+  openModal('guide-detail-modal');
+};
+
+// ─ Boot ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  renderQA();
+  renderNews(NEWS_DATA);
+  renderGallery();
+  renderMods();
+  renderCharacters();
+  renderGuides();
+  renderSysReq();
+  renderSidebar();
+
+  // Try Firebase for live news
+  window.addEventListener('fb-ready', async()=>{
+    try {
+      const live = await fetchLiveNews();
+      if(live && live.length > 0){
+        renderNews(live.map(a=>({...a, emoji:'📰', time:a.timestamp ? new Date(a.timestamp).toLocaleDateString() : 'Recent'})));
+        renderSidebar();
+      }
+    } catch(e){ console.warn('Firebase news fallback to static data'); }
+  },{once:true});
+});
 })();
 </script>
 
@@ -1545,6 +1851,7 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 function filterGallery(cat,btn){
   document.querySelectorAll('#galleryTabs .tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
+  if(typeof renderGallery==='function') renderGallery(cat);
 }
 function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
 function openAddCharacterModal(){G.openAddCharacterModal();}
