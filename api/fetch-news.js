@@ -30,7 +30,7 @@ function detectCategory(text) {
 }
 
 module.exports = async function handler(req, res) {
-  console.log(' Fetching GTA 6 news...');
+  console.log('🔍 Fetching GTA 6 news...');
   let allArticles = [];
 
   for (const feed of FEEDS) {
@@ -54,7 +54,7 @@ module.exports = async function handler(req, res) {
         }
       }
     } catch (e) {
-      console.error(`❌ Failed ${feed}: ${e.message}`);
+      console.error(` Failed ${feed}: ${e.message}`);
     }
   }
 
