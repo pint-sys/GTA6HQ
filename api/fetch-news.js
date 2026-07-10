@@ -30,15 +30,21 @@ function detectCategory(text) {
 }
 
 module.exports = async function handler(req, res) {
-  console.log(' Fetching GTA 6 news...');
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  
+  console.log('🔍 Fetching GTA 6 news...');
   let allArticles = [];
 
   for (const feed of FEEDS) {
     try {
       const source = new URL(feed).hostname.replace('www.', '');
+      console.log(`📡 Scraping ${source}...`);
       const parsedFeed = await parser.parseURL(feed);
       
-      for (const item of parsedFeed.items.slice(0, 5)) {
+      // Only take 3 per source to avoid timeout
+      for (const item of parsedFeed.items.slice(0, 3)) {
         const combined = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
         
         if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
@@ -58,30 +64,45 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // Save to Firestore
-  const savePromises = allArticles.map(async (article) => {
-    const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
-    
-    await fetch(url, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fields: {
-          title:     { stringValue: article.title },
-          link:      { stringValue: article.link },
-          excerpt:   { stringValue: article.excerpt },
-          source:    { stringValue: article.source },
-          timestamp: { timestampValue: article.timestamp },
-          category:  { stringValue: article.category },
+  console.log(`📰 Found ${allArticles.length} GTA 6 articles`);
+
+  // Save to Firestore with proper error handling
+  if (allArticles.length > 0 && FIREBASE_API_KEY) {
+    const savePromises = allArticles.map(async (article) => {
+      const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
+      
+      try {
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fields: {
+              title:     { stringValue: article.title },
+              link:      { stringValue: article.link },
+              excerpt:   { stringValue: article.excerpt },
+              source:    { stringValue: article.source },
+              timestamp: { timestampValue: article.timestamp },
+              category:  { stringValue: article.category },
+            }
+          })
+        });
+        
+        if (!response.ok) {
+          console.error(`Firestore error ${response.status} for ${article.title}`);
         }
-      })
+      } catch (err) {
+        console.error(`Failed to save article: ${err.message}`);
+      }
     });
-  });
 
-  await Promise.all(savePromises);
+    await Promise.all(savePromises);
+    console.log('✅ Saved all articles to Firestore');
+  }
 
+  // Send response
   res.status(200).json({ 
     success: true, 
-    message: `Updated ${allArticles.length} articles.` 
+    message: `Updated ${allArticles.length} articles.`,
+    articles: allArticles.length
   });
 };
