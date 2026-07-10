@@ -388,6 +388,8 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .nl-tag.update{background:rgba(0,230,118,.1);color:var(--green)}
 .nl-tag.characters{background:rgba(168,85,247,.14);color:var(--purple)}
 .nl-tag.vehicles{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.map{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.gameplay{background:rgba(0,230,118,.1);color:var(--green)}
 
 /* ── MISC UI ── */
 .notify{position:fixed;bottom:22px;right:22px;background:var(--green);color:#0a0a0e;padding:10px 18px;border-radius:8px;font-family:var(--fu);font-size:13px;font-weight:700;z-index:6000;transform:translateY(80px);transition:.3s;max-width:320px}
@@ -488,7 +490,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </div>
 
 <!-- ── TICKER ── -->
-<div class="ticker-wrap" id="news">
+<div class="ticker-wrap">
   <div class="ticker-label">🔴 BREAKING</div>
   <div class="ticker-inner">
     <div class="ticker-track" id="tickerTrack">
@@ -602,7 +604,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <div style="padding:28px 0">
 
   <!-- NEWS -->
-  <section class="section container">
+  <section class="section container" id="news">
     <div class="section-header">
       <h2 class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px">⚡ Live</span></h2>
   
@@ -1501,20 +1503,8 @@ window.G={
   openReviewAnswers,submitAnswer,
   openNewsTab:()=>{
     openTab('news-tab-page');
-    const el=$('newsTabList'); if(!el)return;
-    const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
-    el.innerHTML=NEWS_DATA.map(a=>`
-      <div class="ntp-item">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
-        <div class="ntp-body">
-          <div class="ntp-title">${esc(a.title)}</div>
-          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
-          <div class="ntp-meta">
-            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
-            <span style="color:var(--text3)">${a.time}</span>
-          </div>
-        </div>
-      </div>`).join('');
+    renderNewsTabList(newsTabActiveCat);
+    refreshNews(false);
   },
   closeNewsTab:()=>closeTab('news-tab-page'),
   openGuidesTab:()=>openTab('guides-tab-page'),closeGuidesTab:()=>closeTab('guides-tab-page'),
@@ -1522,21 +1512,7 @@ window.G={
   filterNewsTab:(cat,btn)=>{
     document.querySelectorAll('.tab-page-subtabs .ntab').forEach(t=>t.classList.remove('active'));
     if(btn)btn.classList.add('active');
-    const el=$('newsTabList'); if(!el)return;
-    const filtered=cat==='all'?NEWS_DATA:NEWS_DATA.filter(a=>a.category===cat);
-    const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
-    el.innerHTML=filtered.length?filtered.map(a=>`
-      <div class="ntp-item">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
-        <div class="ntp-body">
-          <div class="ntp-title">${esc(a.title)}</div>
-          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
-          <div class="ntp-meta">
-            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
-            <span style="color:var(--text3)">${a.time}</span>
-          </div>
-        </div>
-      </div>`).join(''):'<div style="padding:40px;text-align:center;color:var(--text3)">No articles in this category yet.</div>';
+    renderNewsTabList(cat);
   },
   filterGuides:()=>{},filterGuideType:()=>{},renderEnhancedGuides:()=>{},filterMods:()=>{},
   openAddJobModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-job-modal');},
@@ -1554,7 +1530,10 @@ window.G={
   openAddSectionModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
   submitNewSection:()=>notify('Section created!'),
   submitNewSectionItem:()=>notify('Item added!'),
-  fetchLatestNews:async()=>{notify('📰 Refreshing news...');try{const live=await fetchLiveNews();if(live&&live.length>0){renderNews(live.map(a=>({...a,emoji:'📰',time:a.timestamp?new Date(a.timestamp).toLocaleDateString():'Recent'})));notify('✅ News updated!');}else{notify('📰 No new articles found.');}}catch(e){notify('⚠️ Could not refresh news.');}},
+  fetchLatestNews:async(force)=>{
+    notify('📰 Refreshing news...');
+    await refreshNews(force===undefined?true:!!force);
+  },
 };
 
 // expose for inline onclick attrs
@@ -1573,6 +1552,78 @@ const NEWS_DATA = [
   {id:'n3',title:'State of Leonida Map — Full Breakdown of Every Region',excerpt:'Data miners have pieced together the complete map: Vice City, Grassrivers, Keys, and Everglades zones confirmed.',category:'map',time:'8h ago',emoji:'🗺️'},
   {id:'n4',title:'GTA 6 PC Version — What We Know So Far',excerpt:'Rockstar has yet to announce PC, but historical patterns and job listings suggest it\'s in development.',category:'rumor',time:'1d ago',emoji:'💻'},
 ];
+
+// ─ News auto-refresh (every 3h) + 24h local cache ─────────
+const NEWS_CACHE_KEY='gta6hq_news_cache_v1';
+const NEWS_REFRESH_MS=3*60*60*1000;   // re-check Firestore for fresh articles every 3 hours
+const NEWS_MAX_AGE_MS=24*60*60*1000;  // never show cached news older than 24 hours
+
+let CURRENT_NEWS=NEWS_DATA.slice();    // what's actually rendered right now (falls back to static list)
+let newsTabActiveCat='all';            // remembers which filter tab is open in the full News overlay
+
+function loadNewsCache(){
+  try{
+    const raw=localStorage.getItem(NEWS_CACHE_KEY);
+    if(!raw) return null;
+    const parsed=JSON.parse(raw);
+    if(!parsed||!parsed.timestamp||!Array.isArray(parsed.items)||!parsed.items.length) return null;
+    if(Date.now()-parsed.timestamp>NEWS_MAX_AGE_MS){
+      localStorage.removeItem(NEWS_CACHE_KEY); // older than 24h — expire it
+      return null;
+    }
+    return parsed;
+  }catch(e){ return null; }
+}
+function saveNewsCache(items){
+  try{ localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify({items,timestamp:Date.now()})); }catch(e){}
+}
+function applyNews(items,persist){
+  if(!items||!items.length) return;
+  CURRENT_NEWS=items;
+  if(persist) saveNewsCache(items);
+  renderNews(CURRENT_NEWS);
+  renderSidebar();
+  const tabPage=document.getElementById('news-tab-page');
+  if(tabPage && tabPage.style.display==='block') renderNewsTabList(newsTabActiveCat);
+}
+async function refreshNews(force){
+  const cache=loadNewsCache();
+  const stale=!cache||(Date.now()-cache.timestamp)>=NEWS_REFRESH_MS;
+  if(cache && !stale && !force){
+    // cache is under 3h old — just make sure it's what's on screen, don't hit Firestore again
+    if(CURRENT_NEWS!==cache.items) applyNews(cache.items,false);
+    return;
+  }
+  try{
+    const live=await fetchLiveNews();
+    if(live && live.length){
+      const mapped=live.map(a=>({...a,emoji:a.emoji||'📰',time:a.timestamp?new Date(a.timestamp).toLocaleDateString():'Recent'}));
+      applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
+      if(force) notify('✅ News updated!');
+      return;
+    }
+  }catch(e){ console.warn('[news] live fetch failed, keeping existing news',e); }
+  // fetch failed or Firestore had nothing new — keep showing whatever we already have (cache, up to 24h old, or the static fallback)
+  if(cache){ applyNews(cache.items,false); }
+  else if(force){ notify('📰 No new articles found.'); }
+}
+function renderNewsTabList(cat){
+  newsTabActiveCat=cat;
+  const el=document.getElementById('newsTabList'); if(!el) return;
+  const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
+  el.innerHTML=filtered.length?filtered.map(a=>`
+      <div class="ntp-item">
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div class="ntp-body">
+          <div class="ntp-title">${esc(a.title)}</div>
+          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
+          <div class="ntp-meta">
+            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
+            <span style="color:var(--text3)">${a.time}</span>
+          </div>
+        </div>
+      </div>`).join(''):'<div style="padding:40px;text-align:center;color:var(--text3)">No articles in this category yet.</div>';
+}
 
 const GALLERY_DATA = [
   {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
@@ -1751,11 +1802,11 @@ function renderSysReq(){
 }
 
 function renderSidebar(){
-  // News feed
+  // News feed — driven by CURRENT_NEWS so it stays in sync with the live/cached articles
   const nf=$('newsFeed'); if(nf){
-    nf.innerHTML=NEWS_DATA.map(a=>`
+    nf.innerHTML=CURRENT_NEWS.map(a=>`
       <div class="nf-item">
-        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3)">${a.emoji}</div>
+        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3)">${a.emoji||'📰'}</div>
         <div class="nf-info">
           <div class="nf-title">${esc(a.title)}</div>
           <div class="nf-time">${a.time}</div>
@@ -1817,7 +1868,12 @@ G.openGuideDetail=(id)=>{
 // ─ Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   renderQA();
-  renderNews(NEWS_DATA);
+
+  // Load whatever news we have cached (up to 24h old) instantly, so the page never looks empty
+  const cachedNews=loadNewsCache();
+  if(cachedNews && cachedNews.items.length) CURRENT_NEWS=cachedNews.items;
+  renderNews(CURRENT_NEWS);
+
   renderGallery();
   renderMods();
   renderCharacters();
@@ -1825,16 +1881,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderSysReq();
   renderSidebar();
 
-  // Try Firebase for live news
-  window.addEventListener('fb-ready', async()=>{
-    try {
-      const live = await fetchLiveNews();
-      if(live && live.length > 0){
-        renderNews(live.map(a=>({...a, emoji:'📰', time:a.timestamp ? new Date(a.timestamp).toLocaleDateString() : 'Recent'})));
-        renderSidebar();
-      }
-    } catch(e){ console.warn('Firebase news fallback to static data'); }
+  // Once Firebase is ready: check if news needs a refresh (older than 3h or no cache),
+  // then keep re-checking every 3 hours for as long as the tab stays open.
+  window.addEventListener('fb-ready', ()=>{
+    refreshNews(false);
+    setInterval(()=>refreshNews(false), NEWS_REFRESH_MS);
   },{once:true});
+
+  // Reconnect handling
+  window.addEventListener('online',()=>{
+    document.getElementById('offlineBanner')?.classList.remove('show');
+    refreshNews(false);
+  });
+  window.addEventListener('offline',()=>{
+    document.getElementById('offlineBanner')?.classList.add('show');
+  });
+  if(!navigator.onLine) document.getElementById('offlineBanner')?.classList.add('show');
 });
 })();
 </script>
