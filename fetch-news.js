@@ -1,86 +1,146 @@
 // fetch-news.js
-const Parser = require('rss-parser');
-const admin = require('firebase-admin');
+const https = require('https');
+const Parser = require('rss-parser'); // Install: npm install rss-parser
 
-// 1. Initialize Firebase Admin securely using GitHub Secrets
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+// ── CONFIG ──────────────────────────────────────────────
+const FIREBASE_PROJECT = 'gta6hq-befa7'; // Match your firebase-config.js
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
+
+const parser = new Parser({
+  customFields: {
+    item: ['enclosure']
+  }
 });
-const db = admin.firestore();
 
-const parser = new Parser();
-
-// 2. Expanded Feeds (Added IGN & GameSpot to match your FAQ)
+// All major gaming outlets (added IGN & GameSpot)
 const FEEDS = [
-  { url: 'https://www.rockpapershotgun.com/feed', name: 'rockpapershotgun.com' },
-  { url: 'https://www.eurogamer.net/feed', name: 'eurogamer.net' },
-  { url: 'https://kotaku.com/rss', name: 'kotaku.com' },
-  { url: 'https://www.pcgamer.com/rss/', name: 'pcgamer.com' },
-  { url: 'https://feeds.feedburner.com/ign/all', name: 'ign.com' },
-  { url: 'https://www.gamespot.com/feeds/mashup/', name: 'gamespot.com' }
+  'https://www.rockpapershotgun.com/feed',
+  'https://www.eurogamer.net/feed',
+  'https://kotaku.com/rss',
+  'https://www.pcgamer.com/rss/',
+  'https://feeds.feedburner.com/ign/all',           // Added
+  'https://www.gamespot.com/feeds/mashup/',         // Added
 ];
 
 const GTA6_KEYWORDS = [
   'gta 6', 'gta6', 'grand theft auto 6', 'grand theft auto vi',
-  'rockstar', 'vice city', 'lucia', 'jason', 'leonida'
+  'rockstar games', 'vice city', 'lucia', 'jason', 'leonida',
+  'gta vi', 'gta 6 gameplay', 'gta 6 trailer'
 ];
 
-// 3. Categorization mapped EXACTLY to your index.html UI tabs
+// ── HELPERS ─────────────────────────────────────────────
 function detectCategory(text) {
+  text = text.toLowerCase();
   if (text.includes('character') || text.includes('lucia') || text.includes('jason')) return 'characters';
   if (text.includes('vehicle') || text.includes('car') || text.includes('bike')) return 'vehicles';
   if (text.includes('map') || text.includes('leonida') || text.includes('vice city')) return 'map';
   if (text.includes('gameplay') || text.includes('mechanic')) return 'gameplay';
   if (text.includes('rumor') || text.includes('leak') || text.includes('insider')) return 'rumors';
   if (text.includes('official') || text.includes('release') || text.includes('trailer')) return 'official';
-  return 'community'; // Default fallback
+  return 'community';
 }
 
+// ── FIRESTORE SAVE ──────────────────────────────────────
+async function saveToFirestore(articles) {
+  console.log(`💾 Saving ${articles.length} articles to Firestore...`);
+  
+  for (const article of articles) {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
+    
+    const body = JSON.stringify({
+      fields: {
+        title:     { stringValue: article.title },
+        link:      { stringValue: article.link },
+        excerpt:   { stringValue: article.excerpt },
+        source:    { stringValue: article.source },
+        timestamp: { timestampValue: article.timestamp },
+        category:  { stringValue: article.category },
+        imageUrl:  { stringValue: article.imageUrl || '' },
+      }
+    });
+
+    try {
+      await new Promise((resolve, reject) => {
+        const req = https.request(url, {
+          method: 'PATCH',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body)
+          }
+        }, res => {
+          if (res.statusCode === 200) {
+            console.log(`✅ Saved: ${article.title.slice(0, 50)}...`);
+            resolve();
+          } else {
+            let errorData = '';
+            res.on('data', chunk => errorData += chunk);
+            res.on('end', () => {
+              console.error(`❌ Firestore error ${res.statusCode}:`, errorData);
+              reject(new Error(`Firestore error: ${res.statusCode}`));
+            });
+          }
+        });
+        
+        req.on('error', reject);
+        req.write(body);
+        req.end();
+      });
+    } catch (err) {
+      console.error(`️  Failed to save article: ${err.message}`);
+    }
+  }
+}
+
+// ── MAIN ────────────────────────────────────────────────
 async function main() {
-  console.log('🔍 Fetching GTA 6 news...');
+  console.log('🔍 Fetching ACTUAL GTA 6 news from live sources...\n');
   let allArticles = [];
 
-  for (const feed of FEEDS) {
+  for (const feedUrl of FEEDS) {
     try {
-      console.log(`📡 Scraping ${feed.name}...`);
-      const parsedFeed = await parser.parseURL(feed.url);
+      const source = new URL(feedUrl).hostname.replace('www.', '');
+      console.log(` Fetching ${source}...`);
       
-      // Limit to latest 20 items per source to avoid rate limits
-      for (const item of parsedFeed.items.slice(0, 20)) { 
-        const combined = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
-        
-        if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
-          allArticles.push({
-            // ID matches your old logic for deduplication
-            id: Buffer.from(item.link).toString('base64').slice(0, 20), 
-            title: item.title,
-            link: item.link,
-            excerpt: (item.contentSnippet || '').replace(/<[^>]+>/g, '').slice(0, 200),
-            source: feed.name,
-            // CRITICAL: Use Firestore Timestamp object so orderBy('timestamp') works perfectly
-            timestamp: admin.firestore.Timestamp.fromDate(new Date(item.pubDate || Date.now())), 
-            category: detectCategory(combined)
-          });
-        }
+      const feed = await parser.parseURL(feedUrl);
+      console.log(`   Found ${feed.items.length} total articles`);
+      
+      // Filter for GTA 6 related only
+      const gta6Articles = feed.items.filter(item => {
+        const text = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
+        return GTA6_KEYWORDS.some(kw => text.includes(kw));
+      });
+      
+      console.log(`   → ${gta6Articles.length} GTA 6 related\n`);
+      
+      for (const item of gta6Articles.slice(0, 5)) { // Latest 5 per source
+        allArticles.push({
+          title: item.title,
+          link: item.link,
+          excerpt: (item.contentSnippet || '').replace(/<[^>]+>/g, '').slice(0, 200),
+          source: source,
+          timestamp: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+          category: detectCategory(`${item.title} ${item.contentSnippet || ''}`),
+          imageUrl: item.enclosure?.url || '',
+          id: Buffer.from(item.link).toString('base64').slice(0, 20),
+        });
       }
     } catch (e) {
-      console.error(`❌ Failed ${feed.name}: ${e.message}`);
+      console.error(`❌ Failed ${feedUrl}: ${e.message}\n`);
     }
   }
 
   console.log(`\n📰 Total GTA 6 articles found: ${allArticles.length}`);
-
-  // 4. Batch write to Firestore (Much faster than individual REST API calls)
-  if (allArticles.length > 0) {
-    const batch = db.batch();
-    for (const article of allArticles) {
-      const docRef = db.collection('automated_news').doc(article.id);
-      batch.set(docRef, article, { merge: true }); // merge: true prevents overwriting if it exists
-    }
-    await batch.commit();
-    console.log('✅ Done! Firestore updated securely via Admin SDK.');
+  
+  if (allArticles.length > 0 && FIREBASE_API_KEY) {
+    await saveToFirestore(allArticles);
+    console.log('\n✅ Done! Live news is now active.');
+  } else if (!FIREBASE_API_KEY) {
+    console.log('\n⚠️  No FIREBASE_API_KEY set in GitHub Secrets');
+    console.log('Articles found:', JSON.stringify(allArticles.slice(0, 3), null, 2));
   }
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+main().catch(e => { 
+  console.error('💥 Pipeline crashed:', e); 
+  process.exit(1); 
+});
