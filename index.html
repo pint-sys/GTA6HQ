@@ -12,21 +12,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Proza+Libre:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* ── TOKENS ── */
-:root{
-  --bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;
-  --card:#1a1a23;--card2:#1e1e28;
-  --border:#2a2a38;--border2:#333345;
-  --gold:#f0b429;--gold2:#c8920e;
-  --pink:#ff3c6e;--pink2:#c8204e;
-  --cyan:#00d4ff;--cyan2:#009dbf;
-  --green:#00e676;--purple:#a855f7;
-  --text:#f0f0f8;--text2:#a0a0c0;--text3:#6a6a88;
-  --r:8px;--r2:12px;
-  --fd:'Oswald',sans-serif;
-  --fb:'Proza Libre',sans-serif;
-  --fu:'Inter',sans-serif;
-}
 
 /* ── RESET & BASE ── */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -609,10 +594,53 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     </div>
     <div class="news-feature-grid" id="newsListHome">
       <!-- skeleton -->
-      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+     <a class="nf-card" href="/news/gta6-release-date.html">
+  <div class="nf-card-img">
+    <img src="img/release.jpg" alt="GTA 6 Release Date">
+  </div>
+  <div class="nf-card-body">
+    <div class="nf-eyebrow"><span class="cat-official">OFFICIAL</span></div>
+    <div class="nf-card-title">GTA 6 Release Date Confirmed</div>
+    <div class="nf-card-excerpt">Rockstar officially locked in the date...</div>
+    <span class="nf-read">Read more →</span>
+  </div>
+</a>
+
+<a class="nf-card" href="/news/gta6-lucia-jason-gameplay.html">
+  <div class="nf-card-img">
+    <img src="img/lucia.jpg" alt="Lucia & Jason Gameplay">
+  </div>
+  <div class="nf-card-body">
+    <div class="nf-eyebrow"><span class="cat-official">CHARACTERS</span></div>
+    <div class="nf-card-title">Lucia & Jason Gameplay Deep Dive</div>
+    <div class="nf-card-excerpt">New leaked footage reveals...</div>
+    <span class="nf-read">Read more →</span>
+  </div>
+</a>
+
+<a class="nf-card" href="/news/gta6-leonida-map.html">
+  <div class="nf-card-img">
+    <img src="img/map.jpg" alt="Leonida Map Breakdown">
+  </div>
+  <div class="nf-card-body">
+    <div class="nf-eyebrow"><span class="cat-official">MAP</span></div>
+    <div class="nf-card-title">State of Leonida Map Breakdown</div>
+    <div class="nf-card-excerpt">Vice City, Grassrivers, Keys...</div>
+    <span class="nf-read">Read more →</span>
+  </div>
+</a>
+
+<a class="nf-card" href="/news/gta6-pc-version.html">
+  <div class="nf-card-img">
+    <img src="img/pc.jpg" alt="GTA 6 PC Version">
+  </div>
+  <div class="nf-card-body">
+    <div class="nf-eyebrow"><span class="cat-official">RUMOR</span></div>
+    <div class="nf-card-title">GTA 6 PC Version — What We Know</div>
+    <div class="nf-card-excerpt">Rockstar has yet to announce PC...</div>
+    <span class="nf-read">Read more →</span>
+  </div>
+</a>
     </div>
     <button onclick="G.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
   </section>
