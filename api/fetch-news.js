@@ -54,13 +54,13 @@ module.exports = async function handler(req, res) {
         }
       }
     } catch (e) {
-      console.error(` Failed ${feed}: ${e.message}`);
+      console.error(`❌ Failed ${feed}: ${e.message}`);
     }
   }
 
   if (allArticles.length > 0 && FIREBASE_API_KEY) {
     const savePromises = allArticles.map(async (article) => {
-      // ✅ FIXED: URL is now on a single line without accidental breaks
+      // ✅ FIXED: URL on single line
       const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
       
       await fetch(url, {
@@ -82,7 +82,7 @@ module.exports = async function handler(req, res) {
     await Promise.all(savePromises);
   }
 
-  // ✅ FIXED: Removed accidental newline in the JSON response
+  // ✅ FIXED: No newline in response
   res.status(200).json({ 
     success: true, 
     message: `Updated ${allArticles.length} articles.` 
