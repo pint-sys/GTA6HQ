@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
       const source = new URL(feed).hostname.replace('www.', '');
       const parsedFeed = await parser.parseURL(feed);
 
-      for (const item of parsedFeed.items.slice(0, 8)) {
+      for (const item of parsedFeed.items.slice(0, 15)) {
         const combined = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
 
         if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
