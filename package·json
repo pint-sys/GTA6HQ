@@ -1,12 +1,13 @@
 {
-  "name": "gta6hq",
-  "version": "1.0.0",
-  "description": "GTA 6 Community Hub",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "gta6hq-news-functions",
+  "description": "Scheduled Cloud Function that syncs GTA 6 news into Firestore every 3 hours",
+  "engines": {
+    "node": "20"
   },
+  "main": "index.js",
   "dependencies": {
-    "rss-parser": "^3.13.0"
-  }
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "private": true
 }
