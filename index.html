@@ -885,7 +885,6 @@ G.openNewsDetail = (id)=>{
 <script>
 'use strict';
 
-const GALLERY_DATA = [
   const GALLERY_DATA = [
   {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',
    img:'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_VI_cover.jpg'},
@@ -923,10 +922,36 @@ function filterGallery(cat,btn){
   if(typeof renderGallery==='function') renderGallery(cat);
 }
 function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
-function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
-function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
-function lightboxNav(){}
-</script>
+// 3. LIGHTBOX — full version, not empty
+  let lightboxImages = [];
+let lightboxIndex  = 0;
+
+function openLightbox(imgUrl, caption){
+  lightboxImages = GALLERY_DATA.filter(g=>g.img).map(g=>({img:g.img,title:g.title}));
+  lightboxIndex  = lightboxImages.findIndex(g=>g.img===imgUrl);
+  if(lightboxIndex<0) lightboxIndex=0;
+  _showLightboxFrame();
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+
+function _showLightboxFrame(){
+  const item=lightboxImages[lightboxIndex]; if(!item)return;
+  document.getElementById('lightboxImg').src=item.img;
+  document.getElementById('lightboxCaption').textContent=item.title;
+}
+
+function lightboxNav(dir){
+  lightboxIndex=(lightboxIndex+dir+lightboxImages.length)%lightboxImages.length;
+  _showLightboxFrame();
+}
+
+function closeLightbox(){
+  document.getElementById('lightbox-overlay').classList.remove('open');
+}
+
+function closeLightboxOnOverlay(ev){
+  if(ev.target===document.getElementById('lightbox-overlay')) closeLightbox();
+}
 
 
   <!-- 2-COL GRID -->
