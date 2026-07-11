@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
       const source = new URL(feed).hostname.replace('www.', '');
       const parsedFeed = await parser.parseURL(feed);
 
-      for (const item of parsedFeed.items.slice(0, 3)) {
+      for (const item of parsedFeed.items.slice(0, 8)) {
         const combined = `${item.title} ${item.contentSnippet || ''}`.toLowerCase();
 
         if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
@@ -49,9 +49,15 @@ module.exports = async function handler(req, res) {
           allArticles.push({
             title: item.title,
             url: item.link, // <-- renamed from 'link' to match the site's news.js
-            excerpt: (item.contentSnippet || '').replace(/<[^>]+>/g, '').slice(0, 200),
+           excerpt: (item.contentSnippet || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').slice(0, 200),
             source: source,
-            timestamp: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+           // Add this import at the top of your file
+const { Timestamp } = require('firebase-admin/firestore');
+// or if using firebase (not admin):
+const { Timestamp } = require('firebase/firestore');
+
+// Then change line 54 to:
+timestamp: item.pubDate ? Timestamp.fromDate(new Date(item.pubDate)) : Timestamp.now(),
             category: category,
             emoji: EMOJI[category] || '📰',
             id: Buffer.from(item.link).toString('base64').replace(/[/+=]/g, '_').slice(0, 60),
