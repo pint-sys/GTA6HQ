@@ -10,6 +10,11 @@ const FEEDS = [
   'https://www.pcgamer.com/rss/',
   'https://feeds.feedburner.com/ign/all',
   'https://www.gamespot.com/feeds/mashup/'
+  'https://gtaforums.com/forum/387-gta-vi/index.rss',
+  'https://www.vg247.com/feed',
+  'https://www.gamesradar.com/rss/',
+  'https://screenrant.com/feed/',
+  'https://www.polygon.com/rss/index.xml',
 ];
 const GTA6_KEYWORDS = [
   'gta 6', 'gta6', 'grand theft auto 6', 'grand theft auto vi',
