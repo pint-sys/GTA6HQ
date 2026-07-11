@@ -709,17 +709,18 @@ async function refreshNews(force){
     const live=await fetchLiveNews();
     if(live && live.length){
       const mapped=live.map(a=>{
-        const d=firestoreTimestampToDate(a.timestamp);
-        return{
-          id:a.id,
-          title:a.title||'Untitled',
-          excerpt:a.excerpt||'',
-          category:a.category||'update',
-          emoji:a.emoji||'📰',
-          url:a.url||null,
-          time:d?d.toLocaleDateString():(a.time||'Recent'),
-          _sortMs:d?d.getTime():0
-        };
+  const d=firestoreTimestampToDate(a.timestamp);
+  return{
+    id:a.id,
+    title:a.title||'Untitled',
+    excerpt:a.excerpt||'',
+    category:a.category||'update',
+    emoji:a.emoji||'📰',
+    url:a.url||null,
+    imageUrl: a.imageUrl || null,  // ✅ ADD THIS LINE
+    time:d?d.toLocaleDateString():(a.time||'Recent'),
+    _sortMs:d?d.getTime():0
+  };
       }).sort((x,y)=>y._sortMs-x._sortMs);
       applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
       if(force) notify('✅ News updated!');
@@ -736,7 +737,12 @@ function renderNewsTabList(cat){
   const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
   el.innerHTML=filtered.length?filtered.map(a=>`
       <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px">
+  ${a.imageUrl
+    ? `<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
+    : a.emoji||'📰'
+  }
+</div>
         <div class="ntp-body">
           <div class="ntp-title">${esc(a.title)}</div>
           <div class="ntp-excerpt">${esc(a.excerpt)}</div>
@@ -754,7 +760,12 @@ function renderNews(items){
   el.innerHTML=items.map((a,i)=>{
     const cls=i===0?'featured':i===3?'wide':'mini';
     return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
-      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
+     <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">
+  ${a.imageUrl
+    ? `<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'">`
+    : a.emoji||'📰'
+  }
+</div>
       <div class="nf-card-body">
         <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
         <div class="nf-card-title">${esc(a.title)}</div>
@@ -1807,7 +1818,12 @@ function renderSidebar(){
   const nf=$('newsFeed'); if(nf){
     nf.innerHTML=CURRENT_NEWS.map(a=>`
       <div class="nf-item">
-        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3)">${a.emoji||'📰'}</div>
+        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3);overflow:hidden">
+  ${a.imageUrl
+    ? `<img src="${esc(a.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
+    : a.emoji||'📰'
+  }
+</div>
         <div class="nf-info">
           <div class="nf-title">${esc(a.title)}</div>
           <div class="nf-time">${a.time}</div>
