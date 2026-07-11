@@ -13,7 +13,8 @@ const FEEDS = [
 ];
 const GTA6_KEYWORDS = [
   'gta 6', 'gta6', 'grand theft auto 6', 'grand theft auto vi',
-  'rockstar', 'vice city', 'lucia', 'jason', 'leonida'
+  'rockstar', 'vice city', 'lucia', 'jason', 'leonida' 'gta vi', 'gta6hq', 'rockstar games', 'trevor', 'next gta',
+  'open world', 'take-two', 'take two interactive', 'gta 5', 'gta v' 
 ];
 
 // category values MUST match the site's CSS classes (.nl-tag.official/.rumor/.update/
