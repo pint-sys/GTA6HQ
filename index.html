@@ -28,6 +28,7 @@
   --fu:'Inter',sans-serif;
 }
 
+
 /* ── RESET & BASE ── */
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -43,12 +44,15 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .skip-link{position:absolute;top:-48px;left:8px;z-index:10000;background:var(--gold);color:#111;padding:10px 18px;border-radius:0 0 8px 8px;font-family:var(--fu);font-weight:700;font-size:13px;transition:top .15s}
 .skip-link:focus{top:0}
 
+
 /* ── SCROLL PROGRESS ── */
 .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--gold));z-index:10001;width:0%;transition:width .1s linear}
+
 
 /* ── OFFLINE BANNER ── */
 .offline-banner{position:fixed;top:0;left:0;right:0;background:var(--pink);color:#fff;text-align:center;padding:9px 16px;font-family:var(--fu);font-size:13px;font-weight:600;z-index:10002;transform:translateY(-100%);transition:transform .25s ease}
 .offline-banner.show{transform:translateY(0)}
+
 
 /* ── TOP BAR ── */
 .topbar{background:#0d0d14;border-bottom:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;font-family:var(--fu);font-size:12px;color:var(--text3)}
@@ -56,6 +60,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .live-badge{display:inline-flex;align-items:center;gap:5px;color:var(--pink)}
 .live-dot{width:7px;height:7px;background:var(--pink);border-radius:50%;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
@@ -88,12 +93,14 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
   .nav-links a{padding:14px 20px;border-bottom:1px solid var(--border);border-radius:0}
 }
 
+
 /* ── PAGE TABS ── */
 .page-tabs{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:900}
 .page-tabs-inner{max-width:1300px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;gap:0}
 .ptl{font-family:var(--fu);font-size:13px;font-weight:500;padding:12px 16px;border:none;background:transparent;color:var(--text3);border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;display:block}
 .ptl:hover{color:var(--text)}
 .ptl.active{color:var(--gold);border-bottom-color:var(--gold)}
+
 
 /* ── TICKER ── */
 .ticker-wrap{background:var(--pink);overflow:hidden;height:36px;display:flex;align-items:center}
@@ -103,6 +110,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .ticker-track:hover{animation-play-state:paused}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{padding:0 36px;font-family:var(--fu);font-size:13px;font-weight:600;color:#fff}
+
 
 /* ── HERO ── */
 .hero{position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden;background:#150a24}
@@ -126,6 +134,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .hero-stat-num{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--gold)}
 .hero-stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 
+
 /* ── COUNTDOWN ── */
 .countdown-box{background:var(--bg2);border:1px solid rgba(240,180,41,.2);border-radius:var(--r2);padding:20px;text-align:center}
 .cd-title{font-family:var(--fd);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
@@ -139,6 +148,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 @media(max-width:960px){.hero-content{grid-template-columns:1fr}}
 @media(max-width:600px){.hero-stats{grid-template-columns:1fr 1fr}.cd-units{gap:6px}.cd-unit{padding:8px 10px;min-width:50px}.cd-num{font-size:24px}}
 
+
 /* ── LAYOUT ── */
 .container{max-width:1300px;margin:0 auto;padding:0 20px}
 .section{padding:44px 0}
@@ -149,6 +159,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .hero-scroll-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text3);font-family:var(--fu);font-size:11px;text-transform:uppercase;letter-spacing:1px;z-index:3;animation:bounce 2s infinite}
 .hero-scroll-indicator svg{width:18px;height:18px}
 @keyframes bounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
 
 /* ── CARDS ── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:.2s}
@@ -174,152 +185,20 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .like-btn:hover{color:var(--pink);background:rgba(255,60,110,.08)}
 .like-btn.liked{color:var(--pink)}
 
+
 /* ── GRIDS ── */
 .news-grid,.mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 .mods-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 
-/* ── NEWS FEATURE LAYOUT ── */
-.news-feature-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto;gap:16px}
-.nf-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column;transition:.2s;cursor:pointer;color:inherit}
-.nf-card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.nf-card.featured{grid-column:1;grid-row:1/3}
-.nf-card.wide{grid-column:2/4;grid-row:2;flex-direction:row}
-.nf-card .nf-card-img{width:100%;aspect-ratio:16/10;background:var(--bg3);flex-shrink:0;overflow:hidden}
-.nf-card.featured .nf-card-img{aspect-ratio:16/12;flex:1}
-.nf-card.wide .nf-card-img{width:42%;aspect-ratio:auto}
-.nf-card img{width:100%;height:100%;object-fit:cover;display:block}
-.nf-card-body{padding:14px 16px}
-.nf-card.wide .nf-card-body{flex:1}
-.nf-eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-.nf-eyebrow .cat-official{color:var(--gold)}.nf-eyebrow .cat-rumor{color:var(--pink)}.nf-eyebrow .cat-update{color:var(--green)}.nf-eyebrow .sep{color:var(--text3);font-weight:400}
-.nf-card-title{font-family:var(--fb);font-weight:700;color:var(--text);line-height:1.35;margin-bottom:8px}
-.nf-card.featured .nf-card-title{font-size:19px}
-.nf-card.mini .nf-card-title,.nf-card.wide .nf-card-title{font-size:13px}
-.nf-card-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.nf-read{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--pink)}
-@media(max-width:760px){.news-feature-grid{grid-template-columns:1fr}.nf-card.featured,.nf-card.mini,.nf-card.wide{grid-column:1;grid-row:auto}.nf-card.wide{flex-direction:column}.nf-card.wide .nf-card-img{width:100%;aspect-ratio:16/10}}
-
-/* ── MOD CARDS ── */
-.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s}
-.mod-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
-.mod-icon-box{width:46px;height:46px;border-radius:10px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px}
-.mod-name{font-weight:700;font-size:14px}
-.mod-desc{font-size:13px;color:var(--text2);line-height:1.5}
-.mod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-.mod-dl{font-family:var(--fu);font-size:11px;color:var(--text3)}
-.btn-dl{background:var(--cyan);color:#0a0a0e;border:none;padding:5px 14px;border-radius:4px;font-family:var(--fu);font-size:12px;font-weight:700}
-.btn-dl:hover{background:var(--cyan2)}
-
-/* ── GALLERY ── */
-.gallery-tile{position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.2s}
-.gallery-tile:hover{border-color:var(--gold);transform:translateY(-3px)}
-.gallery-tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.gallery-tile:hover img{transform:scale(1.06)}
-.gallery-tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.82) 100%)}
-.gallery-tile-cat{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 7px;border-radius:4px}
-.gallery-tile-title{position:absolute;left:10px;right:10px;bottom:8px;font-family:var(--fu);font-size:12px;font-weight:600;color:#fff}
-
-/* ── LIGHTBOX ── */
-.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:6000;display:none;align-items:center;justify-content:center;padding:24px}
-.lightbox-overlay.open{display:flex}
-.lightbox-content{max-width:900px;width:100%;text-align:center}
-.lightbox-content img{max-width:100%;max-height:72vh;border-radius:var(--r2);object-fit:contain;background:var(--bg3)}
-.lightbox-caption{margin-top:14px;color:var(--text2);font-family:var(--fu);font-size:13px}
-.lightbox-close{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px}
-.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center}
-.lightbox-prev{left:18px}.lightbox-next{right:18px}
-
-/* ── FAQ ── */
-.faq-list{display:flex;flex-direction:column;gap:10px}
-.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.faq-item summary{padding:14px 18px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--text);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.faq-item summary::-webkit-details-marker{display:none}
-.faq-item summary::after{content:'+';font-size:20px;color:var(--gold);flex-shrink:0;transition:transform .2s}
-.faq-item[open] summary::after{transform:rotate(45deg)}
-.faq-item summary:hover{color:var(--gold)}
-.faq-answer{padding:0 18px 16px;font-size:13px;color:var(--text2);line-height:1.6}
-
-/* ── CHARACTERS ── */
-.character-card{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.25s}
-.character-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.45)}
-.character-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
-.character-card:hover img{transform:scale(1.05)}
-.character-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.85) 100%)}
-.character-overlay-name{position:absolute;left:8px;right:28px;bottom:7px;font-family:var(--fd);font-size:11px;font-weight:700;line-height:1.15;color:#fff;text-transform:uppercase;letter-spacing:.3px}
-.character-overlay-name .surname{color:var(--pink);display:block}
-.character-arrow{position:absolute;right:7px;bottom:7px;width:18px;height:18px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
-.character-role-pill{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:var(--gold);font-family:var(--fu);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:3px}
-
-/* ── Q&A ── */
-.qa-list{display:flex;flex-direction:column;gap:12px}
-.qa-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;gap:14px;transition:.2s;cursor:pointer}
-.qa-item:hover{border-color:var(--gold)}
-.qa-votes{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:40px}
-.vote-count{font-family:var(--fd);font-size:20px;font-weight:700}
-.vote-label{font-size:10px;color:var(--text3);text-transform:uppercase;font-family:var(--fu)}
-.qa-solved{background:var(--green);color:#0a0a0e;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--fu)}
-.qa-content{flex:1}
-.qa-title{font-weight:700;font-size:14px;margin-bottom:5px}
-.qa-title:hover{color:var(--gold)}
-.qa-excerpt{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:7px}
-.qa-meta{font-size:12px;color:var(--text3);display:flex;gap:10px;font-family:var(--fu)}
-.answer-badge{background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-
-/* ── SYS REQ ── */
-.sys-req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.req-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
-.req-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.req-tier-name{font-family:var(--fd);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.req-tier-name.minimum{color:var(--text2)}.req-tier-name.recommended{color:var(--gold)}.req-tier-name.ultra{color:var(--cyan)}
-.req-body{padding:16px 18px}
-.req-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start}
-.req-row:last-child{border-bottom:none}
-.req-label{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;min-width:60px;padding-top:1px}
-.req-val{font-size:13px;color:var(--text);line-height:1.4}
-.req-val strong{color:var(--gold)}
-.console-req{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
-.console-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.console-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
-.console-icon{font-size:32px;margin-bottom:8px}
-.console-name{font-family:var(--fd);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.console-spec{font-size:12px;color:var(--text3);line-height:1.6;font-family:var(--fu)}
-.release-banner{background:linear-gradient(90deg,rgba(240,180,41,.08),rgba(255,60,110,.08));border:1px solid rgba(240,180,41,.2);border-radius:var(--r2);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.rb-date{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--gold)}
-.rb-sub{font-size:13px;color:var(--text2);margin-top:2px}
-.rb-platforms{display:flex;gap:8px}
-.platform-pill{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-family:var(--fu);font-size:12px;font-weight:600}
-
-/* ── SIDEBAR ── */
-.sidebar{display:flex;flex-direction:column;gap:18px}
-.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
-.sidebar-header{padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold)}
-.sidebar-body{padding:13px 16px}
-.nf-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
-.nf-item:last-child{border-bottom:none}
-.nf-item:hover{background:rgba(255,255,255,.03)}
-.nf-thumb{width:56px;height:40px;border-radius:5px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
-.nf-thumb img{width:100%;height:100%;object-fit:cover}
-.nf-info{flex:1}
-.nf-title{font-size:12px;font-weight:600;line-height:1.4;margin-bottom:3px}
-.nf-title:hover{color:var(--gold)}
-.nf-time{font-size:11px;color:var(--text3);font-family:var(--fu)}
-.social-links{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.social-btn{display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);font-size:12px;font-weight:600;color:var(--text);transition:.15s}
-.social-btn:hover{background:var(--card2)}
-.social-btn.discord:hover{border-color:#5865F2;color:#5865F2}
-.social-btn.instagram:hover{border-color:#e1306c;color:#e1306c}
-.social-btn.youtube:hover{border-color:#ff0000;color:#ff0000}
-.social-btn.twitter:hover{border-color:#1d9bf0;color:#1d9bf0}
-.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sd-dc{background:#5865F2}.sd-ig{background:#e1306c}.sd-yt{background:#ff0000}.sd-tw{background:#1d9bf0}
 
 /* ── TABS ── */
 .tabs{display:flex;gap:3px;margin-bottom:16px;flex-wrap:wrap}
 .tab{font-family:var(--fu);font-size:12px;font-weight:500;padding:7px 14px;border:1px solid var(--border);background:var(--bg3);color:var(--text3);border-radius:20px;transition:.15s}
 .tab:hover{color:var(--text);border-color:var(--border2)}
 .tab.active{background:var(--gold);color:#111;border-color:var(--gold)}
+
 
 /* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
@@ -343,12 +222,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .btn-submit:hover{background:var(--gold2)}
 .modal-footer{padding:12px 22px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text3)}
 
-/* ── POLICY ── */
-.policy-box{background:rgba(255,60,110,.04);border:1px solid rgba(255,60,110,.2);border-radius:var(--r2);padding:20px}
-.policy-title{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--pink);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
-.policy-rule{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;color:var(--text2)}
-.policy-rule:last-child{border-bottom:none}
-.rule-num{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--pink);min-width:24px}
 
 /* ── TAB PAGES (full-screen overlays) ── */
 .tab-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:3500;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -363,33 +236,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .ntab:hover{color:var(--gold)}.ntab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-page-content{max-width:1100px;margin:0 auto;padding:20px}
 
-/* ── NEWS LIST ITEMS ── */
-.ntp-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
-.ntp-item:hover{background:rgba(255,255,255,.02)}
-.ntp-thumb{width:88px;height:62px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
-.ntp-body{flex:1;min-width:0}
-.ntp-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:4px}
-.ntp-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ntp-meta{display:flex;align-items:center;gap:8px;font-family:var(--fu);font-size:11px;color:var(--text3)}
-.ntp-src{color:var(--gold);opacity:.8}
-
-/* ── GUIDE CARDS ── */
-.guide-card{position:relative;transition:all .3s ease}
-.guide-card.completed{border-color:var(--green)!important;background:rgba(0,230,118,.03)}
-.guide-card.completed::after{content:'✔';position:absolute;top:10px;right:10px;background:var(--green);color:#000;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;box-shadow:0 0 10px rgba(0,230,118,.4)}
-.guide-step{background:var(--bg3);padding:10px 14px;margin-bottom:8px;border-radius:var(--r);border-left:3px solid var(--gold);font-size:13px;color:var(--text2);transition:transform .2s}
-.guide-step:hover{transform:translateX(5px);background:var(--bg2)}
-.guide-step strong{color:var(--gold);margin-right:8px}
-
-/* ── NEWS TAGS ── */
-.nl-tag{font-family:var(--fu);font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
-.nl-tag.official{background:rgba(240,180,41,.15);color:var(--gold)}
-.nl-tag.rumor{background:rgba(255,60,110,.12);color:var(--pink)}
-.nl-tag.update{background:rgba(0,230,118,.1);color:var(--green)}
-.nl-tag.characters{background:rgba(168,85,247,.14);color:var(--purple)}
-.nl-tag.vehicles{background:rgba(0,212,255,.12);color:var(--cyan)}
-.nl-tag.map{background:rgba(0,212,255,.12);color:var(--cyan)}
-.nl-tag.gameplay{background:rgba(0,230,118,.1);color:var(--green)}
 
 /* ── MISC UI ── */
 .notify{position:fixed;bottom:22px;right:22px;background:var(--green);color:#0a0a0e;padding:10px 18px;border-radius:8px;font-family:var(--fu);font-size:13px;font-weight:700;z-index:6000;transform:translateY(80px);transition:.3s;max-width:320px}
@@ -412,6 +258,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .skel-line.short{width:60%}
 .skel-line.tiny{height:9px;width:40%;margin-top:6px}
 
+
 /* ── FOOTER ── */
 footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 18px}
 .footer-grid{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
@@ -428,11 +275,121 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </style>
 </head>
 <body>
-
 <!-- ── PROGRESS / OFFLINE ── -->
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="offline-banner" id="offlineBanner" role="status" aria-live="polite">📡 You're offline — live content won't update until your connection is back.</div>
 <a class="skip-link" href="#home">Skip to main content</a>
+
+<!-- ══════════════════ SHARED / CORE (loads first) ══════════════════ -->
+<script type="module">
+import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+const CFG = {
+  apiKey:'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
+  authDomain:'gta6hq-befa7.firebaseapp.com',
+  projectId:'gta6hq-befa7',
+  storageBucket:'gta6hq-befa7.firebasestorage.app'
+};
+
+let db=null, auth=null;
+try { const app=initializeApp(CFG); db=getFirestore(app); auth=getAuth(app); } catch(e){ console.error('[firebase]',e.message); }
+
+window.fetchLiveNews = async function(){
+  if(!db) return [];
+  try {
+    const q = query(collection(db,'automated_news'), orderBy('timestamp','desc'), limit(12));
+    return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
+  } catch(e){ console.error(e); return []; }
+};
+
+window.FB = {
+  ready:!!(db&&auth),
+  signIn:(e,p)=>signInWithEmailAndPassword(auth,e,p).then(c=>c.user),
+  signOutUser:()=>signOut(auth),
+  onAuthChange:cb=>onAuthStateChanged(auth,cb),
+  getAdminDoc:async uid=>{ const s=await getDoc(doc(db,'admins',uid)); return s.exists(); },
+  getCollection:async name=>(await getDocs(collection(db,name))).docs.map(d=>({id:d.id,...d.data()})),
+  setDoc:(c,id,data)=>setDoc(doc(db,c,id),data),
+  deleteDoc:(c,id)=>deleteDoc(doc(db,c,id))
+};
+window.dispatchEvent(new Event('fb-ready'));
+</script>
+<script>
+'use strict';
+
+const SK='gta6hq_v4';
+const DEF={loggedIn:false,username:'Guest',userId:null,liked:[],completedJobs:[],customJobs:[]};
+function loadState(){
+  try{
+    const r=localStorage.getItem(SK);
+    if(!r) return {...DEF,liked:new Set()};
+    const p=JSON.parse(r);
+    return{...DEF,...p,liked:new Set(Array.isArray(p.liked)?p.liked:[]),completedJobs:Array.isArray(p.completedJobs)?p.completedJobs:[],customJobs:Array.isArray(p.customJobs)?p.customJobs:[]};
+  }catch(e){return{...DEF,liked:new Set()};}
+}
+const S=loadState();
+let _t=null;
+function save(){clearTimeout(_t);_t=setTimeout(()=>{try{localStorage.setItem(SK,JSON.stringify({...S,liked:[...S.liked]}));}catch(e){}},400);}
+
+// ─ Utils ─
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const $=id=>document.getElementById(id);
+const setHTML=(id,h)=>{const e=$(id);if(e)e.innerHTML=h;};
+const isAdmin=()=>localStorage.getItem('gta6hq_is_admin')==='1';
+
+function notify(msg){
+  const t=$('notifyToast'),m=$('notifyMsg');
+  if(!t||!m)return;
+  m.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3600);
+}
+function openModal(id){const e=$(id);if(e)e.classList.add('open');}
+function closeModal(id){const e=$(id);if(e)e.classList.remove('open');}
+function closeModalOnOverlay(ev,id){if(ev.target===$(id))closeModal(id);}
+
+// ─ Auth ─
+function switchAuthTab(mode,btn){
+  btn.parentElement.querySelectorAll('.form-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  $('auth-login').style.display=mode==='login'?'block':'none';
+  $('auth-register').style.display=mode==='register'?'block':'none';
+}
+function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Signed in.');save();}
+function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Welcome to GTA6HQ!');save();}
+
+// ─ Tab page helpers ─
+const bodyLock=lock=>{document.documentElement.style.overflow=lock?'hidden':'';document.body.style.overflow=lock?'hidden':'';}
+const openTab=id=>{const p=$(id);if(p){p.style.display='block';p.scrollTop=0;bodyLock(true);}};
+const closeTab=id=>{const p=$(id);if(p)p.style.display='none';bodyLock(false);}
+
+// ─ Admin ─
+function adminLinkClick(){
+  if(isAdmin()){localStorage.setItem('gta6hq_is_admin','0');notify('Signed out of admin mode.');return;}
+  openModal('admin-login-modal');
+}
+function adminSignIn(){
+  const e=($('adminEmail')?.value||'').trim(),p=$('adminPassword')?.value||'';
+  if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');}
+}
+
+// ─ Global API (core/shared) ─
+window.G = {
+  openModal, closeModal, closeModalOnOverlay,
+  switchAuthTab, loginUser, registerUser,
+  submitQuestion: ()=>{closeModal('ask-modal');notify('Question posted!');},
+  handleSearch: ()=>{},
+  adminLinkClick, adminSignIn,
+  adminSignOut: ()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');},
+  openAdminDashboard: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('admin-dashboard-modal');},
+  switchDashTab: ()=>{},
+  openAddSectionModal: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
+  submitNewSection: ()=>notify('Section created!'),
+  submitNewSectionItem: ()=>notify('Item added!'),
+};
+window.closeModal = closeModal;
+</script>
 
 <!-- ── TOP BAR ── -->
 <div class="topbar">
@@ -603,6 +560,52 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 <!-- ── MAIN CONTENT ── -->
 <div style="padding:28px 0">
 
+
+<!-- ══════════════════ NEWS SECTION ══════════════════ -->
+<style>
+/* ── NEWS FEATURE LAYOUT ── */
+.news-feature-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto;gap:16px}
+.nf-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column;transition:.2s;cursor:pointer;color:inherit}
+.nf-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.nf-card.featured{grid-column:1;grid-row:1/3}
+.nf-card.wide{grid-column:2/4;grid-row:2;flex-direction:row}
+.nf-card .nf-card-img{width:100%;aspect-ratio:16/10;background:var(--bg3);flex-shrink:0;overflow:hidden}
+.nf-card.featured .nf-card-img{aspect-ratio:16/12;flex:1}
+.nf-card.wide .nf-card-img{width:42%;aspect-ratio:auto}
+.nf-card img{width:100%;height:100%;object-fit:cover;display:block}
+.nf-card-body{padding:14px 16px}
+.nf-card.wide .nf-card-body{flex:1}
+.nf-eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.nf-eyebrow .cat-official{color:var(--gold)}.nf-eyebrow .cat-rumor{color:var(--pink)}.nf-eyebrow .cat-update{color:var(--green)}.nf-eyebrow .sep{color:var(--text3);font-weight:400}
+.nf-card-title{font-family:var(--fb);font-weight:700;color:var(--text);line-height:1.35;margin-bottom:8px}
+.nf-card.featured .nf-card-title{font-size:19px}
+.nf-card.mini .nf-card-title,.nf-card.wide .nf-card-title{font-size:13px}
+.nf-card-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nf-read{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--pink)}
+@media(max-width:760px){.news-feature-grid{grid-template-columns:1fr}.nf-card.featured,.nf-card.mini,.nf-card.wide{grid-column:1;grid-row:auto}.nf-card.wide{flex-direction:column}.nf-card.wide .nf-card-img{width:100%;aspect-ratio:16/10}}
+
+
+/* ── NEWS LIST ITEMS ── */
+.ntp-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.ntp-item:hover{background:rgba(255,255,255,.02)}
+.ntp-thumb{width:88px;height:62px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+.ntp-body{flex:1;min-width:0}
+.ntp-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:4px}
+.ntp-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ntp-meta{display:flex;align-items:center;gap:8px;font-family:var(--fu);font-size:11px;color:var(--text3)}
+.ntp-src{color:var(--gold);opacity:.8}
+
+
+/* ── NEWS TAGS ── */
+.nl-tag{font-family:var(--fu);font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.nl-tag.official{background:rgba(240,180,41,.15);color:var(--gold)}
+.nl-tag.rumor{background:rgba(255,60,110,.12);color:var(--pink)}
+.nl-tag.update{background:rgba(0,230,118,.1);color:var(--green)}
+.nl-tag.characters{background:rgba(168,85,247,.14);color:var(--purple)}
+.nl-tag.vehicles{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.map{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.gameplay{background:rgba(0,230,118,.1);color:var(--green)}
+</style>
   <!-- NEWS -->
   <section class="section container" id="news">
     <div class="section-header">
@@ -610,12 +613,211 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   
     </div>
     <div class="news-feature-grid" id="newsListHome">
-  <!-- Real news articles will load here automatically -->
-</div>
+      <!-- skeleton -->
+      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+      <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
     </div>
     <button onclick="G.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
   </section>
 
+<!-- NEWS TAB -->
+<div class="tab-page" id="news-tab-page">
+  <div class="tab-page-hdr">
+    <div class="tab-page-hdr-inner">
+      <button class="tab-page-back" onclick="G.closeNewsTab()">← Back</button>
+      <div class="tab-page-title">📰 News &amp; Articles</div>
+      <button onclick="G.fetchLatestNews(true)" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--r);font-family:var(--fu);font-size:12px" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text3)'">🔄 Refresh</button>
+    </div>
+    <div class="tab-page-subtabs">
+      <button class="ntab active" onclick="G.filterNewsTab('all',this)">All</button>
+      <button class="ntab" onclick="G.filterNewsTab('official',this)">Official</button>
+      <button class="ntab" onclick="G.filterNewsTab('rumor',this)">Rumors</button>
+      <button class="ntab" onclick="G.filterNewsTab('gameplay',this)">Gameplay</button>
+      <button class="ntab" onclick="G.filterNewsTab('characters',this)">Characters</button>
+      <button class="ntab" onclick="G.filterNewsTab('vehicles',this)">Vehicles</button>
+      <button class="ntab" onclick="G.filterNewsTab('map',this)">Map</button>
+      <button class="ntab" onclick="G.filterNewsTab('update',this)">Community</button>
+    </div>
+  </div>
+  <div class="tab-page-content"><div id="newsTabList"></div></div>
+</div>
+
+<script>
+'use strict';
+
+// ─ Static Data ─────────────────────────────────────────
+
+const NEWS_DATA = [
+  {id:'n1',title:'GTA 6 Release Date Confirmed: November 19, 2026',excerpt:'Rockstar Games officially locked in the date after two delays. Pre-orders now open on PlayStation and Xbox stores.',category:'official',time:'2h ago',emoji:'🚀'},
+  {id:'n2',title:'Lucia & Jason Gameplay Deep Dive — New Details Emerge',excerpt:'Leaked playtesting footage reveals how switching between dual protagonists works mid-mission.',category:'characters',time:'5h ago',emoji:'🎮'},
+  {id:'n3',title:'State of Leonida Map — Full Breakdown of Every Region',excerpt:'Data miners have pieced together the complete map: Vice City, Grassrivers, Keys, and Everglades zones confirmed.',category:'map',time:'8h ago',emoji:'🗺️'},
+  {id:'n4',title:'GTA 6 PC Version — What We Know So Far',excerpt:'Rockstar has yet to announce PC, but historical patterns and job listings suggest it\'s in development.',category:'rumor',time:'1d ago',emoji:'💻'},
+];
+
+// ─ News auto-refresh (every 3h) + 24h local cache ─────────
+const NEWS_CACHE_KEY='gta6hq_news_cache_v1';
+const NEWS_REFRESH_MS=3*60*60*1000;   // re-check Firestore for fresh articles every 3 hours
+const NEWS_MAX_AGE_MS=24*60*60*1000;  // never show cached news older than 24 hours
+
+let CURRENT_NEWS=NEWS_DATA.slice();    // what's actually rendered right now (falls back to static list)
+let newsTabActiveCat='all';            // remembers which filter tab is open in the full News overlay
+
+function firestoreTimestampToDate(ts){
+  if(!ts) return null;
+  if(typeof ts.toDate==='function') return ts.toDate();          // real Firestore Timestamp instance
+  if(typeof ts==='number') return new Date(ts);                   // already a JS millis number
+  if(typeof ts.seconds==='number') return new Date(ts.seconds*1000); // plain {seconds,nanoseconds} object
+  const d=new Date(ts);
+  return isNaN(d.getTime())?null:d;
+}
+function loadNewsCache(){
+  try{
+    const raw=localStorage.getItem(NEWS_CACHE_KEY);
+    if(!raw) return null;
+    const parsed=JSON.parse(raw);
+    if(!parsed||!parsed.timestamp||!Array.isArray(parsed.items)||!parsed.items.length) return null;
+    if(Date.now()-parsed.timestamp>NEWS_MAX_AGE_MS){
+      localStorage.removeItem(NEWS_CACHE_KEY); // older than 24h — expire it
+      return null;
+    }
+    return parsed;
+  }catch(e){ return null; }
+}
+function saveNewsCache(items){
+  try{ localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify({items,timestamp:Date.now()})); }catch(e){}
+}
+function applyNews(items,persist){
+  if(!items||!items.length) return;
+  CURRENT_NEWS=items;
+  if(persist) saveNewsCache(items);
+  renderNews(CURRENT_NEWS);
+  renderSidebar();
+  const tabPage=document.getElementById('news-tab-page');
+  if(tabPage && tabPage.style.display==='block') renderNewsTabList(newsTabActiveCat);
+}
+async function refreshNews(force){
+  const cache=loadNewsCache();
+  const stale=!cache||(Date.now()-cache.timestamp)>=NEWS_REFRESH_MS;
+  if(cache && !stale && !force){
+    // cache is under 3h old — just make sure it's what's on screen, don't hit Firestore again
+    if(CURRENT_NEWS!==cache.items) applyNews(cache.items,false);
+    return;
+  }
+  try{
+    const live=await fetchLiveNews();
+    if(live && live.length){
+      const mapped=live.map(a=>{
+        const d=firestoreTimestampToDate(a.timestamp);
+        return{
+          id:a.id,
+          title:a.title||'Untitled',
+          excerpt:a.excerpt||'',
+          category:a.category||'update',
+          emoji:a.emoji||'📰',
+          url:a.url||null,
+          time:d?d.toLocaleDateString():(a.time||'Recent'),
+          _sortMs:d?d.getTime():0
+        };
+      }).sort((x,y)=>y._sortMs-x._sortMs);
+      applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
+      if(force) notify('✅ News updated!');
+      return;
+    }
+  }catch(e){ console.warn('[news] live fetch failed, keeping existing news',e); }
+  // fetch failed or Firestore had nothing new — keep showing whatever we already have (cache, up to 24h old, or the static fallback)
+  if(cache){ applyNews(cache.items,false); }
+  else if(force){ notify('📰 No new articles found.'); }
+}
+function renderNewsTabList(cat){
+  newsTabActiveCat=cat;
+  const el=document.getElementById('newsTabList'); if(!el) return;
+  const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
+  el.innerHTML=filtered.length?filtered.map(a=>`
+      <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div class="ntp-body">
+          <div class="ntp-title">${esc(a.title)}</div>
+          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
+          <div class="ntp-meta">
+            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
+            <span style="color:var(--text3)">${a.time}</span>
+          </div>
+        </div>
+      </div>`).join(''):'<div style="padding:40px;text-align:center;color:var(--text3)">No articles in this category yet.</div>';
+}
+
+function renderNews(items){
+  const el=$('newsListHome'); if(!el)return;
+  const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
+  el.innerHTML=items.map((a,i)=>{
+    const cls=i===0?'featured':i===3?'wide':'mini';
+    return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
+      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
+      <div class="nf-card-body">
+        <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
+        <div class="nf-card-title">${esc(a.title)}</div>
+        <div class="nf-card-excerpt">${esc(a.excerpt)}</div>
+        <div class="nf-read">Read more →</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+G.openNewsTab = ()=>{
+  openTab('news-tab-page');
+  renderNewsTabList(newsTabActiveCat);
+  refreshNews(false);
+};
+G.closeNewsTab = ()=>closeTab('news-tab-page');
+G.filterNewsTab = (cat,btn)=>{
+  document.querySelectorAll('.tab-page-subtabs .ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderNewsTabList(cat);
+};
+G.fetchLatestNews = async(force)=>{
+  notify('📰 Refreshing news...');
+  await refreshNews(force===undefined?true:!!force);
+};
+G.openNewsDetail = (id)=>{
+  const a=CURRENT_NEWS.find(x=>x.id===id); if(!a)return;
+  $('guideDetailTitle').innerHTML=`${a.emoji||'📰'} ${esc(a.title)}`;
+  setHTML('guideDetailBody',`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span class="nl-tag ${a.category||'update'}">${(a.category||'news').toUpperCase()}</span>
+      <span style="color:var(--text3);font-size:12px">${a.time||''}</span>
+    </div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7">${esc(a.excerpt||'No summary available for this article yet.')}</p>
+    ${a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener" class="btn-submit" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Read Full Article ↗</a>`:'<div style="margin-top:16px;font-size:12px;color:var(--text3)">Full source link not available for this article.</div>'}
+  `);
+  openModal('guide-detail-modal');
+};
+</script>
+
+
+<!-- ══════════════════ GALLERY SECTION ══════════════════ -->
+<style>
+/* ── GALLERY ── */
+.gallery-tile{position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.2s}
+.gallery-tile:hover{border-color:var(--gold);transform:translateY(-3px)}
+.gallery-tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.gallery-tile:hover img{transform:scale(1.06)}
+.gallery-tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.82) 100%)}
+.gallery-tile-cat{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 7px;border-radius:4px}
+.gallery-tile-title{position:absolute;left:10px;right:10px;bottom:8px;font-family:var(--fu);font-size:12px;font-weight:600;color:#fff}
+
+
+/* ── LIGHTBOX ── */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:6000;display:none;align-items:center;justify-content:center;padding:24px}
+.lightbox-overlay.open{display:flex}
+.lightbox-content{max-width:900px;width:100%;text-align:center}
+.lightbox-content img{max-width:100%;max-height:72vh;border-radius:var(--r2);object-fit:contain;background:var(--bg3)}
+.lightbox-caption{margin-top:14px;color:var(--text2);font-family:var(--fu);font-size:13px}
+.lightbox-close{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center}
+.lightbox-prev{left:18px}.lightbox-next{right:18px}
+</style>
   <!-- GALLERY -->
   <section class="section container" id="gallery">
     <div class="section-header">
@@ -640,10 +842,88 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
     </div>
   </section>
 
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightboxOnOverlay(event)">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)" aria-label="Previous image">‹</button>
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightboxImg" src="" alt=""/>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)" aria-label="Next image">›</button>
+</div>
+
+<!-- ADD GALLERY -->
+<div class="modal-overlay" id="add-gallery-modal" onclick="G.closeModalOnOverlay(event,'add-gallery-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--cyan)">+ Add Gallery Image</div>
+      <button class="modal-close" onclick="G.closeModal('add-gallery-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newGalTitle" placeholder="e.g., Vice City Skyline at Sunset"/></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newGalCat"><option value="screenshot">Screenshot</option><option value="artwork">Artwork</option><option value="wallpaper">Wallpaper</option><option value="vehicle">Vehicle</option><option value="environment">Environment</option></select></div>
+      <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" type="text" id="newGalImgUrl" placeholder="https://…"/></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Only use images you own the rights to.</div>
+      <button class="btn-submit" style="background:var(--cyan);color:#062028" onclick="G.submitNewGalleryImage()">Publish Image</button>
+      <div id="gallerySubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const GALLERY_DATA = [
+  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
+  {id:'g2',title:'Lucia — Character Artwork',cat:'artwork',emoji:'🎨'},
+  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',emoji:'🏎️'},
+  {id:'g4',title:'Vice Beach 4K Wallpaper',cat:'wallpaper',emoji:'🌊'},
+  {id:'g5',title:'Supercar Lineup — Leaked',cat:'vehicle',emoji:'🚗'},
+  {id:'g6',title:'Florida Keys Environment',cat:'environment',emoji:'🌴'},
+];
+
+function renderGallery(cat='all'){
+  const el=$('galleryGrid'); if(!el)return;
+  const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
+  el.innerHTML=items.map(g=>`
+    <div class="gallery-tile">
+      <div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji}</div>
+      <div class="gallery-tile-scrim"></div>
+      <div class="gallery-tile-cat">${g.cat}</div>
+      <div class="gallery-tile-title">${esc(g.title)}</div>
+    </div>`).join('');
+}
+
+G.submitNewGalleryImage = ()=>notify('Image submitted!');
+
+function filterGallery(cat,btn){
+  document.querySelectorAll('#galleryTabs .tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(typeof renderGallery==='function') renderGallery(cat);
+}
+function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
+function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
+function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
+function lightboxNav(){}
+</script>
+
+
   <!-- 2-COL GRID -->
   <div class="page-grid">
     <div>
 
+
+<!-- ══════════════════ GUIDES SECTION ══════════════════ -->
+<style>
+/* ── GUIDE CARDS ── */
+.guide-card{position:relative;transition:all .3s ease}
+.guide-card.completed{border-color:var(--green)!important;background:rgba(0,230,118,.03)}
+.guide-card.completed::after{content:'✔';position:absolute;top:10px;right:10px;background:var(--green);color:#000;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;box-shadow:0 0 10px rgba(0,230,118,.4)}
+.guide-step{background:var(--bg3);padding:10px 14px;margin-bottom:8px;border-radius:var(--r);border-left:3px solid var(--gold);font-size:13px;color:var(--text2);transition:transform .2s}
+.guide-step:hover{transform:translateX(5px);background:var(--bg2)}
+.guide-step strong{color:var(--gold);margin-right:8px}
+</style>
       <!-- GUIDES -->
       <section class="section" id="guides">
         <div class="section-header">
@@ -661,295 +941,6 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
         </div>
         <button onclick="G.openGuidesTab()" style="width:100%;margin-top:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(0,230,118,.15)'" onmouseout="this.style.background='rgba(0,230,118,.07)'">📖 Browse All Job Guides →</button>
       </section>
-
-      <!-- CHARACTERS -->
-      <section class="section" id="characters">
-        <div class="section-header">
-          <h2 class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px">⚡ Confirmed</span></h2>
-          <button class="btn btn-gold" id="addCharacterBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="openAddCharacterModal()">+ Upload Character</button>
-        </div>
-        <div class="characters-grid" id="charactersGrid">
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-        </div>
-      </section>
-
-      <!-- MODS -->
-      <section class="section" id="mods">
-        <div class="section-header">
-          <h2 class="section-title">🔧 Mods Database</h2>
-          <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Upload Mod</button>
-        </div>
-        <div class="mods-grid" id="modsGrid">
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-        </div>
-        <button onclick="G.openModsTab()" style="width:100%;margin-top:14px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(0,212,255,.15)'" onmouseout="this.style.background='rgba(0,212,255,.07)'">🔧 Browse All Mods →</button>
-      </section>
-
-      <div id="customSectionsContainer"></div>
-
-      <!-- Q&A -->
-      <section class="section" id="qa">
-        <div class="section-header">
-          <h2 class="section-title">❓ Questions &amp; Solutions</h2>
-          <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openModal('ask-modal')">+ Ask Question</button>
-        </div>
-        <div class="id-search-row">
-          <input class="id-input" type="text" id="qaSearch" placeholder="Search questions or enter #GTA6HQ-XXXXX player ID…"/>
-          <button class="btn-sid" onclick="G.searchQA()">Search</button>
-        </div>
-        <div class="qa-list" id="qaList">
-          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
-          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
-          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
-        </div>
-      </section>
-
-      <!-- SYS REQ -->
-      <section class="section" id="sysreq">
-        <div class="section-header">
-          <h2 class="section-title">💻 GTA 6 System Requirements</h2>
-          <span class="auto-badge">⚡ Updated Jun 2026</span>
-        </div>
-        <div class="release-banner">
-          <div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--fu);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Official Release Date</div>
-            <div class="rb-date">November 19, 2026</div>
-            <div class="rb-sub">Rockstar Games — delayed twice, now confirmed</div>
-          </div>
-          <div class="rb-platforms">
-            <div class="platform-pill">🎮 PS5</div>
-            <div class="platform-pill">🎮 Xbox Series X|S</div>
-            <div class="platform-pill" style="opacity:.5">💻 PC — TBA</div>
-          </div>
-        </div>
-        <div style="background:rgba(255,60,110,.06);border:1px solid rgba(255,60,110,.2);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--text2)">
-          ⚠️ <strong style="color:var(--pink)">Important:</strong> Rockstar has NOT released official PC requirements as of June 2026. The specs below are <strong>community predictions</strong> based on the RAGE 9 engine and leaked playtesting footage.
-        </div>
-        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">🖥️ PC — Predicted Requirements</h3>
-        <div class="sys-req-grid" id="sysReqGrid"></div>
-        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 14px">🎮 Console Requirements (Confirmed)</h3>
-        <div class="console-req">
-          <p style="font-size:13px;color:var(--text2);margin-bottom:14px">GTA 6 is confirmed for current-gen consoles only. No cross-gen (PS4/Xbox One) support announced.</p>
-          <div class="console-grid" id="consoleGrid"></div>
-        </div>
-        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 14px">🔍 Quick PC Check</h3>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px">
-          <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Answer 3 quick questions to estimate if your PC can run GTA 6.</p>
-          <div class="form-group">
-            <label class="form-label">Your GPU</label>
-            <select class="form-input" id="pcGpu">
-              <option value="">Select your graphics card…</option>
-              <option value="3">RTX 4090 / RTX 4080 / RTX 4070 Ti</option>
-              <option value="3">RX 7900 XTX / RX 7900 XT</option>
-              <option value="2">RTX 4070 / RTX 3080 / RX 7800 XT</option>
-              <option value="2">RTX 4060 Ti / RTX 3070 / RX 6800 XT</option>
-              <option value="1">RTX 4060 / RTX 3060 / RX 6700 XT</option>
-              <option value="1">RTX 3050 / GTX 1660 Super / RX 5700</option>
-              <option value="0">GTX 1060 or older / RX 580 or older</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">RAM</label>
-            <select class="form-input" id="pcRam">
-              <option value="">Select your RAM…</option>
-              <option value="3">32 GB or more</option>
-              <option value="2">16 GB</option>
-              <option value="1">12 GB</option>
-              <option value="0">8 GB or less</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Storage</label>
-            <select class="form-input" id="pcStorage">
-              <option value="">Select storage type…</option>
-              <option value="3">NVMe SSD (1 TB+)</option>
-              <option value="2">SATA SSD (500 GB+)</option>
-              <option value="1">SATA SSD (less than 500 GB)</option>
-              <option value="0">HDD only</option>
-            </select>
-          </div>
-          <button class="btn btn-gold" style="width:100%;border-radius:var(--r);padding:10px" onclick="G.checkPC()">Check My PC</button>
-          <div id="pcResult" style="margin-top:14px"></div>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section class="section" id="faq">
-        <div class="section-header"><h2 class="section-title">💬 Frequently Asked Questions</h2></div>
-        <div class="faq-list">
-          <details class="faq-item" open>
-            <summary>Is GTA6HQ an official Rockstar Games website?</summary>
-            <div class="faq-answer">No. GTA6HQ is an independent, unofficial fan community site. We're not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive.</div>
-          </details>
-          <details class="faq-item">
-            <summary>When does GTA 6 release?</summary>
-            <div class="faq-answer">Rockstar has confirmed November 19, 2026 for PlayStation 5 and Xbox Series X|S. See the countdown at the top of the page for the exact time remaining.</div>
-          </details>
-          <details class="faq-item">
-            <summary>Is GTA 6 coming to PC?</summary>
-            <div class="faq-answer">Not yet announced. Rockstar has historically released PC ports 12–18 months after console launch, but nothing official has been confirmed for GTA 6 PC as of this writing.</div>
-          </details>
-          <details class="faq-item">
-            <summary>Where do the news articles on this site come from?</summary>
-            <div class="faq-answer">Our News section automatically pulls from established gaming outlets (IGN, Eurogamer, PC Gamer, Kotaku, Rock Paper Shotgun, GameSpot) filtered for GTA 6-related coverage, refreshed automatically throughout the day.</div>
-          </details>
-          <details class="faq-item">
-            <summary>Can I contribute job guides or ask questions?</summary>
-            <div class="faq-answer">Yes — anyone can post a question in the Q&A section. Job guide submissions are curated by our admin team to keep quality high, alongside guides verified from public sources.</div>
-          </details>
-          <details class="faq-item">
-            <summary>How do I report a bug or suggest a feature?</summary>
-            <div class="faq-answer">Join our Discord server (link in the sidebar and footer) — that's the fastest way to reach the team.</div>
-          </details>
-        </div>
-      </section>
-
-      <!-- POLICY -->
-      <section class="section" id="policy">
-        <div class="section-header"><h2 class="section-title">⚠️ Community Rules &amp; Ban Policy</h2></div>
-        <div class="policy-box">
-          <div class="policy-title">⛔ 3-Strike System — Zero Tolerance</div>
-          <div class="policy-rule"><span class="rule-num">S1</span><div><strong style="color:var(--text)">Warning.</strong> First violation removes the offending content and issues a formal warning. Strike expires in 30 days with good behavior.</div></div>
-          <div class="policy-rule"><span class="rule-num">S2</span><div><strong style="color:var(--text)">7-day suspension.</strong> Posting rights revoked for 7 days. Permanent record entry.</div></div>
-          <div class="policy-rule"><span class="rule-num">S3</span><div><strong style="color:var(--text)">Permanent ban.</strong> Account banned, IP blocked. No appeal for hate speech, harassment, doxxing, or fraud.</div></div>
-          <div style="margin-top:14px;padding:13px;background:rgba(0,0,0,.2);border-radius:var(--r);font-size:12px;color:var(--text2)">
-            <strong style="color:var(--pink)">Instant permanent ban (no strikes):</strong> Doxxing · threats · NSFW content · spam bots · multiple accounts · VPN exploitation · hate speech · piracy links.
-          </div>
-        </div>
-      </section>
-
-    </div><!-- /main col -->
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-header">📡 Auto News Feed</div>
-        <div class="sidebar-body" id="newsFeed"></div>
-      </div>
-      <div class="sidebar-card">
-        <div class="sidebar-header">📲 Connect</div>
-        <div class="sidebar-body">
-          <div class="social-links">
-            <a class="social-btn discord" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener"><span class="sdot sd-dc"></span>Discord</a>
-            <a class="social-btn instagram" href="https://instagram.com/gta6hq" target="_blank" rel="noopener"><span class="sdot sd-ig"></span>Instagram</a>
-            <a class="social-btn youtube" href="https://youtube.com/@gta6hq" target="_blank" rel="noopener"><span class="sdot sd-yt"></span>YouTube</a>
-            <a class="social-btn twitter" href="https://x.com/gta6hq" target="_blank" rel="noopener"><span class="sdot sd-tw"></span>Twitter/X</a>
-          </div>
-          <div style="margin-top:12px;padding:10px;background:rgba(225,48,108,.06);border:1px solid rgba(225,48,108,.15);border-radius:var(--r);font-size:11px;color:var(--text2)">
-            📸 Tag <strong style="color:#e1306c">#GTA6HQ</strong> on Instagram to get featured.
-          </div>
-        </div>
-      </div>
-      <div class="sidebar-card">
-        <div class="sidebar-header">🔍 Player Lookup</div>
-        <div class="sidebar-body">
-          <input class="id-input" type="text" id="playerIdInput" placeholder="#GTA6HQ-00001" style="width:100%;margin-bottom:8px"/>
-          <button class="btn-sid" style="width:100%" onclick="G.lookupPlayer()">Look Up Player</button>
-          <div id="playerResult" style="margin-top:10px"></div>
-        </div>
-      </div>
-      <div class="sidebar-card">
-        <div class="sidebar-header">📅 Upcoming Events</div>
-        <div class="sidebar-body" id="eventsList"></div>
-      </div>
-    </div>
-  </div><!-- /page-grid -->
-</div><!-- /outer pad -->
-
-<!-- ── FOOTER ── -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-logo">GTA<span>6</span>HQ</div>
-      <p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and character intel. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
-    </div>
-    <div>
-      <div class="footer-col-title">Explore</div>
-      <div class="footer-links">
-        <a href="#news">Latest News</a><a href="#mods">Mods</a>
-        <a href="#guides">Job Guides</a><a href="#characters">Characters</a>
-        <a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
-      </div>
-    </div>
-    <div>
-      <div class="footer-col-title">Community</div>
-      <div class="footer-links">
-        <a href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener">Discord Server</a>
-        <a href="https://instagram.com/gta6hq" target="_blank" rel="noopener">Instagram</a>
-        <a href="#policy">Community Rules</a>
-      </div>
-    </div>
-    <div>
-      <div class="footer-col-title">Info</div>
-      <div class="footer-links">
-        <a href="#home">About GTA6HQ</a><a href="#policy">Privacy Policy</a>
-        <a href="#policy">Terms of Service</a><a href="#policy">DMCA</a>
-        <a href="mailto:contact@gta6hq.com">Contact Us</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025–2026 GTA6HQ.com — Fan site, not affiliated with Rockstar Games™ or Take-Two Interactive™</span>
-    <span>Grand Theft Auto 6 and GTA 6 are trademarks of their respective owners.</span>
-  </div>
-</footer>
-
-<!-- ── FLOATING BUTTONS ── -->
-<a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord" aria-label="Join our Discord server">💬</a>
-<button class="back-to-top" id="backToTopBtn" aria-label="Back to top" onclick="scrollToTop()">↑</button>
-
-<!-- ── TAB PAGES (full-screen overlays) ── -->
-
-<!-- NEWS TAB -->
-<div class="tab-page" id="news-tab-page">
-  <div class="tab-page-hdr">
-    <div class="tab-page-hdr-inner">
-      <button class="tab-page-back" onclick="G.closeNewsTab()">← Back</button>
-      <div class="tab-page-title">📰 News &amp; Articles</div>
-      <button onclick="G.fetchLatestNews(true)" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--r);font-family:var(--fu);font-size:12px" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text3)'">🔄 Refresh</button>
-    </div>
-    <div class="tab-page-subtabs">
-      <button class="ntab active" onclick="G.filterNewsTab('all',this)">All</button>
-      <button class="ntab" onclick="G.filterNewsTab('official',this)">Official</button>
-      <button class="ntab" onclick="G.filterNewsTab('rumor',this)">Rumors</button>
-      <button class="ntab" onclick="G.filterNewsTab('gameplay',this)">Gameplay</button>
-      <button class="ntab" onclick="G.filterNewsTab('characters',this)">Characters</button>
-      <button class="ntab" onclick="G.filterNewsTab('vehicles',this)">Vehicles</button>
-      <button class="ntab" onclick="G.filterNewsTab('map',this)">Map</button>
-      <button class="ntab" onclick="G.filterNewsTab('update',this)">Community</button>
-    </div>
-  </div>
-  <div class="tab-page-content"><div id="newsTabList"></div></div>
-</div>
-
-<!-- MODS TAB -->
-<div class="tab-page" id="mods-tab-page">
-  <div class="tab-page-hdr">
-    <div class="tab-page-hdr-inner">
-      <button class="tab-page-back" onclick="G.closeModsTab()">← Back</button>
-      <div class="tab-page-title">🔧 All Mods</div>
-      <button class="btn btn-gold" id="addModBtnTab" style="margin-left:auto;font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Add Mod</button>
-    </div>
-    <div class="tab-page-subtabs">
-      <button class="ntab active" onclick="G.filterMods('all',this)">All</button>
-      <button class="ntab" onclick="G.filterMods('gameplay',this)">Gameplay</button>
-      <button class="ntab" onclick="G.filterMods('visual',this)">Visual</button>
-      <button class="ntab" onclick="G.filterMods('vehicle',this)">Vehicles</button>
-      <button class="ntab" onclick="G.filterMods('weapon',this)">Weapons</button>
-    </div>
-  </div>
-  <div class="tab-page-content"><div class="mods-grid" id="modsTabGrid"></div></div>
-</div>
 
 <!-- GUIDES TAB -->
 <div class="tab-page" id="guides-tab-page">
@@ -974,49 +965,339 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   </div>
 </div>
 
-<!-- ── TOAST ── -->
-<div class="notify" id="notifyToast"><span id="notifyMsg"></span></div>
-
-<!-- ── LIGHTBOX ── -->
-<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightboxOnOverlay(event)">
-  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">×</button>
-  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)" aria-label="Previous image">‹</button>
-  <div class="lightbox-content" onclick="event.stopPropagation()">
-    <img id="lightboxImg" src="" alt=""/>
-    <div class="lightbox-caption" id="lightboxCaption"></div>
-  </div>
-  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)" aria-label="Next image">›</button>
-</div>
-
-<!-- ── MODALS ── -->
-
-<!-- AUTH -->
-<div class="modal-overlay" id="auth-modal" onclick="G.closeModalOnOverlay(event,'auth-modal')">
+<!-- ADD JOB -->
+<div class="modal-overlay" id="add-job-modal" onclick="G.closeModalOnOverlay(event,'add-job-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
-      <div class="modal-title">Join GTA6HQ</div>
-      <button class="modal-close" onclick="G.closeModal('auth-modal')" aria-label="Close dialog">×</button>
+      <div class="modal-title" style="color:var(--green)">+ Add New Job Guide</div>
+      <button class="modal-close" onclick="G.closeModal('add-job-modal')" aria-label="Close dialog">×</button>
     </div>
     <div class="modal-body">
-      <div class="form-tabs">
-        <div class="form-tab active" onclick="G.switchAuthTab('login',this)">Sign In</div>
-        <div class="form-tab" onclick="G.switchAuthTab('register',this)">Create Account</div>
-      </div>
-      <div id="auth-login">
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
-        <button class="btn-submit" onclick="G.loginUser()">Sign In</button>
-      </div>
-      <div id="auth-register" style="display:none">
-        <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" placeholder="LuciaFan2026"/></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min 8 characters"/></div>
-        <button class="btn-submit" onclick="G.registerUser()">Create Account</button>
-      </div>
+      <div class="form-group"><label class="form-label">Game</label><select class="form-input" id="newJobGame"><option value="gta6">GTA 6</option><option value="gtav">GTA V</option></select></div>
+      <div class="form-group"><label class="form-label">Job Title</label><input class="form-input" type="text" id="newJobTitle" placeholder="e.g., Fleeca Bank Heist"/></div>
+      <div class="form-group"><label class="form-label">Job Type</label><input class="form-input" type="text" id="newJobType" placeholder="e.g., Heist, Side Hustle, Story Mission"/></div>
+      <div class="form-group"><label class="form-label">Difficulty</label><select class="form-input" id="newJobDiff"><option>Easy</option><option>Medium</option><option>Hard</option><option>Very Hard</option></select></div>
+      <div class="form-group"><label class="form-label">Reward</label><input class="form-input" type="text" id="newJobReward" placeholder="e.g., $250,000"/></div>
+      <div class="form-group"><label class="form-label">Steps (one per line)</label><textarea class="form-input" id="newJobSteps" rows="5" placeholder="1. Meet the crew...&#10;2. Get the vehicles..."></textarea></div>
+      <button class="btn-submit" onclick="G.submitNewJob()">Publish Guide</button>
     </div>
-    <div class="modal-footer">By joining you agree to our <a href="#policy" style="color:var(--gold)" onclick="G.closeModal('auth-modal')">Community Rules</a> and 3-Strike ban policy.</div>
   </div>
 </div>
+
+<script>
+'use strict';
+
+const GUIDES_DATA = [
+  {id:'j1',game:'gta6',title:'Portsands Bank Heist',type:'Heist',diff:'Hard',reward:'$850,000',emoji:'🏦',steps:['Scope out the bank entrance and guard rotation','Steal a police vehicle for disguise','Breach the vault using Lucia\'s hacking skill','Escape via the marina — boat is pre-staged']},
+  {id:'j2',game:'gtav',title:'Fleeca Job — Two-Man',type:'Heist',diff:'Easy',reward:'$57,500',emoji:'💰',steps:['Complete the scope out as driver','Use Lester\'s drill on the vault','Drive calmly — no wanted level needed']},
+  {id:'j3',game:'gta6',title:'Vice City Arms Deal',type:'Side Hustle',diff:'Medium',reward:'$320,000',emoji:'🔫',steps:['Meet contact at the docks at night','Intercept rival cartel convoy','Deliver crates to the safehouse undetected']},
+];
+
+function renderGuides(game='all',type='all'){
+  const searchVal=($('guideSearch')?.value||'').toLowerCase();
+  let items=GUIDES_DATA.filter(j=>{
+    if(game!=='all'&&j.game!==game)return false;
+    if(type!=='all'&&j.type.toLowerCase()!==type)return false;
+    if(searchVal&&!j.title.toLowerCase().includes(searchVal))return false;
+    return true;
+  });
+  const completed=S.completedJobs||[];
+  const html=items.map(j=>{
+    const done=completed.includes(j.id);
+    return`<div class="card guide-card ${done?'completed':''}" id="guide-${j.id}">
+      <div class="card-thumb-ph" style="background:var(--bg3);font-size:42px;display:flex;align-items:center;justify-content:center">${j.emoji}</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
+          <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
+          <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
+        </div>
+        <div class="card-title">${esc(j.title)}</div>
+        <div class="card-meta"><span style="color:var(--gold);font-weight:700">${j.reward}</span></div>
+      </div>
+      <div class="card-actions">
+        <button class="like-btn" onclick="G.openGuideDetail('${j.id}')">📖 View Steps</button>
+        <button class="like-btn ${done?'liked':''}" onclick="G.toggleGuideComplete('${j.id}',this)">${done?'✅ Done':'☐ Mark Done'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  const g=$('guidesGrid'); if(g)g.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
+  const t=$('guidesTabGrid'); if(t)t.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
+  // update progress
+  const prog=$('guideProgressText');
+  if(prog)prog.textContent=`${completed.filter(id=>GUIDES_DATA.find(j=>j.id===id)).length} / ${GUIDES_DATA.length} Jobs Completed`;
+  // update stat
+  const stat=$('heroStatGuides'); if(stat)stat.textContent=GUIDES_DATA.length;
+}
+
+G.openGuidesTab = ()=>openTab('guides-tab-page');
+G.closeGuidesTab = ()=>closeTab('guides-tab-page');
+G.filterGuideType = ()=>{};
+
+G.filterGuides=(game,btn)=>{
+  document.querySelectorAll('#guideGameTabs .ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderGuides(game);
+};
+G.renderEnhancedGuides=()=>renderGuides();
+G.toggleGuideComplete=(id,btn)=>{
+  if(!S.completedJobs)S.completedJobs=[];
+  const i=S.completedJobs.indexOf(id);
+  if(i>-1)S.completedJobs.splice(i,1); else S.completedJobs.push(id);
+  save(); renderGuides();
+  notify(S.completedJobs.includes(id)?'✅ Marked complete!':'☐ Unmarked');
+};
+G.openGuideDetail=(id)=>{
+  const j=GUIDES_DATA.find(x=>x.id===id); if(!j)return;
+  $('guideDetailTitle').textContent=`${j.emoji} ${j.title}`;
+  setHTML('guideDetailBody',`
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
+      <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
+      <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
+      <span style="color:var(--gold);font-weight:700;font-size:14px;margin-left:auto">${j.reward}</span>
+    </div>
+    <h3 style="font-family:var(--fd);font-size:14px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Steps</h3>
+    ${j.steps.map((s,i)=>`<div class="guide-step"><strong>Step ${i+1}</strong>${esc(s)}</div>`).join('')}
+    <button class="btn-submit" style="margin-top:16px" onclick="G.toggleGuideComplete('${j.id}');G.closeModal('guide-detail-modal')">
+      ${(S.completedJobs||[]).includes(j.id)?'☐ Mark Incomplete':'✅ Mark as Complete'}
+    </button>`);
+  openModal('guide-detail-modal');
+};
+
+G.openAddJobModal = ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-job-modal');};
+G.submitNewJob = ()=>{notify('Job guide submitted!');closeModal('add-job-modal');};
+G.syncCommunityJobs = ()=>notify('🔍 Checking for job guides…');
+</script>
+
+
+<!-- ══════════════════ CHARACTERS SECTION ══════════════════ -->
+<style>
+/* ── CHARACTERS ── */
+.character-card{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.25s}
+.character-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.character-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.character-card:hover img{transform:scale(1.05)}
+.character-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.85) 100%)}
+.character-overlay-name{position:absolute;left:8px;right:28px;bottom:7px;font-family:var(--fd);font-size:11px;font-weight:700;line-height:1.15;color:#fff;text-transform:uppercase;letter-spacing:.3px}
+.character-overlay-name .surname{color:var(--pink);display:block}
+.character-arrow{position:absolute;right:7px;bottom:7px;width:18px;height:18px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.character-role-pill{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:var(--gold);font-family:var(--fu);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:3px}
+</style>
+      <!-- CHARACTERS -->
+      <section class="section" id="characters">
+        <div class="section-header">
+          <h2 class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px">⚡ Confirmed</span></h2>
+          <button class="btn btn-gold" id="addCharacterBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="openAddCharacterModal()">+ Upload Character</button>
+        </div>
+        <div class="characters-grid" id="charactersGrid">
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+        </div>
+      </section>
+
+<!-- ADD CHARACTER -->
+<div class="modal-overlay" id="add-character-modal" onclick="G.closeModalOnOverlay(event,'add-character-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--pink)">+ Add Character</div>
+      <button class="modal-close" onclick="G.closeModal('add-character-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" id="newCharFirst" placeholder="e.g., Jason"/></div>
+      <div class="form-group"><label class="form-label">Surname</label><input class="form-input" type="text" id="newCharLast" placeholder="e.g., Duval"/></div>
+      <div class="form-group"><label class="form-label">Role</label><input class="form-input" type="text" id="newCharRole" placeholder="e.g., Main Protagonist"/></div>
+      <div class="form-group"><label class="form-label">Accent Color</label><select class="form-input" id="newCharColor"><option value="pink">Pink</option><option value="gold">Gold</option><option value="cyan">Cyan</option><option value="purple">Purple</option><option value="green">Green</option></select></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newCharDesc" rows="3" placeholder="Short bio…"></textarea></div>
+      <div class="form-group"><label class="form-label">Image URL (optional)</label><input class="form-input" type="text" id="newCharImgUrl" placeholder="https://…"/><div style="font-size:11px;color:var(--text3);margin-top:4px">Only use images you own the rights to.</div></div>
+      <button class="btn-submit" style="background:var(--pink)" onclick="G.submitNewCharacter()">Publish Character</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const CHARACTERS_DATA = [
+  {id:'c1',first:'Lucia',last:'Caminos',role:'Protagonist',color:'pink',emoji:'👩'},
+  {id:'c2',first:'Jason',last:'Duval',role:'Protagonist',color:'gold',emoji:'👨'},
+  {id:'c3',first:'Calvin',last:'Andrews',role:'Antagonist',color:'purple',emoji:'🕵️'},
+  {id:'c4',first:'Raul',last:'Djinn',role:'Crime Boss',color:'cyan',emoji:'💼'},
+  {id:'c5',first:'Summer',last:'Torres',role:'Ally',color:'green',emoji:'🌿'},
+  {id:'c6',first:'Rico',last:'Vega',role:'Informant',color:'gold',emoji:'🎯'},
+];
+
+function renderCharacters(){
+  const el=$('charactersGrid'); if(!el)return;
+  const colors={pink:'var(--pink)',gold:'var(--gold)',cyan:'var(--cyan)',purple:'var(--purple)',green:'var(--green)'};
+  el.innerHTML=CHARACTERS_DATA.map(c=>`
+    <div class="character-card">
+      <div style="position:absolute;inset:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${c.emoji}</div>
+      <div class="character-scrim"></div>
+      <div class="character-role-pill">${c.role}</div>
+      <div class="character-overlay-name">${esc(c.first)}<span class="surname" style="color:${colors[c.color]||'var(--pink)'}">${esc(c.last)}</span></div>
+      <div class="character-arrow" style="background:${colors[c.color]||'var(--pink)'}">›</div>
+    </div>`).join('');
+}
+
+G.openAddCharacterModal = ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-character-modal');};
+G.submitNewCharacter = ()=>notify('Character submitted!');
+
+function openAddCharacterModal(){G.openAddCharacterModal();}
+</script>
+
+
+<!-- ══════════════════ MODS SECTION ══════════════════ -->
+<style>
+/* ── MOD CARDS ── */
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s}
+.mod-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.mod-icon-box{width:46px;height:46px;border-radius:10px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px}
+.mod-name{font-weight:700;font-size:14px}
+.mod-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.mod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.mod-dl{font-family:var(--fu);font-size:11px;color:var(--text3)}
+.btn-dl{background:var(--cyan);color:#0a0a0e;border:none;padding:5px 14px;border-radius:4px;font-family:var(--fu);font-size:12px;font-weight:700}
+.btn-dl:hover{background:var(--cyan2)}
+</style>
+      <!-- MODS -->
+      <section class="section" id="mods">
+        <div class="section-header">
+          <h2 class="section-title">🔧 Mods Database</h2>
+          <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Upload Mod</button>
+        </div>
+        <div class="mods-grid" id="modsGrid">
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
+        </div>
+        <button onclick="G.openModsTab()" style="width:100%;margin-top:14px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(0,212,255,.15)'" onmouseout="this.style.background='rgba(0,212,255,.07)'">🔧 Browse All Mods →</button>
+      </section>
+
+      <div id="customSectionsContainer"></div>
+
+<!-- MODS TAB -->
+<div class="tab-page" id="mods-tab-page">
+  <div class="tab-page-hdr">
+    <div class="tab-page-hdr-inner">
+      <button class="tab-page-back" onclick="G.closeModsTab()">← Back</button>
+      <div class="tab-page-title">🔧 All Mods</div>
+      <button class="btn btn-gold" id="addModBtnTab" style="margin-left:auto;font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Add Mod</button>
+    </div>
+    <div class="tab-page-subtabs">
+      <button class="ntab active" onclick="G.filterMods('all',this)">All</button>
+      <button class="ntab" onclick="G.filterMods('gameplay',this)">Gameplay</button>
+      <button class="ntab" onclick="G.filterMods('visual',this)">Visual</button>
+      <button class="ntab" onclick="G.filterMods('vehicle',this)">Vehicles</button>
+      <button class="ntab" onclick="G.filterMods('weapon',this)">Weapons</button>
+    </div>
+  </div>
+  <div class="tab-page-content"><div class="mods-grid" id="modsTabGrid"></div></div>
+</div>
+
+<!-- ADD MOD -->
+<div class="modal-overlay" id="add-mod-modal" onclick="G.closeModalOnOverlay(event,'add-mod-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--cyan)">+ Add Mod</div>
+      <button class="modal-close" onclick="G.closeModal('add-mod-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Mod Name</label><input class="form-input" type="text" id="newModName" placeholder="e.g., Ultra Realism ENB"/></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newModCat"><option value="visual">Visual</option><option value="gameplay">Gameplay</option><option value="vehicle">Vehicles</option><option value="weapon">Weapons</option></select></div>
+      <div class="form-group"><label class="form-label">Version</label><input class="form-input" type="text" id="newModVer" placeholder="e.g., v1.0.0"/></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newModDesc" rows="3" placeholder="What does this mod do?"></textarea></div>
+      <div class="form-group"><label class="form-label">Download URL</label><input class="form-input" type="text" id="newModUrl" placeholder="https://…"/></div>
+      <div class="form-group"><label class="form-label">Thumbnail URL (optional)</label><input class="form-input" type="text" id="newModImgUrl" placeholder="https://…"/><div style="font-size:11px;color:var(--text3);margin-top:4px">Only use images you own the rights to.</div></div>
+      <button class="btn-submit" style="background:var(--cyan);color:#062028" onclick="G.submitNewMod()">Publish Mod</button>
+      <div id="modSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const MODS_DATA = [
+  {id:'m1',name:'Ultra Realism ENB v2.3',cat:'visual',icon:'🌅',desc:'Cinematic lighting overhaul with ray-traced reflections and volumetric fog. Based on RAGE 9 shaders.',dl:'12.4K'},
+  {id:'m2',name:'Vice City Redux Sounds',cat:'gameplay',icon:'🔊',desc:'Complete audio overhaul — 80s radio, ambient city sounds, and reworked weapon audio.',dl:'8.7K'},
+  {id:'m3',name:'Supercar Pack Vol.1',cat:'vehicle',icon:'🏎️',desc:'Adds 12 real-world supercars with custom handling, interiors, and damage models.',dl:'21.2K'},
+  {id:'m4',name:'Tactical Weapon Pack',cat:'weapon',icon:'🔫',desc:'Military-grade weapons with realistic reload animations and ballistic simulation.',dl:'15.9K'},
+  {id:'m5',name:'Photo Mode Pro',cat:'visual',icon:'📷',desc:'Advanced photo mode with depth of field, color grading, and filter presets.',dl:'6.3K'},
+  {id:'m6',name:'FPS Boost Optimizer',cat:'gameplay',icon:'⚡',desc:'Config tweaks and shader optimizations for lower-end GPUs. Gains of 20–35% reported.',dl:'44.1K'},
+];
+
+function renderMods(cat='all'){
+  const el=$('modsGrid'); if(!el)return;
+  const items=cat==='all'?MODS_DATA:MODS_DATA.filter(m=>m.cat===cat);
+  el.innerHTML=items.map(m=>`
+    <div class="mod-card">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="mod-icon-box">${m.icon}</div>
+        <div class="mod-name">${esc(m.name)}</div>
+      </div>
+      <div class="mod-desc">${esc(m.desc)}</div>
+      <div class="mod-footer">
+        <div class="mod-dl">⬇️ ${m.dl} downloads</div>
+        <button class="btn-dl">Download</button>
+      </div>
+    </div>`).join('');
+  // also update tab grid
+  const tab=$('modsTabGrid'); if(tab)tab.innerHTML=el.innerHTML;
+}
+
+G.filterMods = (cat,btn)=>{
+  document.querySelectorAll('#modTabs .ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderMods(cat);
+};
+G.openModsTab = ()=>openTab('mods-tab-page');
+G.closeModsTab = ()=>closeTab('mods-tab-page');
+G.openAddModModal = ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-mod-modal');};
+G.submitNewMod = ()=>notify('Mod submitted!');
+</script>
+
+
+<!-- ══════════════════ Q&A SECTION ══════════════════ -->
+<style>
+/* ── Q&A ── */
+.qa-list{display:flex;flex-direction:column;gap:12px}
+.qa-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;gap:14px;transition:.2s;cursor:pointer}
+.qa-item:hover{border-color:var(--gold)}
+.qa-votes{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:40px}
+.vote-count{font-family:var(--fd);font-size:20px;font-weight:700}
+.vote-label{font-size:10px;color:var(--text3);text-transform:uppercase;font-family:var(--fu)}
+.qa-solved{background:var(--green);color:#0a0a0e;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--fu)}
+.qa-content{flex:1}
+.qa-title{font-weight:700;font-size:14px;margin-bottom:5px}
+.qa-title:hover{color:var(--gold)}
+.qa-excerpt{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:7px}
+.qa-meta{font-size:12px;color:var(--text3);display:flex;gap:10px;font-family:var(--fu)}
+.answer-badge{background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+</style>
+      <!-- Q&A -->
+      <section class="section" id="qa">
+        <div class="section-header">
+          <h2 class="section-title">❓ Questions &amp; Solutions</h2>
+          <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openModal('ask-modal')">+ Ask Question</button>
+        </div>
+        <div class="id-search-row">
+          <input class="id-input" type="text" id="qaSearch" placeholder="Search questions or enter #GTA6HQ-XXXXX player ID…"/>
+          <button class="btn-sid" onclick="G.searchQA()">Search</button>
+        </div>
+        <div class="qa-list" id="qaList">
+          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
+          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
+          <div class="skel-card" style="padding:14px;display:flex;gap:14px;align-items:center"><div class="skeleton" style="width:44px;height:44px;border-radius:8px;flex-shrink:0"></div><div style="flex:1"><div class="skeleton skel-line" style="margin:0 0 8px;width:70%"></div><div class="skeleton skel-line tiny" style="margin:0"></div></div></div>
+        </div>
+      </section>
 
 <!-- ASK QUESTION -->
 <div class="modal-overlay" id="ask-modal" onclick="G.closeModalOnOverlay(event,'ask-modal')">
@@ -1066,253 +1347,8 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
   </div>
 </div>
 
-<!-- GUIDE DETAIL -->
-<div class="modal-overlay" id="guide-detail-modal" onclick="G.closeModalOnOverlay(event,'guide-detail-modal')">
-  <div class="modal" role="dialog" aria-modal="true" style="max-width:600px">
-    <div class="modal-header">
-      <div class="modal-title" id="guideDetailTitle">Job Details</div>
-      <button class="modal-close" onclick="G.closeModal('guide-detail-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body" id="guideDetailBody"></div>
-  </div>
-</div>
-
-<!-- ADD JOB -->
-<div class="modal-overlay" id="add-job-modal" onclick="G.closeModalOnOverlay(event,'add-job-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--green)">+ Add New Job Guide</div>
-      <button class="modal-close" onclick="G.closeModal('add-job-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Game</label><select class="form-input" id="newJobGame"><option value="gta6">GTA 6</option><option value="gtav">GTA V</option></select></div>
-      <div class="form-group"><label class="form-label">Job Title</label><input class="form-input" type="text" id="newJobTitle" placeholder="e.g., Fleeca Bank Heist"/></div>
-      <div class="form-group"><label class="form-label">Job Type</label><input class="form-input" type="text" id="newJobType" placeholder="e.g., Heist, Side Hustle, Story Mission"/></div>
-      <div class="form-group"><label class="form-label">Difficulty</label><select class="form-input" id="newJobDiff"><option>Easy</option><option>Medium</option><option>Hard</option><option>Very Hard</option></select></div>
-      <div class="form-group"><label class="form-label">Reward</label><input class="form-input" type="text" id="newJobReward" placeholder="e.g., $250,000"/></div>
-      <div class="form-group"><label class="form-label">Steps (one per line)</label><textarea class="form-input" id="newJobSteps" rows="5" placeholder="1. Meet the crew...&#10;2. Get the vehicles..."></textarea></div>
-      <button class="btn-submit" onclick="G.submitNewJob()">Publish Guide</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD CHARACTER -->
-<div class="modal-overlay" id="add-character-modal" onclick="G.closeModalOnOverlay(event,'add-character-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--pink)">+ Add Character</div>
-      <button class="modal-close" onclick="G.closeModal('add-character-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" id="newCharFirst" placeholder="e.g., Jason"/></div>
-      <div class="form-group"><label class="form-label">Surname</label><input class="form-input" type="text" id="newCharLast" placeholder="e.g., Duval"/></div>
-      <div class="form-group"><label class="form-label">Role</label><input class="form-input" type="text" id="newCharRole" placeholder="e.g., Main Protagonist"/></div>
-      <div class="form-group"><label class="form-label">Accent Color</label><select class="form-input" id="newCharColor"><option value="pink">Pink</option><option value="gold">Gold</option><option value="cyan">Cyan</option><option value="purple">Purple</option><option value="green">Green</option></select></div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newCharDesc" rows="3" placeholder="Short bio…"></textarea></div>
-      <div class="form-group"><label class="form-label">Image URL (optional)</label><input class="form-input" type="text" id="newCharImgUrl" placeholder="https://…"/><div style="font-size:11px;color:var(--text3);margin-top:4px">Only use images you own the rights to.</div></div>
-      <button class="btn-submit" style="background:var(--pink)" onclick="G.submitNewCharacter()">Publish Character</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN LOGIN -->
-<div class="modal-overlay" id="admin-login-modal" onclick="G.closeModalOnOverlay(event,'admin-login-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--gold)">🔐 Admin Sign In</div>
-      <button class="modal-close" onclick="G.closeModal('admin-login-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div id="adminAuthModeNotice" style="display:none;background:rgba(255,60,110,.08);border:1px solid rgba(255,60,110,.25);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text2);margin-bottom:14px">
-        ⚠️ Firebase isn't configured yet — running in local demo mode. Admin status is only stored in your browser.
-      </div>
-      <div class="form-group"><label class="form-label">Admin Email</label><input class="form-input" type="email" id="adminEmail" placeholder="you@gta6hq.com"/></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="adminPassword" placeholder="••••••••"/></div>
-      <button class="btn-submit" onclick="G.adminSignIn()">Sign In</button>
-      <div id="adminAuthStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD MOD -->
-<div class="modal-overlay" id="add-mod-modal" onclick="G.closeModalOnOverlay(event,'add-mod-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--cyan)">+ Add Mod</div>
-      <button class="modal-close" onclick="G.closeModal('add-mod-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Mod Name</label><input class="form-input" type="text" id="newModName" placeholder="e.g., Ultra Realism ENB"/></div>
-      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newModCat"><option value="visual">Visual</option><option value="gameplay">Gameplay</option><option value="vehicle">Vehicles</option><option value="weapon">Weapons</option></select></div>
-      <div class="form-group"><label class="form-label">Version</label><input class="form-input" type="text" id="newModVer" placeholder="e.g., v1.0.0"/></div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newModDesc" rows="3" placeholder="What does this mod do?"></textarea></div>
-      <div class="form-group"><label class="form-label">Download URL</label><input class="form-input" type="text" id="newModUrl" placeholder="https://…"/></div>
-      <div class="form-group"><label class="form-label">Thumbnail URL (optional)</label><input class="form-input" type="text" id="newModImgUrl" placeholder="https://…"/><div style="font-size:11px;color:var(--text3);margin-top:4px">Only use images you own the rights to.</div></div>
-      <button class="btn-submit" style="background:var(--cyan);color:#062028" onclick="G.submitNewMod()">Publish Mod</button>
-      <div id="modSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD GALLERY -->
-<div class="modal-overlay" id="add-gallery-modal" onclick="G.closeModalOnOverlay(event,'add-gallery-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--cyan)">+ Add Gallery Image</div>
-      <button class="modal-close" onclick="G.closeModal('add-gallery-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newGalTitle" placeholder="e.g., Vice City Skyline at Sunset"/></div>
-      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newGalCat"><option value="screenshot">Screenshot</option><option value="artwork">Artwork</option><option value="wallpaper">Wallpaper</option><option value="vehicle">Vehicle</option><option value="environment">Environment</option></select></div>
-      <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" type="text" id="newGalImgUrl" placeholder="https://…"/></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Only use images you own the rights to.</div>
-      <button class="btn-submit" style="background:var(--cyan);color:#062028" onclick="G.submitNewGalleryImage()">Publish Image</button>
-      <div id="gallerySubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD SECTION -->
-<div class="modal-overlay" id="add-section-modal" onclick="G.closeModalOnOverlay(event,'add-section-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--green)">+ New Section</div>
-      <button class="modal-close" onclick="G.closeModal('add-section-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Section Name</label><input class="form-input" type="text" id="newSectionName" placeholder="e.g., Locations to Buy"/></div>
-      <div class="form-group"><label class="form-label">Icon (emoji)</label><input class="form-input" type="text" id="newSectionIcon" placeholder="📍" maxlength="4"/></div>
-      <button class="btn-submit" style="background:var(--green);color:#04220f" onclick="G.submitNewSection()">Create Section</button>
-      <div id="sectionSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD SECTION ITEM -->
-<div class="modal-overlay" id="add-section-item-modal" onclick="G.closeModalOnOverlay(event,'add-section-item-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--green)">+ Add Item</div>
-      <button class="modal-close" onclick="G.closeModal('add-section-item-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="newItemSectionId"/>
-      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newItemTitle" placeholder="e.g., Vice Beach Real Estate"/></div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newItemDesc" rows="3" placeholder="What is this?"></textarea></div>
-      <div class="form-group"><label class="form-label">Price / Tag (optional)</label><input class="form-input" type="text" id="newItemPrice" placeholder="e.g., $2,500,000"/></div>
-      <div class="form-group"><label class="form-label">Link (optional)</label><input class="form-input" type="text" id="newItemLink" placeholder="https://…"/></div>
-      <div class="form-group"><label class="form-label">Image URL (optional)</label><input class="form-input" type="text" id="newItemImgUrl" placeholder="https://…"/></div>
-      <button class="btn-submit" style="background:var(--green);color:#04220f" onclick="G.submitNewSectionItem()">Publish Item</button>
-      <div id="sectionItemSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN DASHBOARD -->
-<div class="modal-overlay" id="admin-dashboard-modal" onclick="G.closeModalOnOverlay(event,'admin-dashboard-modal')">
-  <div class="modal" role="dialog" aria-modal="true" style="max-width:720px">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--gold)">🛠️ Admin Dashboard</div>
-      <button class="modal-close" onclick="G.closeModal('admin-dashboard-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div id="adminDashStatus" style="font-size:12px;color:var(--text3);margin-bottom:12px"></div>
-      <div class="tabs">
-        <button class="tab active" onclick="G.switchDashTab('mods',this)">🔧 Mods</button>
-        <button class="tab" onclick="G.switchDashTab('characters',this)">👥 Characters</button>
-        <button class="tab" onclick="G.switchDashTab('gallery',this)">🖼️ Gallery</button>
-        <button class="tab" onclick="G.switchDashTab('sections',this)">➕ Custom Sections</button>
-        <button class="tab" onclick="G.switchDashTab('jobs',this)">📖 Job Sync Log</button>
-        <button class="tab" onclick="G.switchDashTab('site',this)">🎨 Site Settings</button>
-      </div>
-      <div id="dashPanel"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ── FIREBASE ── -->
-<script type="module">
-import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-
-const CFG = {
-  const CFG = {
-apiKey:'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
-authDomain:'gta6hq-befa7.firebaseapp.com',
-projectId:'gta6hq-befa7',
-storageBucket:'gta6hq-befa7.firebasestorage.app',
-};
-
-let db=null, auth=null;
-try { const app=initializeApp(CFG); db=getFirestore(app); auth=getAuth(app); } catch(e){ console.error('[firebase]',e.message); }
-
-window.fetchLiveNews = async function(){
-  if(!db) return [];
-  try {
-    const q = query(collection(db,'automated_news'), orderBy('timestamp','desc'), limit(12));
-    return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
-  } catch(e){ console.error(e); return []; }
-};
-
-window.FB = {
-  ready:!!(db&&auth),
-  signIn:(e,p)=>signInWithEmailAndPassword(auth,e,p).then(c=>c.user),
-  signOutUser:()=>signOut(auth),
-  onAuthChange:cb=>onAuthStateChanged(auth,cb),
-  getAdminDoc:async uid=>{ const s=await getDoc(doc(db,'admins',uid)); return s.exists(); },
-  getCollection:async name=>(await getDocs(collection(db,name))).docs.map(d=>({id:d.id,...d.data()})),
-  setDoc:(c,id,data)=>setDoc(doc(db,c,id),data),
-  deleteDoc:(c,id)=>deleteDoc(doc(db,c,id))
-};
-window.dispatchEvent(new Event('fb-ready'));
-</script>
-
-<!-- ── APP LOGIC ── -->
 <script>
-(()=>{
 'use strict';
-
-// ─ State ─
-const SK='gta6hq_v4';
-const DEF={loggedIn:false,username:'Guest',userId:null,liked:[],completedJobs:[],customJobs:[]};
-function loadState(){
-  try{
-    const r=localStorage.getItem(SK);
-    if(!r) return {...DEF,liked:new Set()};
-    const p=JSON.parse(r);
-    return{...DEF,...p,liked:new Set(Array.isArray(p.liked)?p.liked:[]),completedJobs:Array.isArray(p.completedJobs)?p.completedJobs:[],customJobs:Array.isArray(p.customJobs)?p.customJobs:[]};
-  }catch(e){return{...DEF,liked:new Set()};}
-}
-const S=loadState();
-let _t=null;
-function save(){clearTimeout(_t);_t=setTimeout(()=>{try{localStorage.setItem(SK,JSON.stringify({...S,liked:[...S.liked]}));}catch(e){}},400);}
-
-// ─ Utils ─
-const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const $=id=>document.getElementById(id);
-const setHTML=(id,h)=>{const e=$(id);if(e)e.innerHTML=h;};
-const isAdmin=()=>localStorage.getItem('gta6hq_is_admin')==='1';
-
-function notify(msg){
-  const t=$('notifyToast'),m=$('notifyMsg');
-  if(!t||!m)return;
-  m.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3600);
-}
-function openModal(id){const e=$(id);if(e)e.classList.add('open');}
-function closeModal(id){const e=$(id);if(e)e.classList.remove('open');}
-function closeModalOnOverlay(ev,id){if(ev.target===$(id))closeModal(id);}
-
-// ─ Auth ─
-function switchAuthTab(mode,btn){
-  btn.parentElement.querySelectorAll('.form-tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  $('auth-login').style.display=mode==='login'?'block':'none';
-  $('auth-register').style.display=mode==='register'?'block':'none';
-}
-function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Signed in.');save();}
-function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Welcome to GTA6HQ!');save();}
 
 // ─ Q&A ─
 const QA=[
@@ -1445,6 +1481,116 @@ function searchQA(){
   renderQA(f.length?f:[{id:0,votes:0,solved:false,title:`No results for "${v}"`,excerpt:'Try different keywords.',time:'—',author:''}]);
 }
 
+G.searchQA = searchQA;
+G.openReviewAnswers = openReviewAnswers;
+G.submitAnswer = submitAnswer;
+
+window.openAnswerModal = openAnswerModal;
+window.openQuestionDetail = openQuestionDetail;
+window.voteAnswer = voteAnswer;
+window.approveAnswer = approveAnswer;
+window.rejectAnswer = rejectAnswer;
+</script>
+
+
+<!-- ══════════════════ SYSTEM REQUIREMENTS SECTION ══════════════════ -->
+<style>
+/* ── SYS REQ ── */
+.sys-req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.req-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.req-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.req-tier-name{font-family:var(--fd);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.req-tier-name.minimum{color:var(--text2)}.req-tier-name.recommended{color:var(--gold)}.req-tier-name.ultra{color:var(--cyan)}
+.req-body{padding:16px 18px}
+.req-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.req-row:last-child{border-bottom:none}
+.req-label{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;min-width:60px;padding-top:1px}
+.req-val{font-size:13px;color:var(--text);line-height:1.4}
+.req-val strong{color:var(--gold)}
+.console-req{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.console-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.console-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.console-icon{font-size:32px;margin-bottom:8px}
+.console-name{font-family:var(--fd);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.console-spec{font-size:12px;color:var(--text3);line-height:1.6;font-family:var(--fu)}
+.release-banner{background:linear-gradient(90deg,rgba(240,180,41,.08),rgba(255,60,110,.08));border:1px solid rgba(240,180,41,.2);border-radius:var(--r2);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.rb-date{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--gold)}
+.rb-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.rb-platforms{display:flex;gap:8px}
+.platform-pill{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-family:var(--fu);font-size:12px;font-weight:600}
+</style>
+      <!-- SYS REQ -->
+      <section class="section" id="sysreq">
+        <div class="section-header">
+          <h2 class="section-title">💻 GTA 6 System Requirements</h2>
+          <span class="auto-badge">⚡ Updated Jun 2026</span>
+        </div>
+        <div class="release-banner">
+          <div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--fu);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Official Release Date</div>
+            <div class="rb-date">November 19, 2026</div>
+            <div class="rb-sub">Rockstar Games — delayed twice, now confirmed</div>
+          </div>
+          <div class="rb-platforms">
+            <div class="platform-pill">🎮 PS5</div>
+            <div class="platform-pill">🎮 Xbox Series X|S</div>
+            <div class="platform-pill" style="opacity:.5">💻 PC — TBA</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,60,110,.06);border:1px solid rgba(255,60,110,.2);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--text2)">
+          ⚠️ <strong style="color:var(--pink)">Important:</strong> Rockstar has NOT released official PC requirements as of June 2026. The specs below are <strong>community predictions</strong> based on the RAGE 9 engine and leaked playtesting footage.
+        </div>
+        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">🖥️ PC — Predicted Requirements</h3>
+        <div class="sys-req-grid" id="sysReqGrid"></div>
+        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 14px">🎮 Console Requirements (Confirmed)</h3>
+        <div class="console-req">
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px">GTA 6 is confirmed for current-gen consoles only. No cross-gen (PS4/Xbox One) support announced.</p>
+          <div class="console-grid" id="consoleGrid"></div>
+        </div>
+        <h3 style="font-family:var(--fd);font-size:16px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 14px">🔍 Quick PC Check</h3>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px">
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Answer 3 quick questions to estimate if your PC can run GTA 6.</p>
+          <div class="form-group">
+            <label class="form-label">Your GPU</label>
+            <select class="form-input" id="pcGpu">
+              <option value="">Select your graphics card…</option>
+              <option value="3">RTX 4090 / RTX 4080 / RTX 4070 Ti</option>
+              <option value="3">RX 7900 XTX / RX 7900 XT</option>
+              <option value="2">RTX 4070 / RTX 3080 / RX 7800 XT</option>
+              <option value="2">RTX 4060 Ti / RTX 3070 / RX 6800 XT</option>
+              <option value="1">RTX 4060 / RTX 3060 / RX 6700 XT</option>
+              <option value="1">RTX 3050 / GTX 1660 Super / RX 5700</option>
+              <option value="0">GTX 1060 or older / RX 580 or older</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">RAM</label>
+            <select class="form-input" id="pcRam">
+              <option value="">Select your RAM…</option>
+              <option value="3">32 GB or more</option>
+              <option value="2">16 GB</option>
+              <option value="1">12 GB</option>
+              <option value="0">8 GB or less</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Storage</label>
+            <select class="form-input" id="pcStorage">
+              <option value="">Select storage type…</option>
+              <option value="3">NVMe SSD (1 TB+)</option>
+              <option value="2">SATA SSD (500 GB+)</option>
+              <option value="1">SATA SSD (less than 500 GB)</option>
+              <option value="0">HDD only</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" style="width:100%;border-radius:var(--r);padding:10px" onclick="G.checkPC()">Check My PC</button>
+          <div id="pcResult" style="margin-top:14px"></div>
+        </div>
+      </section>
+
+<script>
+'use strict';
+
 // ─ PC Check ─
 function checkPC(){
   const gpu=parseInt($('pcGpu')?.value||'');
@@ -1460,249 +1606,6 @@ function checkPC(){
   r.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-size:13px;color:${col};line-height:1.6">${msg}<br><span style="color:var(--text3);font-size:11px;margin-top:6px;display:block">⚠️ Based on community predictions — official requirements not yet announced.</span></div>`;
 }
 
-// ─ Player Lookup ─
-function lookupPlayer(){
-  const v=($('playerIdInput')?.value||'').trim(); if(!v)return;
-  setHTML('playerResult',`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px">
-    <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
-      <div style="width:38px;height:38px;border-radius:50%;background:rgba(240,180,41,.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center">🎮</div>
-      <div><div style="font-weight:700;font-size:13px">ViceCityKing</div><div style="font-size:11px;color:var(--gold);font-family:var(--fu)">${esc(v)}</div></div>
-    </div>
-    <div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;margin-bottom:8px">
-      <div style="font-family:var(--fd);font-size:15px;font-weight:700;color:var(--cyan)">${Math.floor(Math.random()*800)+50}</div>
-      <div style="font-size:10px;color:var(--text3)">Posts</div>
-    </div>
-    <span style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700">Trusted Member</span>
-  </div>`);
-}
-
-// ─ Tab page helpers ─
-const bodyLock=lock=>{document.documentElement.style.overflow=lock?'hidden':'';document.body.style.overflow=lock?'hidden':'';}
-const openTab=id=>{const p=$(id);if(p){p.style.display='block';p.scrollTop=0;bodyLock(true);}};
-const closeTab=id=>{const p=$(id);if(p)p.style.display='none';bodyLock(false);}
-
-// ─ Admin ─
-function adminLinkClick(){
-  if(isAdmin()){localStorage.setItem('gta6hq_is_admin','0');notify('Signed out of admin mode.');return;}
-  openModal('admin-login-modal');
-}
-function adminSignIn(){
-  const e=($('adminEmail')?.value||'').trim(),p=$('adminPassword')?.value||'';
-  if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');}
-}
-
-// ─ Global API ─
-window.G={
-  openModal,closeModal,closeModalOnOverlay,
-  switchAuthTab,loginUser,registerUser,submitQuestion:()=>{closeModal('ask-modal');notify('Question posted!');},
-  searchQA,checkPC,handleSearch:()=>{},lookupPlayer,
-  openReviewAnswers,submitAnswer,
-  openNewsTab:()=>{
-    openTab('news-tab-page');
-    renderNewsTabList(newsTabActiveCat);
-    refreshNews(false);
-  },
-  closeNewsTab:()=>closeTab('news-tab-page'),
-  openGuidesTab:()=>openTab('guides-tab-page'),closeGuidesTab:()=>closeTab('guides-tab-page'),
-  openModsTab:()=>openTab('mods-tab-page'),closeModsTab:()=>closeTab('mods-tab-page'),
-  filterNewsTab:(cat,btn)=>{
-    document.querySelectorAll('.tab-page-subtabs .ntab').forEach(t=>t.classList.remove('active'));
-    if(btn)btn.classList.add('active');
-    renderNewsTabList(cat);
-  },
-  filterGuides:()=>{},filterGuideType:()=>{},renderEnhancedGuides:()=>{},filterMods:()=>{},
-  openAddJobModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-job-modal');},
-  submitNewJob:()=>{notify('Job guide submitted!');closeModal('add-job-modal');},
-  syncCommunityJobs:()=>notify('🔍 Checking for job guides…'),
-  adminLinkClick,adminSignIn,
-  adminSignOut:()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');},
-  openAdminDashboard:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('admin-dashboard-modal');},
-  switchDashTab:()=>{},
-  openAddModModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-mod-modal');},
-  submitNewMod:()=>notify('Mod submitted!'),
-  openAddCharacterModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-character-modal');},
-  submitNewCharacter:()=>notify('Character submitted!'),
-  submitNewGalleryImage:()=>notify('Image submitted!'),
-  openAddSectionModal:()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
-  submitNewSection:()=>notify('Section created!'),
-  submitNewSectionItem:()=>notify('Item added!'),
-  fetchLatestNews:async(force)=>{
-    notify('📰 Refreshing news...');
-    await refreshNews(force===undefined?true:!!force);
-  },
-  openNewsDetail:(id)=>{
-    const a=CURRENT_NEWS.find(x=>x.id===id); if(!a)return;
-    $('guideDetailTitle').innerHTML=`${a.emoji||'📰'} ${esc(a.title)}`;
-    setHTML('guideDetailBody',`
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-        <span class="nl-tag ${a.category||'update'}">${(a.category||'news').toUpperCase()}</span>
-        <span style="color:var(--text3);font-size:12px">${a.time||''}</span>
-      </div>
-      <p style="font-size:13px;color:var(--text2);line-height:1.7">${esc(a.excerpt||'No summary available for this article yet.')}</p>
-      ${a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener" class="btn-submit" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Read Full Article ↗</a>`:'<div style="margin-top:16px;font-size:12px;color:var(--text3)">Full source link not available for this article.</div>'}
-    `);
-    openModal('guide-detail-modal');
-  },
-};
-
-// expose for inline onclick attrs
-window.openAnswerModal=openAnswerModal;
-window.openQuestionDetail=openQuestionDetail;
-window.voteAnswer=voteAnswer;
-window.approveAnswer=approveAnswer;
-window.rejectAnswer=rejectAnswer;
-window.closeModal=closeModal;
-
-// ─ Static Data ─────────────────────────────────────────
-
-const NEWS_DATA = [
-  {id:'n1',title:'GTA 6 Release Date Confirmed: November 19, 2026',excerpt:'Rockstar Games officially locked in the date after two delays. Pre-orders now open on PlayStation and Xbox stores.',category:'official',time:'2h ago',emoji:'🚀'},
-  {id:'n2',title:'Lucia & Jason Gameplay Deep Dive — New Details Emerge',excerpt:'Leaked playtesting footage reveals how switching between dual protagonists works mid-mission.',category:'characters',time:'5h ago',emoji:'🎮'},
-  {id:'n3',title:'State of Leonida Map — Full Breakdown of Every Region',excerpt:'Data miners have pieced together the complete map: Vice City, Grassrivers, Keys, and Everglades zones confirmed.',category:'map',time:'8h ago',emoji:'🗺️'},
-  {id:'n4',title:'GTA 6 PC Version — What We Know So Far',excerpt:'Rockstar has yet to announce PC, but historical patterns and job listings suggest it\'s in development.',category:'rumor',time:'1d ago',emoji:'💻'},
-];
-
-// ─ News auto-refresh (every 3h) + 24h local cache ─────────
-const NEWS_CACHE_KEY='gta6hq_news_cache_v1';
-const NEWS_REFRESH_MS=3*60*60*1000;   // re-check Firestore for fresh articles every 3 hours
-const NEWS_MAX_AGE_MS=24*60*60*1000;  // never show cached news older than 24 hours
-
-let CURRENT_NEWS=NEWS_DATA.slice();    // what's actually rendered right now (falls back to static list)
-let newsTabActiveCat='all';            // remembers which filter tab is open in the full News overlay
-
-function firestoreTimestampToDate(ts){
-  if(!ts) return null;
-  if(typeof ts.toDate==='function') return ts.toDate();          // real Firestore Timestamp instance
-  if(typeof ts==='number') return new Date(ts);                   // already a JS millis number
-  if(typeof ts.seconds==='number') return new Date(ts.seconds*1000); // plain {seconds,nanoseconds} object
-  const d=new Date(ts);
-  return isNaN(d.getTime())?null:d;
-}
-function loadNewsCache(){
-  try{
-    const raw=localStorage.getItem(NEWS_CACHE_KEY);
-    if(!raw) return null;
-    const parsed=JSON.parse(raw);
-    if(!parsed||!parsed.timestamp||!Array.isArray(parsed.items)||!parsed.items.length) return null;
-    if(Date.now()-parsed.timestamp>NEWS_MAX_AGE_MS){
-      localStorage.removeItem(NEWS_CACHE_KEY); // older than 24h — expire it
-      return null;
-    }
-    return parsed;
-  }catch(e){ return null; }
-}
-function saveNewsCache(items){
-  try{ localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify({items,timestamp:Date.now()})); }catch(e){}
-}
-function applyNews(items, persist) {
-  if (!items || !items.length) return;
-  CURRENT_NEWS = items;
-  if (persist) saveNewsCache(items);
-  renderNews(CURRENT_NEWS);
-  renderSidebar();
-  const tabPage = document.getElementById('news-tab-page');
-  if (tabPage && tabPage.style.display === 'block') {
-    renderNewsTabList(newsTabActiveCat);
-  }
-}
-
-async function refreshNews(force) {
-  const cache = loadNewsCache();
-  const stale = !cache || (Date.now() - cache.timestamp) >= NEWS_REFRESH_MS;
-  
-  if (cache && !stale && !force) {
-    // cache is under 3h old — just make sure it's what's on screen, don't hit Firestore again
-    if (CURRENT_NEWS !== cache.items) applyNews(cache.items, false);
-    return;
-  }
-  
-  try {
-    const live = await fetchLiveNews();
-    if (live && live.length) {
-      const mapped = live.map(a => {
-        const d = firestoreTimestampToDate(a.timestamp);
-        return {
-          id: a.id,
-          title: a.title || 'Untitled',
-          excerpt: a.excerpt || '',
-          category: a.category || 'update',
-          emoji: a.emoji || '📰',
-          url: a.url || null,
-          time: d ? d.toLocaleDateString() : (a.time || 'Recent'),
-          _sortMs: d ? d.getTime() : 0
-        };
-      }).sort((x, y) => y._sortMs - x._sortMs);
-      
-      applyNews(mapped, true); // persist fresh fetch, resets the 24h/3h clocks
-      if (force) notify('✅ News updated!');
-      return;
-    }
-  } catch (e) {
-    console.warn('[news] live fetch failed, keeping existing news', e);
-  }
-  
-  // fetch failed or Firestore had nothing new — keep showing whatever we already have
-  if (cache) {
-    applyNews(cache.items, false);
-  } else if (force) {
-    notify(' No new articles found.');
-  }
-}
-  // fetch failed or Firestore had nothing new — keep showing whatever we already have (cache, up to 24h old, or the static fallback)
-  if(cache){ applyNews(cache.items,false); }
-  else if(force){ notify('📰 No new articles found.'); }
-}
-function renderNewsTabList(cat){
-  newsTabActiveCat=cat;
-  const el=document.getElementById('newsTabList'); if(!el) return;
-  const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
-  el.innerHTML=filtered.length?filtered.map(a=>`
-      <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
-        <div class="ntp-body">
-          <div class="ntp-title">${esc(a.title)}</div>
-          <div class="ntp-excerpt">${esc(a.excerpt)}</div>
-          <div class="ntp-meta">
-            <span class="nl-tag ${a.category||'update'}">${a.category?.toUpperCase()||'NEWS'}</span>
-            <span style="color:var(--text3)">${a.time}</span>
-          </div>
-        </div>
-      </div>`).join(''):'<div style="padding:40px;text-align:center;color:var(--text3)">No articles in this category yet.</div>';
-}
-
-const GALLERY_DATA = [
-  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
-  {id:'g2',title:'Lucia — Character Artwork',cat:'artwork',emoji:'🎨'},
-  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',emoji:'🏎️'},
-  {id:'g4',title:'Vice Beach 4K Wallpaper',cat:'wallpaper',emoji:'🌊'},
-  {id:'g5',title:'Supercar Lineup — Leaked',cat:'vehicle',emoji:'🚗'},
-  {id:'g6',title:'Florida Keys Environment',cat:'environment',emoji:'🌴'},
-];
-
-const MODS_DATA = [
-  {id:'m1',name:'Ultra Realism ENB v2.3',cat:'visual',icon:'🌅',desc:'Cinematic lighting overhaul with ray-traced reflections and volumetric fog. Based on RAGE 9 shaders.',dl:'12.4K'},
-  {id:'m2',name:'Vice City Redux Sounds',cat:'gameplay',icon:'🔊',desc:'Complete audio overhaul — 80s radio, ambient city sounds, and reworked weapon audio.',dl:'8.7K'},
-  {id:'m3',name:'Supercar Pack Vol.1',cat:'vehicle',icon:'🏎️',desc:'Adds 12 real-world supercars with custom handling, interiors, and damage models.',dl:'21.2K'},
-  {id:'m4',name:'Tactical Weapon Pack',cat:'weapon',icon:'🔫',desc:'Military-grade weapons with realistic reload animations and ballistic simulation.',dl:'15.9K'},
-  {id:'m5',name:'Photo Mode Pro',cat:'visual',icon:'📷',desc:'Advanced photo mode with depth of field, color grading, and filter presets.',dl:'6.3K'},
-  {id:'m6',name:'FPS Boost Optimizer',cat:'gameplay',icon:'⚡',desc:'Config tweaks and shader optimizations for lower-end GPUs. Gains of 20–35% reported.',dl:'44.1K'},
-];
-
-const CHARACTERS_DATA = [
-  {id:'c1',first:'Lucia',last:'Caminos',role:'Protagonist',color:'pink',emoji:'👩'},
-  {id:'c2',first:'Jason',last:'Duval',role:'Protagonist',color:'gold',emoji:'👨'},
-  {id:'c3',first:'Calvin',last:'Andrews',role:'Antagonist',color:'purple',emoji:'🕵️'},
-  {id:'c4',first:'Raul',last:'Djinn',role:'Crime Boss',color:'cyan',emoji:'💼'},
-  {id:'c5',first:'Summer',last:'Torres',role:'Ally',color:'green',emoji:'🌿'},
-  {id:'c6',first:'Rico',last:'Vega',role:'Informant',color:'gold',emoji:'🎯'},
-];
-
-const GUIDES_DATA = [
-  {id:'j1',game:'gta6',title:'Portsands Bank Heist',type:'Heist',diff:'Hard',reward:'$850,000',emoji:'🏦',steps:['Scope out the bank entrance and guard rotation','Steal a police vehicle for disguise','Breach the vault using Lucia\'s hacking skill','Escape via the marina — boat is pre-staged']},
-  {id:'j2',game:'gtav',title:'Fleeca Job — Two-Man',type:'Heist',diff:'Easy',reward:'$57,500',emoji:'💰',steps:['Complete the scope out as driver','Use Lester\'s drill on the vault','Drive calmly — no wanted level needed']},
-  {id:'j3',game:'gta6',title:'Vice City Arms Deal',type:'Side Hustle',diff:'Medium',reward:'$320,000',emoji:'🔫',steps:['Meet contact at the docks at night','Intercept rival cartel convoy','Deliver crates to the safehouse undetected']},
-];
-
 const SYS_REQ = [
   {tier:'Minimum',cls:'minimum',target:'1080p / 30fps / Low',specs:{OS:'Windows 10 64-bit',CPU:'Intel i7-8700K / AMD Ryzen 5 3600',GPU:'NVIDIA RTX 2070 / AMD RX 5700 XT',RAM:'16 GB',Storage:'150 GB NVMe SSD',VRAM:'8 GB'}},
   {tier:'Recommended',cls:'recommended',target:'1440p / 60fps / High',specs:{OS:'Windows 11 64-bit',CPU:'Intel i9-12900K / AMD Ryzen 7 5800X3D',GPU:'NVIDIA RTX 3080 / AMD RX 6800 XT',RAM:'32 GB',Storage:'150 GB NVMe SSD',VRAM:'10 GB'}},
@@ -1713,112 +1616,6 @@ const CONSOLES = [
   {name:'PlayStation 5',icon:'🎮',specs:'AMD Zen 2 CPU · RDNA 2 GPU · 16 GB GDDR6\n4K / 60fps · Ray tracing · DualSense haptics'},
   {name:'Xbox Series X',icon:'🎮',specs:'AMD Zen 2 CPU · RDNA 2 GPU · 16 GB GDDR6\n4K / 60fps · Ray tracing · Quick Resume'},
 ];
-
-const EVENTS_DATA = [
-  {date:'Nov 19, 2026',title:'GTA 6 Launch Day 🚀',note:'PS5 & Xbox Series X|S'},
-  {date:'TBA 2027',title:'GTA 6 PC Release 💻',note:'Unconfirmed — based on history'},
-  {date:'TBA',title:'GTA Online 6 Beta 🌐',note:'Rockstar historically launches ~3 months after'},
-];
-
-// ─ Render Functions ─────────────────────────────────────
-
-function renderNews(items){
-  const el=$('newsListHome'); if(!el)return;
-  const cats={official:'cat-official',rumor:'cat-rumor',map:'cat-map',characters:'cat-characters',vehicles:'cat-vehicles',gameplay:'cat-gameplay',update:'cat-update'};
-  el.innerHTML=items.map((a,i)=>{
-    const cls=i===0?'featured':i===3?'wide':'mini';
-    return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
-      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
-      <div class="nf-card-body">
-        <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
-        <div class="nf-card-title">${esc(a.title)}</div>
-        <div class="nf-card-excerpt">${esc(a.excerpt)}</div>
-        <div class="nf-read">Read more →</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderGallery(cat='all'){
-  const el=$('galleryGrid'); if(!el)return;
-  const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
-  el.innerHTML=items.map(g=>`
-    <div class="gallery-tile">
-      <div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji}</div>
-      <div class="gallery-tile-scrim"></div>
-      <div class="gallery-tile-cat">${g.cat}</div>
-      <div class="gallery-tile-title">${esc(g.title)}</div>
-    </div>`).join('');
-}
-
-function renderMods(cat='all'){
-  const el=$('modsGrid'); if(!el)return;
-  const items=cat==='all'?MODS_DATA:MODS_DATA.filter(m=>m.cat===cat);
-  el.innerHTML=items.map(m=>`
-    <div class="mod-card">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="mod-icon-box">${m.icon}</div>
-        <div class="mod-name">${esc(m.name)}</div>
-      </div>
-      <div class="mod-desc">${esc(m.desc)}</div>
-      <div class="mod-footer">
-        <div class="mod-dl">⬇️ ${m.dl} downloads</div>
-        <button class="btn-dl">Download</button>
-      </div>
-    </div>`).join('');
-  // also update tab grid
-  const tab=$('modsTabGrid'); if(tab)tab.innerHTML=el.innerHTML;
-}
-
-function renderCharacters(){
-  const el=$('charactersGrid'); if(!el)return;
-  const colors={pink:'var(--pink)',gold:'var(--gold)',cyan:'var(--cyan)',purple:'var(--purple)',green:'var(--green)'};
-  el.innerHTML=CHARACTERS_DATA.map(c=>`
-    <div class="character-card">
-      <div style="position:absolute;inset:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${c.emoji}</div>
-      <div class="character-scrim"></div>
-      <div class="character-role-pill">${c.role}</div>
-      <div class="character-overlay-name">${esc(c.first)}<span class="surname" style="color:${colors[c.color]||'var(--pink)'}">${esc(c.last)}</span></div>
-      <div class="character-arrow" style="background:${colors[c.color]||'var(--pink)'}">›</div>
-    </div>`).join('');
-}
-
-function renderGuides(game='all',type='all'){
-  const searchVal=($('guideSearch')?.value||'').toLowerCase();
-  let items=GUIDES_DATA.filter(j=>{
-    if(game!=='all'&&j.game!==game)return false;
-    if(type!=='all'&&j.type.toLowerCase()!==type)return false;
-    if(searchVal&&!j.title.toLowerCase().includes(searchVal))return false;
-    return true;
-  });
-  const completed=S.completedJobs||[];
-  const html=items.map(j=>{
-    const done=completed.includes(j.id);
-    return`<div class="card guide-card ${done?'completed':''}" id="guide-${j.id}">
-      <div class="card-thumb-ph" style="background:var(--bg3);font-size:42px;display:flex;align-items:center;justify-content:center">${j.emoji}</div>
-      <div class="card-body">
-        <div class="card-tags">
-          <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
-          <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
-          <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
-        </div>
-        <div class="card-title">${esc(j.title)}</div>
-        <div class="card-meta"><span style="color:var(--gold);font-weight:700">${j.reward}</span></div>
-      </div>
-      <div class="card-actions">
-        <button class="like-btn" onclick="G.openGuideDetail('${j.id}')">📖 View Steps</button>
-        <button class="like-btn ${done?'liked':''}" onclick="G.toggleGuideComplete('${j.id}',this)">${done?'✅ Done':'☐ Mark Done'}</button>
-      </div>
-    </div>`;
-  }).join('');
-  const g=$('guidesGrid'); if(g)g.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
-  const t=$('guidesTabGrid'); if(t)t.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
-  // update progress
-  const prog=$('guideProgressText');
-  if(prog)prog.textContent=`${completed.filter(id=>GUIDES_DATA.find(j=>j.id===id)).length} / ${GUIDES_DATA.length} Jobs Completed`;
-  // update stat
-  const stat=$('heroStatGuides'); if(stat)stat.textContent=GUIDES_DATA.length;
-}
 
 function renderSysReq(){
   const g=$('sysReqGrid'); if(!g)return;
@@ -1845,6 +1642,165 @@ function renderSysReq(){
       <div class="console-spec">${con.specs}</div>
     </div>`).join('');
 }
+
+G.checkPC = checkPC;
+</script>
+
+
+<!-- ══════════════════ FAQ SECTION ══════════════════ -->
+<style>
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:10px}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.faq-item summary{padding:14px 18px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--text);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:'+';font-size:20px;color:var(--gold);flex-shrink:0;transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item summary:hover{color:var(--gold)}
+.faq-answer{padding:0 18px 16px;font-size:13px;color:var(--text2);line-height:1.6}
+</style>
+      <!-- FAQ -->
+      <section class="section" id="faq">
+        <div class="section-header"><h2 class="section-title">💬 Frequently Asked Questions</h2></div>
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>Is GTA6HQ an official Rockstar Games website?</summary>
+            <div class="faq-answer">No. GTA6HQ is an independent, unofficial fan community site. We're not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive.</div>
+          </details>
+          <details class="faq-item">
+            <summary>When does GTA 6 release?</summary>
+            <div class="faq-answer">Rockstar has confirmed November 19, 2026 for PlayStation 5 and Xbox Series X|S. See the countdown at the top of the page for the exact time remaining.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Is GTA 6 coming to PC?</summary>
+            <div class="faq-answer">Not yet announced. Rockstar has historically released PC ports 12–18 months after console launch, but nothing official has been confirmed for GTA 6 PC as of this writing.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Where do the news articles on this site come from?</summary>
+            <div class="faq-answer">Our News section automatically pulls from established gaming outlets (IGN, Eurogamer, PC Gamer, Kotaku, Rock Paper Shotgun, GameSpot) filtered for GTA 6-related coverage, refreshed automatically throughout the day.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I contribute job guides or ask questions?</summary>
+            <div class="faq-answer">Yes — anyone can post a question in the Q&A section. Job guide submissions are curated by our admin team to keep quality high, alongside guides verified from public sources.</div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I report a bug or suggest a feature?</summary>
+            <div class="faq-answer">Join our Discord server (link in the sidebar and footer) — that's the fastest way to reach the team.</div>
+          </details>
+        </div>
+      </section>
+
+
+<!-- ══════════════════ POLICY SECTION ══════════════════ -->
+<style>
+/* ── POLICY ── */
+.policy-box{background:rgba(255,60,110,.04);border:1px solid rgba(255,60,110,.2);border-radius:var(--r2);padding:20px}
+.policy-title{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--pink);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.policy-rule{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;color:var(--text2)}
+.policy-rule:last-child{border-bottom:none}
+.rule-num{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--pink);min-width:24px}
+</style>
+      <!-- POLICY -->
+      <section class="section" id="policy">
+        <div class="section-header"><h2 class="section-title">⚠️ Community Rules &amp; Ban Policy</h2></div>
+        <div class="policy-box">
+          <div class="policy-title">⛔ 3-Strike System — Zero Tolerance</div>
+          <div class="policy-rule"><span class="rule-num">S1</span><div><strong style="color:var(--text)">Warning.</strong> First violation removes the offending content and issues a formal warning. Strike expires in 30 days with good behavior.</div></div>
+          <div class="policy-rule"><span class="rule-num">S2</span><div><strong style="color:var(--text)">7-day suspension.</strong> Posting rights revoked for 7 days. Permanent record entry.</div></div>
+          <div class="policy-rule"><span class="rule-num">S3</span><div><strong style="color:var(--text)">Permanent ban.</strong> Account banned, IP blocked. No appeal for hate speech, harassment, doxxing, or fraud.</div></div>
+          <div style="margin-top:14px;padding:13px;background:rgba(0,0,0,.2);border-radius:var(--r);font-size:12px;color:var(--text2)">
+            <strong style="color:var(--pink)">Instant permanent ban (no strikes):</strong> Doxxing · threats · NSFW content · spam bots · multiple accounts · VPN exploitation · hate speech · piracy links.
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /main col -->
+
+
+
+<!-- ══════════════════ SIDEBAR SECTION ══════════════════ -->
+<style>
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:18px}
+.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.sidebar-header{padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold)}
+.sidebar-body{padding:13px 16px}
+.nf-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.nf-item:last-child{border-bottom:none}
+.nf-item:hover{background:rgba(255,255,255,.03)}
+.nf-thumb{width:56px;height:40px;border-radius:5px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
+.nf-thumb img{width:100%;height:100%;object-fit:cover}
+.nf-info{flex:1}
+.nf-title{font-size:12px;font-weight:600;line-height:1.4;margin-bottom:3px}
+.nf-title:hover{color:var(--gold)}
+.nf-time{font-size:11px;color:var(--text3);font-family:var(--fu)}
+.social-links{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.social-btn{display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);font-size:12px;font-weight:600;color:var(--text);transition:.15s}
+.social-btn:hover{background:var(--card2)}
+.social-btn.discord:hover{border-color:#5865F2;color:#5865F2}
+.social-btn.instagram:hover{border-color:#e1306c;color:#e1306c}
+.social-btn.youtube:hover{border-color:#ff0000;color:#ff0000}
+.social-btn.twitter:hover{border-color:#1d9bf0;color:#1d9bf0}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sd-dc{background:#5865F2}.sd-ig{background:#e1306c}.sd-yt{background:#ff0000}.sd-tw{background:#1d9bf0}
+</style>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-header">📡 Auto News Feed</div>
+        <div class="sidebar-body" id="newsFeed"></div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-header">📲 Connect</div>
+        <div class="sidebar-body">
+          <div class="social-links">
+            <a class="social-btn discord" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener"><span class="sdot sd-dc"></span>Discord</a>
+            <a class="social-btn instagram" href="https://instagram.com/gta6hq" target="_blank" rel="noopener"><span class="sdot sd-ig"></span>Instagram</a>
+            <a class="social-btn youtube" href="https://youtube.com/@gta6hq" target="_blank" rel="noopener"><span class="sdot sd-yt"></span>YouTube</a>
+            <a class="social-btn twitter" href="https://x.com/gta6hq" target="_blank" rel="noopener"><span class="sdot sd-tw"></span>Twitter/X</a>
+          </div>
+          <div style="margin-top:12px;padding:10px;background:rgba(225,48,108,.06);border:1px solid rgba(225,48,108,.15);border-radius:var(--r);font-size:11px;color:var(--text2)">
+            📸 Tag <strong style="color:#e1306c">#GTA6HQ</strong> on Instagram to get featured.
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-header">🔍 Player Lookup</div>
+        <div class="sidebar-body">
+          <input class="id-input" type="text" id="playerIdInput" placeholder="#GTA6HQ-00001" style="width:100%;margin-bottom:8px"/>
+          <button class="btn-sid" style="width:100%" onclick="G.lookupPlayer()">Look Up Player</button>
+          <div id="playerResult" style="margin-top:10px"></div>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-header">📅 Upcoming Events</div>
+        <div class="sidebar-body" id="eventsList"></div>
+      </div>
+    </div>
+<script>
+'use strict';
+
+// ─ Player Lookup ─
+function lookupPlayer(){
+  const v=($('playerIdInput')?.value||'').trim(); if(!v)return;
+  setHTML('playerResult',`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+      <div style="width:38px;height:38px;border-radius:50%;background:rgba(240,180,41,.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center">🎮</div>
+      <div><div style="font-weight:700;font-size:13px">ViceCityKing</div><div style="font-size:11px;color:var(--gold);font-family:var(--fu)">${esc(v)}</div></div>
+    </div>
+    <div style="background:var(--bg2);padding:7px;border-radius:5px;text-align:center;margin-bottom:8px">
+      <div style="font-family:var(--fd);font-size:15px;font-weight:700;color:var(--cyan)">${Math.floor(Math.random()*800)+50}</div>
+      <div style="font-size:10px;color:var(--text3)">Posts</div>
+    </div>
+    <span style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700">Trusted Member</span>
+  </div>`);
+}
+
+const EVENTS_DATA = [
+  {date:'Nov 19, 2026',title:'GTA 6 Launch Day 🚀',note:'PS5 & Xbox Series X|S'},
+  {date:'TBA 2027',title:'GTA 6 PC Release 💻',note:'Unconfirmed — based on history'},
+  {date:'TBA',title:'GTA Online 6 Beta 🌐',note:'Rockstar historically launches ~3 months after'},
+];
 
 function renderSidebar(){
   // News feed — driven by CURRENT_NEWS so it stays in sync with the live/cached articles
@@ -1873,42 +1829,189 @@ function renderSidebar(){
   const ms=$('heroStatMods'); if(ms)ms.textContent=MODS_DATA.length;
 }
 
-// Extend G with guide helpers
-G.filterMods=(cat,btn)=>{
-  document.querySelectorAll('#modTabs .ntab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderMods(cat);
-};
-G.filterGuides=(game,btn)=>{
-  document.querySelectorAll('#guideGameTabs .ntab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderGuides(game);
-};
-G.renderEnhancedGuides=()=>renderGuides();
-G.toggleGuideComplete=(id,btn)=>{
-  if(!S.completedJobs)S.completedJobs=[];
-  const i=S.completedJobs.indexOf(id);
-  if(i>-1)S.completedJobs.splice(i,1); else S.completedJobs.push(id);
-  save(); renderGuides();
-  notify(S.completedJobs.includes(id)?'✅ Marked complete!':'☐ Unmarked');
-};
-G.openGuideDetail=(id)=>{
-  const j=GUIDES_DATA.find(x=>x.id===id); if(!j)return;
-  $('guideDetailTitle').textContent=`${j.emoji} ${j.title}`;
-  setHTML('guideDetailBody',`
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-      <span class="tag tag-guide">${j.game==='gta6'?'🌴 GTA 6':'🌆 GTA V'}</span>
-      <span class="tag" style="background:rgba(255,255,255,.06);color:var(--text2)">${j.type}</span>
-      <span class="tag" style="background:rgba(255,60,110,.1);color:var(--pink)">${j.diff}</span>
-      <span style="color:var(--gold);font-weight:700;font-size:14px;margin-left:auto">${j.reward}</span>
+G.lookupPlayer = lookupPlayer;
+</script>
+
+  </div><!-- /page-grid -->
+</div><!-- /outer pad -->
+
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">GTA<span>6</span>HQ</div>
+      <p class="footer-desc">The #1 independent GTA 6 community hub. Auto-updated news, mods, job guides, and character intel. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
     </div>
-    <h3 style="font-family:var(--fd);font-size:14px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Steps</h3>
-    ${j.steps.map((s,i)=>`<div class="guide-step"><strong>Step ${i+1}</strong>${esc(s)}</div>`).join('')}
-    <button class="btn-submit" style="margin-top:16px" onclick="G.toggleGuideComplete('${j.id}');G.closeModal('guide-detail-modal')">
-      ${(S.completedJobs||[]).includes(j.id)?'☐ Mark Incomplete':'✅ Mark as Complete'}
-    </button>`);
-  openModal('guide-detail-modal');
-};
+    <div>
+      <div class="footer-col-title">Explore</div>
+      <div class="footer-links">
+        <a href="#news">Latest News</a><a href="#mods">Mods</a>
+        <a href="#guides">Job Guides</a><a href="#characters">Characters</a>
+        <a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Community</div>
+      <div class="footer-links">
+        <a href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener">Discord Server</a>
+        <a href="https://instagram.com/gta6hq" target="_blank" rel="noopener">Instagram</a>
+        <a href="#policy">Community Rules</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Info</div>
+      <div class="footer-links">
+        <a href="#home">About GTA6HQ</a><a href="#policy">Privacy Policy</a>
+        <a href="#policy">Terms of Service</a><a href="#policy">DMCA</a>
+        <a href="mailto:contact@gta6hq.com">Contact Us</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025–2026 GTA6HQ.com — Fan site, not affiliated with Rockstar Games™ or Take-Two Interactive™</span>
+    <span>Grand Theft Auto 6 and GTA 6 are trademarks of their respective owners.</span>
+  </div>
+</footer>
+
+
+<!-- ── FLOATING BUTTONS ── -->
+<a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord" aria-label="Join our Discord server">💬</a>
+<button class="back-to-top" id="backToTopBtn" aria-label="Back to top" onclick="scrollToTop()">↑</button>
+
+
+<!-- ══════════════════ SHARED MODALS / ADMIN ══════════════════ -->
+<!-- ── TOAST ── -->
+<div class="notify" id="notifyToast"><span id="notifyMsg"></span></div>
+
+<!-- AUTH -->
+<div class="modal-overlay" id="auth-modal" onclick="G.closeModalOnOverlay(event,'auth-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title">Join GTA6HQ</div>
+      <button class="modal-close" onclick="G.closeModal('auth-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-tabs">
+        <div class="form-tab active" onclick="G.switchAuthTab('login',this)">Sign In</div>
+        <div class="form-tab" onclick="G.switchAuthTab('register',this)">Create Account</div>
+      </div>
+      <div id="auth-login">
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+        <button class="btn-submit" onclick="G.loginUser()">Sign In</button>
+      </div>
+      <div id="auth-register" style="display:none">
+        <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" placeholder="LuciaFan2026"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min 8 characters"/></div>
+        <button class="btn-submit" onclick="G.registerUser()">Create Account</button>
+      </div>
+    </div>
+    <div class="modal-footer">By joining you agree to our <a href="#policy" style="color:var(--gold)" onclick="G.closeModal('auth-modal')">Community Rules</a> and 3-Strike ban policy.</div>
+  </div>
+</div>
+
+<!-- GUIDE DETAIL -->
+<div class="modal-overlay" id="guide-detail-modal" onclick="G.closeModalOnOverlay(event,'guide-detail-modal')">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="guideDetailTitle">Job Details</div>
+      <button class="modal-close" onclick="G.closeModal('guide-detail-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body" id="guideDetailBody"></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="modal-overlay" id="admin-login-modal" onclick="G.closeModalOnOverlay(event,'admin-login-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--gold)">🔐 Admin Sign In</div>
+      <button class="modal-close" onclick="G.closeModal('admin-login-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="adminAuthModeNotice" style="display:none;background:rgba(255,60,110,.08);border:1px solid rgba(255,60,110,.25);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text2);margin-bottom:14px">
+        ⚠️ Firebase isn't configured yet — running in local demo mode. Admin status is only stored in your browser.
+      </div>
+      <div class="form-group"><label class="form-label">Admin Email</label><input class="form-input" type="email" id="adminEmail" placeholder="you@gta6hq.com"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="adminPassword" placeholder="••••••••"/></div>
+      <button class="btn-submit" onclick="G.adminSignIn()">Sign In</button>
+      <div id="adminAuthStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="modal-overlay" id="admin-dashboard-modal" onclick="G.closeModalOnOverlay(event,'admin-dashboard-modal')">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:720px">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--gold)">🛠️ Admin Dashboard</div>
+      <button class="modal-close" onclick="G.closeModal('admin-dashboard-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="adminDashStatus" style="font-size:12px;color:var(--text3);margin-bottom:12px"></div>
+      <div class="tabs">
+        <button class="tab active" onclick="G.switchDashTab('mods',this)">🔧 Mods</button>
+        <button class="tab" onclick="G.switchDashTab('characters',this)">👥 Characters</button>
+        <button class="tab" onclick="G.switchDashTab('gallery',this)">🖼️ Gallery</button>
+        <button class="tab" onclick="G.switchDashTab('sections',this)">➕ Custom Sections</button>
+        <button class="tab" onclick="G.switchDashTab('jobs',this)">📖 Job Sync Log</button>
+        <button class="tab" onclick="G.switchDashTab('site',this)">🎨 Site Settings</button>
+      </div>
+      <div id="dashPanel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SECTION -->
+<div class="modal-overlay" id="add-section-modal" onclick="G.closeModalOnOverlay(event,'add-section-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--green)">+ New Section</div>
+      <button class="modal-close" onclick="G.closeModal('add-section-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Section Name</label><input class="form-input" type="text" id="newSectionName" placeholder="e.g., Locations to Buy"/></div>
+      <div class="form-group"><label class="form-label">Icon (emoji)</label><input class="form-input" type="text" id="newSectionIcon" placeholder="📍" maxlength="4"/></div>
+      <button class="btn-submit" style="background:var(--green);color:#04220f" onclick="G.submitNewSection()">Create Section</button>
+      <div id="sectionSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SECTION ITEM -->
+<div class="modal-overlay" id="add-section-item-modal" onclick="G.closeModalOnOverlay(event,'add-section-item-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--green)">+ Add Item</div>
+      <button class="modal-close" onclick="G.closeModal('add-section-item-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="newItemSectionId"/>
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" id="newItemTitle" placeholder="e.g., Vice Beach Real Estate"/></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newItemDesc" rows="3" placeholder="What is this?"></textarea></div>
+      <div class="form-group"><label class="form-label">Price / Tag (optional)</label><input class="form-input" type="text" id="newItemPrice" placeholder="e.g., $2,500,000"/></div>
+      <div class="form-group"><label class="form-label">Link (optional)</label><input class="form-input" type="text" id="newItemLink" placeholder="https://…"/></div>
+      <div class="form-group"><label class="form-label">Image URL (optional)</label><input class="form-input" type="text" id="newItemImgUrl" placeholder="https://…"/></div>
+      <button class="btn-submit" style="background:var(--green);color:#04220f" onclick="G.submitNewSectionItem()">Publish Item</button>
+      <div id="sectionItemSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ BOOT (loads last) ══════════════════ -->
+<script>
+'use strict';
+
+function toggleNav(){
+  const nav=document.getElementById('navLinks'),btn=document.getElementById('hamburgerBtn');
+  if(!nav||!btn)return;
+  const open=nav.classList.toggle('open');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 
 // ─ Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
@@ -1943,31 +2046,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   if(!navigator.onLine) document.getElementById('offlineBanner')?.classList.add('show');
 });
-})();
 </script>
-
-<!-- ── HELPERS ── -->
-<script>
-function toggleNav(){
-  const nav=document.getElementById('navLinks'),btn=document.getElementById('hamburgerBtn');
-  if(!nav||!btn)return;
-  const open=nav.classList.toggle('open');
-  btn.setAttribute('aria-expanded',open?'true':'false');
-}
-function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
-function filterGallery(cat,btn){
-  document.querySelectorAll('#galleryTabs .tab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  if(typeof renderGallery==='function') renderGallery(cat);
-}
-function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
-function openAddCharacterModal(){G.openAddCharacterModal();}
-function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
-function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
-function lightboxNav(){}
-</script>
-
-<!-- ── SCROLL SPY ── -->
 <script>
 (()=>{
   const SECTIONS=['home','news','gallery','mods','guides','characters','qa','sysreq','faq','policy'];
@@ -1990,8 +2069,6 @@ function lightboxNav(){}
   document.addEventListener('DOMContentLoaded',onScroll);
 })();
 </script>
-
-<!-- ── COUNTDOWN ── -->
 <script>
 (()=>{
   const TARGET=new Date('2026-11-19T08:00:00').getTime();
@@ -2015,86 +2092,5 @@ function lightboxNav(){}
 })();
 </script>
 
- <script>
-// Auto-load GTA 6 news when page loads
-document.addEventListener('DOMContentLoaded', async function() {
-  const newsContainer = document.getElementById('newsListHome');
-  
-  // Wait a moment for Firebase to initialize
-  setTimeout(async () => {
-    try {
-      // Fetch live news from Firestore
-      const articles = await window.fetchLiveNews();
-      
-      if (!articles || articles.length === 0) {
-        newsContainer.innerHTML = '<p style="text-align:center; color:#666; padding:40px;">No news available yet. Check back soon!</p>';
-        return;
-      }
-      
-      // Clear container
-      newsContainer.innerHTML = '';
-      
-      // Create clickable card for each article
-      articles.forEach(article => {
-        const articleUrl = article.link || article.url || '#';
-        const title = article.title || 'Untitled';
-        const excerpt = article.excerpt || 'Click to read full article';
-        const category = article.category || 'NEWS';
-        const source = article.source || 'Gaming News';
-        const timestamp = article.timestamp ? new Date(article.timestamp).toLocaleDateString() : '';
-        
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        card.style.cssText = `
-          background: #1a1a1a;
-          border-radius: 12px;
-          padding: 20px;
-          border: 1px solid #333;
-          transition: transform 0.2s, border-color 0.2s;
-          cursor: pointer;
-        `;
-        
-        card.onmouseover = () => {
-          card.style.transform = 'translateY(-4px)';
-          card.style.borderColor = '#f39c12';
-        };
-        card.onmouseout = () => {
-          card.style.transform = 'translateY(0)';
-          card.style.borderColor = '#333';
-        };
-        
-        card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <span style="background:#f39c12; color:#000; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:bold; text-transform:uppercase;">
-              ${category}
-            </span>
-            <span style="color:#666; font-size:12px;">${source} • ${timestamp}</span>
-          </div>
-          <h3 style="color:#fff; margin:10px 0; font-size:18px; line-height:1.3;">${title}</h3>
-          <p style="color:#aaa; font-size:14px; margin:12px 0; line-height:1.5;">${excerpt}</p>
-          <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" 
-             style="display:inline-block; margin-top:15px; color:#e74c3c; text-decoration:none; font-weight:bold; font-size:14px;">
-            Read Full Article →
-          </a>
-        `;
-        
-        // Make entire card clickable
-        card.onclick = (e) => {
-          if (e.target.tagName !== 'A') {
-            window.open(articleUrl, '_blank');
-          }
-        };
-        
-        newsContainer.appendChild(card);
-      });
-      
-    } catch (error) {
-      console.error('Error loading news:', error);
-      newsContainer.innerHTML = '<p style="text-align:center; color:#e74c3c; padding:40px;">Failed to load news. Please refresh the page.</p>';
-    }
-  }, 500);
-});
-</script> 
- 
 </body>
 </html>
