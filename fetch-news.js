@@ -19,7 +19,9 @@ const FEEDS = [
 const GTA6_KEYWORDS = [
   'gta 6', 'gta6', 'grand theft auto 6', 'grand theft auto vi',
   'rockstar', 'vice city', 'lucia', 'jason', 'leonida' 'gta vi', 'gta6hq', 'rockstar games', 'trevor', 'next gta',
-  'open world', 'take-two', 'take two interactive', 'gta 5', 'gta v' 
+  'open world', 'take-two', 'take two interactive', 'gta 5', 'gta v', 'gta 5', 'gta5', 'gta v', 'grand theft auto 5', 'grand theft auto v',
+  'gtav', 'gta online', 'los santos', 'trevor', 'michael', 'franklin',
+  'grove street', 'san andreas',
 ];
 
 // category values MUST match the site's CSS classes (.nl-tag.official/.rumor/.update/
@@ -31,12 +33,22 @@ function detectCategory(text) {
   if (text.includes('gameplay') || text.includes('mechanic')) return 'gameplay';
   if (text.includes('rumor') || text.includes('leak')) return 'rumor';
   if (text.includes('official') || text.includes('release')) return 'official';
+  if (text.includes('trailer') || text.includes('teaser')) return 'trailer';
+  if (text.includes('music') || text.includes('soundtrack')) return 'music';
+  if (text.includes('multiplayer') || text.includes('online') || text.includes('co-op')) return 'online';
+  if (text.includes('weapon') || text.includes('gun') || text.includes('combat')) return 'weapons';
+  if (text.includes('pc') || text.includes('steam') || text.includes('system requirements')) return 'pc';
+
   return 'update';
 }
 
 const EMOJI = {
   official: '🚀', rumor: '🕵️', map: '🗺️', characters: '🎮',
-  vehicles: '🚗', gameplay: '🎯', update: '📰'
+  vehicles: '🚗', gameplay: '🎯', update: '📰' trailer: '🎬',
+  music: '🎵',
+  online: '🌐',
+  weapons: '🔫',
+  pc: '💻',
 };
 
 module.exports = async function handler(req, res) {
