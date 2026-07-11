@@ -303,6 +303,17 @@ window.fetchLiveNews = async function(){
     return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
   } catch(e){ console.error(e); return []; }
 };
+  window.fetchLiveGallery = async function(){
+  if(!db) return [];
+  try {
+    const q = query(
+      collection(db,'gallery'),
+      orderBy('timestamp','desc'),
+      limit(20)
+    );
+    return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
+  } catch(e){ console.error(e); return []; }
+};
 
 window.FB = {
   ready:!!(db&&auth),
@@ -923,7 +934,32 @@ G.openNewsDetail = (id)=>{
   img:'https://img.youtube.com/vi/fyBGCGbdZBY/maxresdefault.jpg'
 },
 ];
+async function initGallery(cat='all') {
+  const el = $('galleryGrid'); if(!el) return;
 
+  // Show skeletons while loading
+  el.innerHTML = Array(6).fill(
+    '<div class="skeleton" style="aspect-ratio:4/3;border-radius:8px"></div>'
+  ).join('');
+
+  try {
+    const live = await fetchLiveGallery();
+    if(live && live.length) {
+      GALLERY_DATA.length = 0;
+      GALLERY_DATA.push(...live.map(g => ({
+        id:       g.id,
+        title:    g.title    || 'GTA Image',
+        cat:      g.category || 'screenshot',
+        emoji:    '🖼️',
+        img:      g.imageUrl || null
+      })));
+    }
+  } catch(e) {
+    console.warn('Gallery fetch failed, using defaults', e);
+  }
+
+  renderGallery(cat);
+}
 function renderGallery(cat='all'){
   const el=$('galleryGrid'); if(!el)return;
   const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
@@ -938,12 +974,48 @@ function renderGallery(cat='all'){
       <div class="gallery-tile-title">${esc(g.title)}</div>
     </div>`).join('');
 }
-G.submitNewGalleryImage = ()=>notify('Image submitted!');
+G.submitNewGalleryImage = async () => {
+  const title    = $('newGalTitle')?.value?.trim();
+  const category = $('newGalCat')?.value;
+  const imageUrl = $('newGalImgUrl')?.value?.trim();
+
+  if(!title || !imageUrl){
+    notify('⚠️ Please fill in title and image URL');
+    return;
+  }
+
+  // Basic URL check
+  if(!imageUrl.startsWith('http')){
+    notify('⚠️ Image URL must start with https://');
+    return;
+  }
+
+  try {
+    const id = 'gallery_' + Date.now();
+    await window.FB.setDoc('gallery', id, {
+      title,
+      category,
+      imageUrl,
+      timestamp: new Date().toISOString()
+    });
+    notify('✅ Image added to gallery!');
+    G.closeModal('add-gallery-modal');
+    // Clear form
+    $('newGalTitle').value = '';
+    $('newGalImgUrl').value = '';
+    // Refresh gallery
+    await initGallery();
+  } catch(e) {
+    console.error(e);
+    notify('❌ Failed to save — check admin sign in');
+  }
+};
 
 function filterGallery(cat,btn){
   document.querySelectorAll('#galleryTabs .tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  if(typeof renderGallery==='function') renderGallery(cat);
+  renderGallery(cat); // just filter existing data, no re-fetch needed
+}
 }
 function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
 // 3. LIGHTBOX — full version, not empty
@@ -2096,7 +2168,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(cachedNews && cachedNews.items.length) CURRENT_NEWS=cachedNews.items;
   renderNews(CURRENT_NEWS);
 
-  renderGallery();
+  initGallery();
   renderMods();
   renderCharacters();
   renderGuides();
@@ -2108,6 +2180,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('fb-ready', ()=>{
     refreshNews(false);
     setInterval(()=>refreshNews(false), NEWS_REFRESH_MS);
+  },{once:true});
+   window.FB.onAuthChange(user => {
+      if(user) {
+        window.FB.getAdminDoc(user.uid).then(isAdminUser => {
+          if(isAdminUser) {
+            const btn = document.getElementById('addGalleryBtn');
+            if(btn) btn.style.display = 'block';
+          }
+        });
+      }
+    });
+
   },{once:true});
 
   // Reconnect handling
