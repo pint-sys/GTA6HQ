@@ -886,26 +886,35 @@ G.openNewsDetail = (id)=>{
 'use strict';
 
 const GALLERY_DATA = [
-  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
-  {id:'g2',title:'Lucia — Character Artwork',cat:'artwork',emoji:'🎨'},
-  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',emoji:'🏎️'},
-  {id:'g4',title:'Vice Beach 4K Wallpaper',cat:'wallpaper',emoji:'🌊'},
-  {id:'g5',title:'Supercar Lineup — Leaked',cat:'vehicle',emoji:'🚗'},
-  {id:'g6',title:'Florida Keys Environment',cat:'environment',emoji:'🌴'},
+  const GALLERY_DATA = [
+  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',
+   img:'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_VI_cover.jpg'},
+  {id:'g2',title:'Lucia — GTA 6 Protagonist',cat:'artwork',
+   img:'https://staticg.sportskeeda.com/editor/2023/12/c6c56-17031765557289-1920.jpg'},
+  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',
+   img:'https://staticg.sportskeeda.com/editor/2023/12/5e1bb-17031758971396-1920.jpg'},
+  {id:'g4',title:'Vice Beach — GTA 6',cat:'wallpaper',
+   img:'https://staticg.sportskeeda.com/editor/2023/12/39c10-17031761234567-1920.jpg'},
+  {id:'g5',title:'GTA V Los Santos Skyline',cat:'screenshot',
+   img:'https://upload.wikimedia.org/wikipedia/en/a/a5/GTA_V_Official_Cover_Art.jpg'},
+  {id:'g6',title:'Florida Keys Environment',cat:'environment',
+   img:'https://staticg.sportskeeda.com/editor/2023/12/abc12-17031762345678-1920.jpg'},
 ];
 
 function renderGallery(cat='all'){
   const el=$('galleryGrid'); if(!el)return;
   const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
   el.innerHTML=items.map(g=>`
-    <div class="gallery-tile">
-      <div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji}</div>
+    <div class="gallery-tile" onclick="openLightbox('${esc(g.img)}','${esc(g.title)}')">
+      ${g.img
+        ? `<img src="${esc(g.img)}" alt="${esc(g.title)}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.style.display='none'">`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji||'🖼️'}</div>`
+      }
       <div class="gallery-tile-scrim"></div>
       <div class="gallery-tile-cat">${g.cat}</div>
       <div class="gallery-tile-title">${esc(g.title)}</div>
     </div>`).join('');
 }
-
 G.submitNewGalleryImage = ()=>notify('Image submitted!');
 
 function filterGallery(cat,btn){
