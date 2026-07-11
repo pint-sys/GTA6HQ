@@ -2177,11 +2177,12 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // Once Firebase is ready: check if news needs a refresh (older than 3h or no cache),
   // then keep re-checking every 3 hours for as long as the tab stays open.
-  window.addEventListener('fb-ready', ()=>{
+window.addEventListener('fb-ready', ()=>{
     refreshNews(false);
     setInterval(()=>refreshNews(false), NEWS_REFRESH_MS);
-  },{once:true});
-   window.FB.onAuthChange(user => {
+
+    // ✅ INSIDE fb-ready — show upload button for admins
+    window.FB.onAuthChange(user => {
       if(user) {
         window.FB.getAdminDoc(user.uid).then(isAdminUser => {
           if(isAdminUser) {
@@ -2192,7 +2193,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       }
     });
 
-  },{once:true});
+  },{once:true});                           // ← only ONE closing here
 
   // Reconnect handling
   window.addEventListener('online',()=>{
