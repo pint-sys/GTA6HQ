@@ -1016,7 +1016,6 @@ function filterGallery(cat,btn){
   if(btn)btn.classList.add('active');
   renderGallery(cat); // just filter existing data, no re-fetch needed
 }
-}
 function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
 // 3. LIGHTBOX — full version, not empty
   let lightboxImages = [];
