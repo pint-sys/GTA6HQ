@@ -885,19 +885,43 @@ G.openNewsDetail = (id)=>{
 <script>
 'use strict';
 
-  const GALLERY_DATA = [
-  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',
-   img:'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_VI_cover.jpg'},
-  {id:'g2',title:'Lucia — GTA 6 Protagonist',cat:'artwork',
-   img:'https://staticg.sportskeeda.com/editor/2023/12/c6c56-17031765557289-1920.jpg'},
-  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',
-   img:'https://staticg.sportskeeda.com/editor/2023/12/5e1bb-17031758971396-1920.jpg'},
-  {id:'g4',title:'Vice Beach — GTA 6',cat:'wallpaper',
-   img:'https://staticg.sportskeeda.com/editor/2023/12/39c10-17031761234567-1920.jpg'},
-  {id:'g5',title:'GTA V Los Santos Skyline',cat:'screenshot',
-   img:'https://upload.wikimedia.org/wikipedia/en/a/a5/GTA_V_Official_Cover_Art.jpg'},
-  {id:'g6',title:'Florida Keys Environment',cat:'environment',
-   img:'https://staticg.sportskeeda.com/editor/2023/12/abc12-17031762345678-1920.jpg'},
+ const GALLERY_DATA = [
+  {
+    id:'g1', title:'GTA 6 — Official Trailer 1', cat:'screenshot', emoji:'🎬',
+    img:'https://img.youtube.com/vi/QdBZExpgErs/maxresdefault.jpg'
+  },
+  {
+    id:'g2', title:'GTA 6 — Official Trailer 2', cat:'screenshot', emoji:'🎬',
+    img:'https://img.youtube.com/vi/q7mlOaHYZjw/maxresdefault.jpg'
+  },
+  {
+    id:'g3', title:'GTA V — Official Trailer', cat:'artwork', emoji:'🎬',
+    img:'https://img.youtube.com/vi/QkkoHAzjnUs/maxresdefault.jpg'
+  },
+  {
+    id:'g4', title:'GTA 6 Gameplay Breakdown', cat:'wallpaper', emoji:'🎬',
+    img:'https://img.youtube.com/vi/fyBGCGbdZBY/maxresdefault.jpg'
+  },
+  {
+    id:'g5', title:'GTA V Los Santos Overview', cat:'environment', emoji:'🌆',
+    img:'https://img.youtube.com/vi/VnHGFEBNDhM/maxresdefault.jpg'
+  },
+  {
+    id:'g6', title:'GTA 6 Vice City First Look', cat:'environment', emoji:'🌴',
+    img:'https://img.youtube.com/vi/QdBZExpgErs/hqdefault.jpg'
+  },
+   {
+    id:'g7', title:'GTA 6 Official Cover Art', cat:'artwork', emoji:'🎨',
+    img:'https://www.rockstargames.com/VI/img/global/bg-hero.jpg''
+  },
+  {
+    id:'g8', title:'GTA V Cover Art', cat:'artwork', emoji:'🎨',
+    img:'https://www.rockstargames.com/V/img/global/screenshots/screenshot1.jpg'
+  },
+  {
+    id:'g10', title:'GTA V Los Santos', cat:'screenshot', emoji:'🌆',
+    img:'https://assets1.ignimgs.com/2023/12/05/gta6-1701810484533.jpg'
+  },
 ];
 
 function renderGallery(cat='all'){
