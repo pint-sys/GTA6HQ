@@ -371,7 +371,7 @@ function updateAdminUI(){
   const dashLink = $('adminDashLink');
   if (signInLink) signInLink.textContent = admin ? 'Admin Sign Out' : 'Admin Sign In';
   if (dashLink) dashLink.style.display = admin ? 'inline' : 'none';
-  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn','addMapPinBtn'].forEach(id=>{
+  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn','addMapPinBtn','reviewAnswersBtn'].forEach(id=>{
     const el = $(id);
     if (el) el.style.display = admin ? 'inline-block' : 'none';
   });
@@ -655,7 +655,7 @@ window.closeModal = closeModal;
       <div class="hero-actions">
         <button class="btn-hero btn-hg" onclick="G.openModal('auth-modal')">Join the Crew — Free</button>
         <button class="btn-hero btn-hp" onclick="document.getElementById('guides').scrollIntoView({behavior:'smooth'})">Browse Guides</button>
-        <button class="tab" onclick="G.openReviewAnswers()">📋 Review Answers</button>
+        <button class="tab" id="reviewAnswersBtn" style="display:none" onclick="G.openReviewAnswers()">📋 Review Answers</button>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
