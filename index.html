@@ -303,17 +303,6 @@ window.fetchLiveNews = async function(){
     return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
   } catch(e){ console.error(e); return []; }
 };
-  window.fetchLiveGallery = async function(){
-  if(!db) return [];
-  try {
-    const q = query(
-      collection(db,'gallery'),
-      orderBy('timestamp','desc'),
-      limit(20)
-    );
-    return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}));
-  } catch(e){ console.error(e); return []; }
-};
 
 window.FB = {
   ready:!!(db&&auth),
@@ -376,13 +365,24 @@ const openTab=id=>{const p=$(id);if(p){p.style.display='block';p.scrollTop=0;bod
 const closeTab=id=>{const p=$(id);if(p)p.style.display='none';bodyLock(false);}
 
 // ─ Admin ─
+function updateAdminUI(){
+  const admin = isAdmin();
+  const signInLink = $('adminToggleLink');
+  const dashLink = $('adminDashLink');
+  if (signInLink) signInLink.textContent = admin ? 'Admin Sign Out' : 'Admin Sign In';
+  if (dashLink) dashLink.style.display = admin ? 'inline' : 'none';
+  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn'].forEach(id=>{
+    const el = $(id);
+    if (el) el.style.display = admin ? 'inline-block' : 'none';
+  });
+}
 function adminLinkClick(){
-  if(isAdmin()){localStorage.setItem('gta6hq_is_admin','0');notify('Signed out of admin mode.');return;}
+  if(isAdmin()){localStorage.setItem('gta6hq_is_admin','0');notify('Signed out of admin mode.');updateAdminUI();return;}
   openModal('admin-login-modal');
 }
 function adminSignIn(){
   const e=($('adminEmail')?.value||'').trim(),p=$('adminPassword')?.value||'';
-  if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');}
+  if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');updateAdminUI();}
 }
 
 // ─ Global API (core/shared) ─
@@ -392,7 +392,7 @@ window.G = {
   submitQuestion: ()=>{closeModal('ask-modal');notify('Question posted!');},
   handleSearch: ()=>{},
   adminLinkClick, adminSignIn,
-  adminSignOut: ()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');},
+  adminSignOut: ()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');updateAdminUI();},
   openAdminDashboard: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('admin-dashboard-modal');},
   switchDashTab: ()=>{},
   openAddSectionModal: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
@@ -720,18 +720,17 @@ async function refreshNews(force){
     const live=await fetchLiveNews();
     if(live && live.length){
       const mapped=live.map(a=>{
-  const d=firestoreTimestampToDate(a.timestamp);
-  return{
-    id:a.id,
-    title:a.title||'Untitled',
-    excerpt:a.excerpt||'',
-    category:a.category||'update',
-    emoji:a.emoji||'📰',
-    url:a.url||null,
-    imageUrl: a.imageUrl || null,  // ✅ ADD THIS LINE
-    time:d?d.toLocaleDateString():(a.time||'Recent'),
-    _sortMs:d?d.getTime():0
-  };
+        const d=firestoreTimestampToDate(a.timestamp);
+        return{
+          id:a.id,
+          title:a.title||'Untitled',
+          excerpt:a.excerpt||'',
+          category:a.category||'update',
+          emoji:a.emoji||'📰',
+          url:a.url||null,
+          time:d?d.toLocaleDateString():(a.time||'Recent'),
+          _sortMs:d?d.getTime():0
+        };
       }).sort((x,y)=>y._sortMs-x._sortMs);
       applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
       if(force) notify('✅ News updated!');
@@ -748,12 +747,7 @@ function renderNewsTabList(cat){
   const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
   el.innerHTML=filtered.length?filtered.map(a=>`
       <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px">
-  ${a.imageUrl
-    ? `<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
-    : a.emoji||'📰'
-  }
-</div>
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
         <div class="ntp-body">
           <div class="ntp-title">${esc(a.title)}</div>
           <div class="ntp-excerpt">${esc(a.excerpt)}</div>
@@ -771,12 +765,7 @@ function renderNews(items){
   el.innerHTML=items.map((a,i)=>{
     const cls=i===0?'featured':i===3?'wide':'mini';
     return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
-     <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">
-  ${a.imageUrl
-    ? `<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'">`
-    : a.emoji||'📰'
-  }
-</div>
+      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
       <div class="nf-card-body">
         <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
         <div class="nf-card-title">${esc(a.title)}</div>
@@ -896,158 +885,40 @@ G.openNewsDetail = (id)=>{
 <script>
 'use strict';
 
- const GALLERY_DATA = [
-  {
-    id:'g1', title:'GTA 6 — Official Trailer 1', cat:'screenshot', emoji:'🎬',
-    img:'https://img.youtube.com/vi/QdBZExpgErs/maxresdefault.jpg'
-  },
-  {
-    id:'g2', title:'GTA 6 — Official Trailer 2', cat:'screenshot', emoji:'🎬',
-    img:'https://img.youtube.com/vi/q7mlOaHYZjw/maxresdefault.jpg'
-  },
-  {
-    id:'g3', title:'GTA V — Official Trailer', cat:'artwork', emoji:'🎬',
-    img:'https://img.youtube.com/vi/QkkoHAzjnUs/maxresdefault.jpg'
-  },
-  {
-    id:'g4', title:'GTA 6 Gameplay Breakdown', cat:'wallpaper', emoji:'🎬',
-    img:'https://img.youtube.com/vi/fyBGCGbdZBY/maxresdefault.jpg'
-  },
-  {
-    id:'g5', title:'GTA V Los Santos Overview', cat:'environment', emoji:'🌆',
-    img:'https://img.youtube.com/vi/VnHGFEBNDhM/maxresdefault.jpg'
-  },
-  {
-    id:'g6', title:'GTA 6 Vice City First Look', cat:'environment', emoji:'🌴',
-    img:'https://img.youtube.com/vi/QdBZExpgErs/hqdefault.jpg'
-  },
- {
-  id:'g7', title:'GTA 6 State of Leonida', cat:'environment', emoji:'🌴',
-  img:'https://img.youtube.com/vi/pVfYDa6XZLE/maxresdefault.jpg'
-},
-{
-  id:'g8', title:'GTA V Gameplay Trailer', cat:'artwork', emoji:'🎬',
-  img:'https://img.youtube.com/vi/QDHX3PZGB08/maxresdefault.jpg'
-},
-{
-  id:'g10', title:'GTA 6 Trailer Analysis', cat:'screenshot', emoji:'🎬',
-  img:'https://img.youtube.com/vi/fyBGCGbdZBY/maxresdefault.jpg'
-},
+const GALLERY_DATA = [
+  {id:'g1',title:'Vice City Skyline at Sunset',cat:'screenshot',emoji:'🌆'},
+  {id:'g2',title:'Lucia — Character Artwork',cat:'artwork',emoji:'🎨'},
+  {id:'g3',title:'Leonida Highway Chase',cat:'screenshot',emoji:'🏎️'},
+  {id:'g4',title:'Vice Beach 4K Wallpaper',cat:'wallpaper',emoji:'🌊'},
+  {id:'g5',title:'Supercar Lineup — Leaked',cat:'vehicle',emoji:'🚗'},
+  {id:'g6',title:'Florida Keys Environment',cat:'environment',emoji:'🌴'},
 ];
-async function initGallery(cat='all') {
-  const el = $('galleryGrid'); if(!el) return;
 
-  // Show skeletons while loading
-  el.innerHTML = Array(6).fill(
-    '<div class="skeleton" style="aspect-ratio:4/3;border-radius:8px"></div>'
-  ).join('');
-
-  try {
-    const live = await fetchLiveGallery();
-    if(live && live.length) {
-      GALLERY_DATA.length = 0;
-      GALLERY_DATA.push(...live.map(g => ({
-        id:       g.id,
-        title:    g.title    || 'GTA Image',
-        cat:      g.category || 'screenshot',
-        emoji:    '🖼️',
-        img:      g.imageUrl || null
-      })));
-    }
-  } catch(e) {
-    console.warn('Gallery fetch failed, using defaults', e);
-  }
-
-  renderGallery(cat);
-}
 function renderGallery(cat='all'){
   const el=$('galleryGrid'); if(!el)return;
   const items=cat==='all'?GALLERY_DATA:GALLERY_DATA.filter(g=>g.cat===cat);
   el.innerHTML=items.map(g=>`
-    <div class="gallery-tile" onclick="openLightbox('${esc(g.img)}','${esc(g.title)}')">
-      ${g.img
-        ? `<img src="${esc(g.img)}" alt="${esc(g.title)}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.style.display='none'">`
-        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji||'🖼️'}</div>`
-      }
+    <div class="gallery-tile">
+      <div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${g.emoji}</div>
       <div class="gallery-tile-scrim"></div>
       <div class="gallery-tile-cat">${g.cat}</div>
       <div class="gallery-tile-title">${esc(g.title)}</div>
     </div>`).join('');
 }
-G.submitNewGalleryImage = async () => {
-  const title    = $('newGalTitle')?.value?.trim();
-  const category = $('newGalCat')?.value;
-  const imageUrl = $('newGalImgUrl')?.value?.trim();
 
-  if(!title || !imageUrl){
-    notify('⚠️ Please fill in title and image URL');
-    return;
-  }
-
-  // Basic URL check
-  if(!imageUrl.startsWith('http')){
-    notify('⚠️ Image URL must start with https://');
-    return;
-  }
-
-  try {
-    const id = 'gallery_' + Date.now();
-    await window.FB.setDoc('gallery', id, {
-      title,
-      category,
-      imageUrl,
-      timestamp: new Date().toISOString()
-    });
-    notify('✅ Image added to gallery!');
-    G.closeModal('add-gallery-modal');
-    // Clear form
-    $('newGalTitle').value = '';
-    $('newGalImgUrl').value = '';
-    // Refresh gallery
-    await initGallery();
-  } catch(e) {
-    console.error(e);
-    notify('❌ Failed to save — check admin sign in');
-  }
-};
+G.submitNewGalleryImage = ()=>notify('Image submitted!');
 
 function filterGallery(cat,btn){
   document.querySelectorAll('#galleryTabs .tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  renderGallery(cat); // just filter existing data, no re-fetch needed
+  if(typeof renderGallery==='function') renderGallery(cat);
 }
 function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
-// 3. LIGHTBOX — full version, not empty
-  let lightboxImages = [];
-let lightboxIndex  = 0;
+function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
+function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
+function lightboxNav(){}
+</script>
 
-function openLightbox(imgUrl, caption){
-  lightboxImages = GALLERY_DATA.filter(g=>g.img).map(g=>({img:g.img,title:g.title}));
-  lightboxIndex  = lightboxImages.findIndex(g=>g.img===imgUrl);
-  if(lightboxIndex<0) lightboxIndex=0;
-  _showLightboxFrame();
-  document.getElementById('lightbox-overlay').classList.add('open');
-}
-
-function _showLightboxFrame(){
-  const item=lightboxImages[lightboxIndex]; if(!item)return;
-  document.getElementById('lightboxImg').src=item.img;
-  document.getElementById('lightboxCaption').textContent=item.title;
-}
-
-function lightboxNav(dir){
-  lightboxIndex=(lightboxIndex+dir+lightboxImages.length)%lightboxImages.length;
-  _showLightboxFrame();
-}
-
-function closeLightbox(){
-  document.getElementById('lightbox-overlay').classList.remove('open');
-}
-
-function closeLightboxOnOverlay(ev){
-  if(ev.target===document.getElementById('lightbox-overlay')) closeLightbox();
-}
- </script>
 
   <!-- 2-COL GRID -->
   <div class="page-grid">
@@ -1947,12 +1818,7 @@ function renderSidebar(){
   const nf=$('newsFeed'); if(nf){
     nf.innerHTML=CURRENT_NEWS.map(a=>`
       <div class="nf-item">
-        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3);overflow:hidden">
-  ${a.imageUrl
-    ? `<img src="${esc(a.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
-    : a.emoji||'📰'
-  }
-</div>
+        <div class="nf-thumb" style="font-size:22px;display:flex;align-items:center;justify-content:center;background:var(--bg3)">${a.emoji||'📰'}</div>
         <div class="nf-info">
           <div class="nf-title">${esc(a.title)}</div>
           <div class="nf-time">${a.time}</div>
@@ -2161,13 +2027,14 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 // ─ Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   renderQA();
+  updateAdminUI();
 
   // Load whatever news we have cached (up to 24h old) instantly, so the page never looks empty
   const cachedNews=loadNewsCache();
   if(cachedNews && cachedNews.items.length) CURRENT_NEWS=cachedNews.items;
   renderNews(CURRENT_NEWS);
 
-  initGallery();
+  renderGallery();
   renderMods();
   renderCharacters();
   renderGuides();
@@ -2176,23 +2043,10 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // Once Firebase is ready: check if news needs a refresh (older than 3h or no cache),
   // then keep re-checking every 3 hours for as long as the tab stays open.
-window.addEventListener('fb-ready', ()=>{
+  window.addEventListener('fb-ready', ()=>{
     refreshNews(false);
     setInterval(()=>refreshNews(false), NEWS_REFRESH_MS);
-
-    // ✅ INSIDE fb-ready — show upload button for admins
-    window.FB.onAuthChange(user => {
-      if(user) {
-        window.FB.getAdminDoc(user.uid).then(isAdminUser => {
-          if(isAdminUser) {
-            const btn = document.getElementById('addGalleryBtn');
-            if(btn) btn.style.display = 'block';
-          }
-        });
-      }
-    });
-
-  },{once:true});                           // ← only ONE closing here
+  },{once:true});
 
   // Reconnect handling
   window.addEventListener('online',()=>{
