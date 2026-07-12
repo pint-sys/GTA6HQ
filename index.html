@@ -187,8 +187,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 
 
 /* ── GRIDS ── */
-.news-grid,.mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
-.mods-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 
@@ -371,7 +370,7 @@ function updateAdminUI(){
   const dashLink = $('adminDashLink');
   if (signInLink) signInLink.textContent = admin ? 'Admin Sign Out' : 'Admin Sign In';
   if (dashLink) dashLink.style.display = admin ? 'inline' : 'none';
-  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn','addMapPinBtn','reviewAnswersBtn'].forEach(id=>{
+  ['addJobBtn','addCharacterBtn','addGalleryBtn','addMapPinBtn','reviewAnswersBtn'].forEach(id=>{
     const el = $(id);
     if (el) el.style.display = admin ? 'inline-block' : 'none';
   });
@@ -390,7 +389,7 @@ function adminSignIn(){
 }
 
 // ─ Admin Dashboard: per-tab content ─
-let currentDashTab = 'mods';
+let currentDashTab = 'characters';
 
 function dashListItem(label, sub, onRemoveJs){
   return `
@@ -535,7 +534,6 @@ window.closeModal = closeModal;
       <a href="#news">News</a>
       <a href="#gallery">Gallery</a>
       <a href="#map">Map</a>
-      <a href="#mods">Mods</a>
       <a href="#guides">Guides</a>
       <a href="#characters">Characters</a>
       <a href="#qa">Q&amp;A</a>
@@ -564,7 +562,6 @@ window.closeModal = closeModal;
     <a class="ptl" href="#news">📰 News</a>
     <a class="ptl" href="#gallery">🖼️ Gallery</a>
     <a class="ptl" href="#map">🗺️ Map</a>
-    <a class="ptl" href="#mods">🔧 Mods</a>
     <a class="ptl" href="#guides">📖 Guides</a>
     <a class="ptl" href="#characters">👥 Characters</a>
     <a class="ptl" href="#qa">❓ Q&amp;A</a>
@@ -1503,118 +1500,7 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
 </script>
 
 
-<!-- ══════════════════ MODS SECTION ══════════════════ -->
-<style>
-/* ── MOD CARDS ── */
-.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s}
-.mod-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
-.mod-icon-box{width:46px;height:46px;border-radius:10px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px}
-.mod-name{font-weight:700;font-size:14px}
-.mod-desc{font-size:13px;color:var(--text2);line-height:1.5}
-.mod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-.mod-dl{font-family:var(--fu);font-size:11px;color:var(--text3)}
-.btn-dl{background:var(--cyan);color:#0a0a0e;border:none;padding:5px 14px;border-radius:4px;font-family:var(--fu);font-size:12px;font-weight:700}
-.btn-dl:hover{background:var(--cyan2)}
-</style>
-      <!-- MODS -->
-      <section class="section" id="mods">
-        <div class="section-header">
-          <h2 class="section-title">🔧 Mods Database</h2>
-          <button class="btn btn-gold" id="addModBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Upload Mod</button>
-        </div>
-        <div class="mods-grid" id="modsGrid">
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-          <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
-        </div>
-        <button onclick="G.openModsTab()" style="width:100%;margin-top:14px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(0,212,255,.15)'" onmouseout="this.style.background='rgba(0,212,255,.07)'">🔧 Browse All Mods →</button>
-      </section>
-
       <div id="customSectionsContainer"></div>
-
-<!-- MODS TAB -->
-<div class="tab-page" id="mods-tab-page">
-  <div class="tab-page-hdr">
-    <div class="tab-page-hdr-inner">
-      <button class="tab-page-back" onclick="G.closeModsTab()">← Back</button>
-      <div class="tab-page-title">🔧 All Mods</div>
-      <button class="btn btn-gold" id="addModBtnTab" style="margin-left:auto;font-size:12px;padding:6px 14px;display:none" onclick="G.openAddModModal()">+ Add Mod</button>
-    </div>
-    <div class="tab-page-subtabs">
-      <button class="ntab active" onclick="G.filterMods('all',this)">All</button>
-      <button class="ntab" onclick="G.filterMods('gameplay',this)">Gameplay</button>
-      <button class="ntab" onclick="G.filterMods('visual',this)">Visual</button>
-      <button class="ntab" onclick="G.filterMods('vehicle',this)">Vehicles</button>
-      <button class="ntab" onclick="G.filterMods('weapon',this)">Weapons</button>
-    </div>
-  </div>
-  <div class="tab-page-content"><div class="mods-grid" id="modsTabGrid"></div></div>
-</div>
-
-<!-- ADD MOD -->
-<div class="modal-overlay" id="add-mod-modal" onclick="G.closeModalOnOverlay(event,'add-mod-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--cyan)">+ Add Mod</div>
-      <button class="modal-close" onclick="G.closeModal('add-mod-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Mod Name</label><input class="form-input" type="text" id="newModName" placeholder="e.g., Ultra Realism ENB"/></div>
-      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newModCat"><option value="visual">Visual</option><option value="gameplay">Gameplay</option><option value="vehicle">Vehicles</option><option value="weapon">Weapons</option></select></div>
-      <div class="form-group"><label class="form-label">Version</label><input class="form-input" type="text" id="newModVer" placeholder="e.g., v1.0.0"/></div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newModDesc" rows="3" placeholder="What does this mod do?"></textarea></div>
-      <div class="form-group"><label class="form-label">Download URL</label><input class="form-input" type="text" id="newModUrl" placeholder="https://…"/></div>
-      <div class="form-group"><label class="form-label">Thumbnail URL (optional)</label><input class="form-input" type="text" id="newModImgUrl" placeholder="https://…"/><div style="font-size:11px;color:var(--text3);margin-top:4px">Only use images you own the rights to.</div></div>
-      <button class="btn-submit" style="background:var(--cyan);color:#062028" onclick="G.submitNewMod()">Publish Mod</button>
-      <div id="modSubmitStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-'use strict';
-
-const MODS_DATA = [
-  {id:'m1',name:'Ultra Realism ENB v2.3',cat:'visual',icon:'🌅',desc:'Cinematic lighting overhaul with ray-traced reflections and volumetric fog. Based on RAGE 9 shaders.',dl:'12.4K'},
-  {id:'m2',name:'Vice City Redux Sounds',cat:'gameplay',icon:'🔊',desc:'Complete audio overhaul — 80s radio, ambient city sounds, and reworked weapon audio.',dl:'8.7K'},
-  {id:'m3',name:'Supercar Pack Vol.1',cat:'vehicle',icon:'🏎️',desc:'Adds 12 real-world supercars with custom handling, interiors, and damage models.',dl:'21.2K'},
-  {id:'m4',name:'Tactical Weapon Pack',cat:'weapon',icon:'🔫',desc:'Military-grade weapons with realistic reload animations and ballistic simulation.',dl:'15.9K'},
-  {id:'m5',name:'Photo Mode Pro',cat:'visual',icon:'📷',desc:'Advanced photo mode with depth of field, color grading, and filter presets.',dl:'6.3K'},
-  {id:'m6',name:'FPS Boost Optimizer',cat:'gameplay',icon:'⚡',desc:'Config tweaks and shader optimizations for lower-end GPUs. Gains of 20–35% reported.',dl:'44.1K'},
-];
-
-function renderMods(cat='all'){
-  const el=$('modsGrid'); if(!el)return;
-  const items=cat==='all'?MODS_DATA:MODS_DATA.filter(m=>m.cat===cat);
-  el.innerHTML=items.map(m=>`
-    <div class="mod-card">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="mod-icon-box">${m.icon}</div>
-        <div class="mod-name">${esc(m.name)}</div>
-      </div>
-      <div class="mod-desc">${esc(m.desc)}</div>
-      <div class="mod-footer">
-        <div class="mod-dl">⬇️ ${m.dl} downloads</div>
-        <button class="btn-dl">Download</button>
-      </div>
-    </div>`).join('');
-  // also update tab grid
-  const tab=$('modsTabGrid'); if(tab)tab.innerHTML=el.innerHTML;
-}
-
-G.filterMods = (cat,btn)=>{
-  document.querySelectorAll('#modTabs .ntab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderMods(cat);
-};
-G.openModsTab = ()=>openTab('mods-tab-page');
-G.closeModsTab = ()=>closeTab('mods-tab-page');
-G.openAddModModal = ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-mod-modal');};
-G.submitNewMod = ()=>notify('Mod submitted!');
-</script>
 
 
 <!-- ══════════════════ Q&A SECTION ══════════════════ -->
@@ -2202,7 +2088,7 @@ G.lookupPlayer = lookupPlayer;
     <div>
       <div class="footer-col-title">Explore</div>
       <div class="footer-links">
-        <a href="#news">Latest News</a><a href="#mods">Mods</a>
+        <a href="#news">Latest News</a>
         <a href="#guides">Job Guides</a><a href="#characters">Characters</a>
         <a href="#qa">Q&amp;A</a><a href="#sysreq">PC Requirements</a>
       </div>
