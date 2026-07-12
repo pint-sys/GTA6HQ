@@ -422,13 +422,7 @@ function renderDashPanel(tab){
   const el = $('dashPanel'); if(!el) return;
   currentDashTab = tab;
 
-  if (tab === 'mods') {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddModModal()">+ Add Mod</button>
-      </div>
-      ${MODS_DATA.map((m,i)=>dashListItem(m.name, `${m.cat} · ${m.dl} downloads`, `G.dashRemove('mods',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No mods yet.</p>'}`;
-  } else if (tab === 'characters') {
+  if (tab === 'characters') {
     el.innerHTML = `
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
         <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddCharacterModal()">+ Add Character</button>
@@ -490,11 +484,11 @@ window.G = {
   openAdminDashboard: ()=>{
     if(!isAdmin()){notify('Admin sign-in required.');return;}
     openModal('admin-dashboard-modal');
-    switchDashTab('mods', document.querySelector('#admin-dashboard-modal .tabs .tab'));
+    switchDashTab('characters', document.querySelector('#admin-dashboard-modal .tabs .tab'));
   },
   switchDashTab,
   dashRemove: (type, idx) => {
-    const map = { mods:[MODS_DATA,renderMods], characters:[CHARACTERS_DATA,renderCharacters], gallery:[GALLERY_DATA,renderGallery], guides:[GUIDES_DATA,renderGuides], mapPins:[MAP_DATA,renderMapPins] };
+    const map = { characters:[CHARACTERS_DATA,renderCharacters], gallery:[GALLERY_DATA,renderGallery], guides:[GUIDES_DATA,renderGuides], mapPins:[MAP_DATA,renderMapPins] };
     const entry = map[type]; if(!entry) return;
     const [arr, renderFn] = entry;
     arr.splice(idx, 1);
@@ -580,13 +574,13 @@ window.closeModal = closeModal;
       <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
       <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
       <span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
-      <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
+      <span class="ticker-item">🗺️ New interactive map with job & heist locations — unlocks at launch</span>
       <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured in the community spotlight</span>
       <span class="ticker-item">🚀 GTA 6 confirmed for November 19, 2026 on PS5 &amp; Xbox Series X|S</span>
       <span class="ticker-item">⚠️ PC version NOT yet announced by Rockstar — console first</span>
       <span class="ticker-item">🗺️ State of Leonida — Vice City + Grassrivers + Florida Keys-style map</span>
       <span class="ticker-item">🎮 Dual protagonists Jason &amp; Lucia confirmed — first female GTA lead</span>
-      <span class="ticker-item">🔧 New mod: Ultra Realism ENB v2.3 available in Mods section</span>
+      <span class="ticker-item">🗺️ New interactive map with job & heist locations — unlocks at launch</span>
       <span class="ticker-item">📱 Tag #GTA6HQ on Instagram to get featured in the community spotlight</span>
     </div>
   </div>
@@ -654,9 +648,8 @@ window.closeModal = closeModal;
         <button class="btn-hero btn-hp" onclick="document.getElementById('guides').scrollIntoView({behavior:'smooth'})">Browse Guides</button>
         <button class="tab" id="reviewAnswersBtn" style="display:none" onclick="G.openReviewAnswers()">📋 Review Answers</button>
       </div>
-      <div class="hero-stats">
+      <div class="hero-stats" style="grid-template-columns:repeat(2,1fr)">
         <div class="hero-stat"><div class="hero-stat-num">48.2K</div><div class="hero-stat-label">Members</div></div>
-        <div class="hero-stat"><div class="hero-stat-num" id="heroStatMods">--</div><div class="hero-stat-label">Mods</div></div>
         <div class="hero-stat"><div class="hero-stat-num" id="heroStatGuides">--</div><div class="hero-stat-label">Job Guides</div></div>
       </div>
     </div>
@@ -2067,8 +2060,6 @@ function renderSidebar(){
     // remove last border
     const last=ev.querySelector('div:last-child'); if(last)last.style.borderBottom='none';
   }
-  // Mods stat
-  const ms=$('heroStatMods'); if(ms)ms.textContent=MODS_DATA.length;
 }
 
 G.lookupPlayer = lookupPlayer;
@@ -2194,8 +2185,7 @@ G.lookupPlayer = lookupPlayer;
     <div class="modal-body">
       <div id="adminDashStatus" style="font-size:12px;color:var(--text3);margin-bottom:12px"></div>
       <div class="tabs">
-        <button class="tab active" onclick="G.switchDashTab('mods',this)">🔧 Mods</button>
-        <button class="tab" onclick="G.switchDashTab('characters',this)">👥 Characters</button>
+        <button class="tab active" onclick="G.switchDashTab('characters',this)">👥 Characters</button>
         <button class="tab" onclick="G.switchDashTab('gallery',this)">🖼️ Gallery</button>
         <button class="tab" onclick="G.switchDashTab('sections',this)">➕ Custom Sections</button>
         <button class="tab" onclick="G.switchDashTab('jobs',this)">📖 Job Sync Log</button>
@@ -2271,7 +2261,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderMapLock();
   renderMapPins();
   setInterval(()=>{ renderMapLock(); renderMapPins(); }, 60000); // catches the moment it unlocks without a page reload
-  renderMods();
   renderCharacters();
   renderGuides();
   renderSysReq();
@@ -2297,7 +2286,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 <script>
 (()=>{
-  const SECTIONS=['home','news','gallery','map','mods','guides','characters','qa','sysreq','faq','policy'];
+  const SECTIONS=['home','news','gallery','map','guides','characters','qa','sysreq','faq','policy'];
   let ticking=false;
   function onScroll(){
     const st=window.scrollY;
