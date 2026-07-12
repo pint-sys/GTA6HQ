@@ -371,7 +371,7 @@ function updateAdminUI(){
   const dashLink = $('adminDashLink');
   if (signInLink) signInLink.textContent = admin ? 'Admin Sign Out' : 'Admin Sign In';
   if (dashLink) dashLink.style.display = admin ? 'inline' : 'none';
-  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn'].forEach(id=>{
+  ['addJobBtn','addCharacterBtn','addModBtn','addModBtnTab','addGalleryBtn','addMapPinBtn'].forEach(id=>{
     const el = $(id);
     if (el) el.style.display = admin ? 'inline-block' : 'none';
   });
@@ -454,6 +454,12 @@ function renderDashPanel(tab){
         <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddJobModal()">+ Add Job Guide</button>
       </div>
       ${GUIDES_DATA.map((j,i)=>dashListItem(j.title, `${j.game.toUpperCase()} · ${j.type} · ${j.reward}`, `G.dashRemove('guides',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No job guides yet.</p>'}`;
+  } else if (tab === 'mapPins') {
+    const unlocked = (typeof isMapUnlocked==='function') ? isMapUnlocked() : false;
+    const pins = (typeof MAP_DATA!=='undefined') ? MAP_DATA : [];
+    el.innerHTML = `
+      <p style="color:var(--text3);font-size:12px;margin-bottom:12px">${unlocked ? 'Click "+ Add Pin" on the Map section, then click anywhere on the map to place a new pin.' : '🔒 The map unlocks at launch (Nov 19, 2026) — pins can be added once GTA 6 releases.'}</p>
+      ${pins.map((p,i)=>dashListItem(p.name, (MAP_CAT_LABEL&&MAP_CAT_LABEL[p.category])||p.category, `G.dashRemove('mapPins',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No pins yet.</p>'}`;
   } else if (tab === 'site') {
     const s = loadSiteSettings();
     el.innerHTML = `
@@ -489,7 +495,7 @@ window.G = {
   },
   switchDashTab,
   dashRemove: (type, idx) => {
-    const map = { mods:[MODS_DATA,renderMods], characters:[CHARACTERS_DATA,renderCharacters], gallery:[GALLERY_DATA,renderGallery], guides:[GUIDES_DATA,renderGuides] };
+    const map = { mods:[MODS_DATA,renderMods], characters:[CHARACTERS_DATA,renderCharacters], gallery:[GALLERY_DATA,renderGallery], guides:[GUIDES_DATA,renderGuides], mapPins:[MAP_DATA,renderMapPins] };
     const entry = map[type]; if(!entry) return;
     const [arr, renderFn] = entry;
     arr.splice(idx, 1);
@@ -528,6 +534,7 @@ window.closeModal = closeModal;
       <a href="#home" class="active">Home</a>
       <a href="#news">News</a>
       <a href="#gallery">Gallery</a>
+      <a href="#map">Map</a>
       <a href="#mods">Mods</a>
       <a href="#guides">Guides</a>
       <a href="#characters">Characters</a>
@@ -556,6 +563,7 @@ window.closeModal = closeModal;
     <a class="ptl active" href="#home">🏠 Home</a>
     <a class="ptl" href="#news">📰 News</a>
     <a class="ptl" href="#gallery">🖼️ Gallery</a>
+    <a class="ptl" href="#map">🗺️ Map</a>
     <a class="ptl" href="#mods">🔧 Mods</a>
     <a class="ptl" href="#guides">📖 Guides</a>
     <a class="ptl" href="#characters">👥 Characters</a>
@@ -1026,6 +1034,212 @@ function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1')
 function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
 function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
 function lightboxNav(){}
+</script>
+
+<!-- ══════════════════ MAP SECTION ══════════════════ -->
+<style>
+.map-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);background:#0d0518}
+.map-svg{width:100%;height:100%;display:block}
+.map-pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;transition:transform .15s;z-index:2}
+.map-pin:hover{transform:translate(-50%,-100%) scale(1.18)}
+.map-pin-dot{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.25)}
+.map-pin-dot span{display:block;transform:rotate(45deg);font-size:13px;line-height:1}
+.map-pin.heist .map-pin-dot{background:var(--pink)}
+.map-pin.job .map-pin-dot{background:var(--green)}
+.map-pin.collectible .map-pin-dot{background:var(--gold)}
+.map-pin.easter .map-pin-dot{background:var(--purple)}
+.map-pin.vehicle .map-pin-dot{background:var(--cyan)}
+.map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+.map-legend-item{display:flex;align-items:center;gap:6px;font-family:var(--fu);font-size:12px;color:var(--text2)}
+.map-legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.map-locked{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;background:rgba(10,10,14,.9);backdrop-filter:blur(3px);padding:20px}
+.map-locked-icon{font-size:44px}
+.map-locked-title{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.map-locked-sub{font-size:13px;color:var(--text2);max-width:380px;line-height:1.6}
+.map-placing-banner{background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:var(--gold);padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;gap:10px;font-family:var(--fu)}
+</style>
+<section class="section container" id="map">
+  <div class="section-header">
+    <h2 class="section-title">🗺️ Interactive Map <span class="auto-badge" style="margin-left:8px">⚡ Community Curated</span></h2>
+    <button class="btn btn-gold" id="addMapPinBtn" style="font-size:12px;padding:6px 14px;display:none" onclick="G.toggleMapPlacing()">+ Add Pin</button>
+  </div>
+  <div class="map-placing-banner" id="mapPlacingBanner">
+    <span>📍 Placement mode on — click anywhere on the map to drop a pin.</span>
+    <button class="btn-sid" style="background:var(--pink)" onclick="G.toggleMapPlacing()">Cancel</button>
+  </div>
+  <div class="tabs" id="mapTabs">
+    <button class="tab active" onclick="G.filterMap('all',this)">All</button>
+    <button class="tab" onclick="G.filterMap('heist',this)">💰 Heists</button>
+    <button class="tab" onclick="G.filterMap('job',this)">📋 Jobs</button>
+    <button class="tab" onclick="G.filterMap('collectible',this)">⭐ Collectibles</button>
+    <button class="tab" onclick="G.filterMap('easter',this)">🥚 Easter Eggs</button>
+    <button class="tab" onclick="G.filterMap('vehicle',this)">🚗 Vehicle Spawns</button>
+  </div>
+  <div class="map-wrap" id="mapWrap" onclick="G.handleMapClick(event)">
+    <svg class="map-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Original stylized illustrative map — not a reproduction of any leaked or licensed artwork -->
+      <defs>
+        <linearGradient id="mapWater" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1a0b2e"/>
+          <stop offset="1" stop-color="#2d1145"/>
+        </linearGradient>
+        <linearGradient id="mapLand" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#233a2b"/>
+          <stop offset="1" stop-color="#16281c"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="500" fill="url(#mapWater)"/>
+      <path d="M120 90 Q260 40 420 80 Q560 110 620 200 Q660 270 600 340 Q520 420 400 430 Q260 440 180 380 Q100 320 100 220 Q100 140 120 90 Z" fill="url(#mapLand)" stroke="#3a5a42" stroke-width="3"/>
+      <path d="M560 340 Q600 380 590 420 Q570 450 530 440 Q510 400 530 370 Q545 350 560 340 Z" fill="url(#mapLand)" stroke="#3a5a42" stroke-width="2"/>
+      <path d="M610 400 Q650 420 660 450 Q650 470 615 460 Q600 435 610 400 Z" fill="url(#mapLand)" stroke="#3a5a42" stroke-width="2"/>
+      <circle cx="330" cy="190" r="46" fill="#2a4030" opacity=".7"/>
+      <text x="330" y="196" text-anchor="middle" font-family="Oswald, sans-serif" font-size="13" fill="#f0b429" font-weight="700" letter-spacing="1">VICE CITY</text>
+      <text x="230" y="330" text-anchor="middle" font-family="Oswald, sans-serif" font-size="12" fill="#a0a0c0" letter-spacing="1">GRASSRIVERS</text>
+      <text x="600" y="410" text-anchor="middle" font-family="Oswald, sans-serif" font-size="11" fill="#a0a0c0" letter-spacing="1">THE KEYS</text>
+    </svg>
+    <div id="mapPinsLayer"></div>
+    <div class="map-locked" id="mapLocked">
+      <div class="map-locked-icon">🔒</div>
+      <div class="map-locked-title">Map Unlocks at Launch</div>
+      <div class="map-locked-sub">Job locations, heist markers, and collectibles go live the moment GTA 6 releases on November 19, 2026 — no early speculation, only confirmed in-game locations.</div>
+    </div>
+  </div>
+  <div class="map-legend">
+    <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--pink)"></span>Heists</div>
+    <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--green)"></span>Jobs</div>
+    <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--gold)"></span>Collectibles</div>
+    <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--purple)"></span>Easter Eggs</div>
+    <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--cyan)"></span>Vehicle Spawns</div>
+  </div>
+</section>
+
+<!-- ADD MAP PIN -->
+<div class="modal-overlay" id="add-pin-modal" onclick="G.closeModalOnOverlay(event,'add-pin-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--pink)">+ Add Map Pin</div>
+      <button class="modal-close" onclick="G.closeModal('add-pin-modal')" aria-label="Close dialog">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="newPinX"/>
+      <input type="hidden" id="newPinY"/>
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" type="text" id="newPinName" placeholder="e.g., Portsands Bank Heist"/></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-input" id="newPinCategory">
+          <option value="heist">Heist</option>
+          <option value="job">Job / Side Hustle</option>
+          <option value="collectible">Collectible</option>
+          <option value="easter">Easter Egg</option>
+          <option value="vehicle">Vehicle Spawn</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newPinDesc" rows="3" placeholder="What's here?"></textarea></div>
+      <button class="btn-submit" style="background:var(--pink)" onclick="G.submitNewPin()">Drop Pin</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// Original community-curated location data — starts empty until real, confirmed
+// in-game locations exist after release. Admins add pins via the "+ Add Pin" tool.
+let MAP_DATA = [];
+
+const MAP_RELEASE_TS = new Date('2026-11-19T08:00:00').getTime();
+let mapPlacingMode = false;
+let mapFilterCat = 'all';
+
+const MAP_CAT_EMOJI = { heist:'💰', job:'📋', collectible:'⭐', easter:'🥚', vehicle:'🚗' };
+const MAP_CAT_LABEL = { heist:'Heist', job:'Job / Side Hustle', collectible:'Collectible', easter:'Easter Egg', vehicle:'Vehicle Spawn' };
+
+function isMapUnlocked(){ return Date.now() >= MAP_RELEASE_TS; }
+
+function renderMapLock(){
+  const locked = $('mapLocked');
+  const wrap = $('mapWrap');
+  if(!locked || !wrap) return;
+  const unlocked = isMapUnlocked();
+  locked.style.display = unlocked ? 'none' : 'flex';
+  wrap.style.cursor = (unlocked && mapPlacingMode) ? 'crosshair' : '';
+}
+
+function renderMapPins(){
+  const layer = $('mapPinsLayer'); if(!layer) return;
+  if(!isMapUnlocked()){ layer.innerHTML=''; return; }
+  const items = mapFilterCat==='all' ? MAP_DATA : MAP_DATA.filter(p=>p.category===mapFilterCat);
+  layer.innerHTML = items.map((p,i)=>{
+    const realIdx = MAP_DATA.indexOf(p);
+    return `<div class="map-pin ${p.category}" style="left:${p.x}%;top:${p.y}%" onclick="event.stopPropagation();G.openMapPinDetail(${realIdx})">
+      <div class="map-pin-dot"><span>${MAP_CAT_EMOJI[p.category]||'📍'}</span></div>
+    </div>`;
+  }).join('') || '';
+}
+
+function openMapPinDetail(idx){
+  const p = MAP_DATA[idx]; if(!p) return;
+  $('guideDetailTitle').innerHTML = `📍 ${esc(p.name)}`;
+  setHTML('guideDetailBody', `
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span class="tag" style="background:rgba(255,255,255,.08);color:var(--text2)">${MAP_CAT_EMOJI[p.category]||'📍'} ${MAP_CAT_LABEL[p.category]||'Location'}</span>
+    </div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7">${esc(p.desc||'No details added yet.')}</p>
+  `);
+  openModal('guide-detail-modal');
+}
+
+function toggleMapPlacing(){
+  if(!isAdmin()){notify('Admin sign-in required.');return;}
+  if(!isMapUnlocked()){notify('Map unlocks at launch — pins can be added once GTA 6 releases.');return;}
+  mapPlacingMode = !mapPlacingMode;
+  const banner = $('mapPlacingBanner');
+  if(banner) banner.style.display = mapPlacingMode ? 'flex' : 'none';
+  renderMapLock();
+}
+
+function handleMapClick(ev){
+  if(!mapPlacingMode) return;
+  const wrap = $('mapWrap'); if(!wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  const x = ((ev.clientX - rect.left) / rect.width) * 100;
+  const y = ((ev.clientY - rect.top) / rect.height) * 100;
+  $('newPinX').value = x.toFixed(2);
+  $('newPinY').value = y.toFixed(2);
+  $('newPinName').value = '';
+  $('newPinDesc').value = '';
+  openModal('add-pin-modal');
+  mapPlacingMode = false;
+  const banner = $('mapPlacingBanner');
+  if(banner) banner.style.display = 'none';
+  renderMapLock();
+}
+
+function submitNewPin(){
+  const name = ($('newPinName').value||'').trim();
+  const category = $('newPinCategory').value;
+  const desc = ($('newPinDesc').value||'').trim();
+  const x = parseFloat($('newPinX').value);
+  const y = parseFloat($('newPinY').value);
+  if(!name){ notify('Please name this location.'); return; }
+  MAP_DATA.push({ name, category, desc, x, y });
+  closeModal('add-pin-modal');
+  renderMapPins();
+  if (typeof currentDashTab !== 'undefined') renderDashPanel(currentDashTab);
+  notify('📍 Pin added!');
+}
+
+function filterMap(cat, btn){
+  document.querySelectorAll('#mapTabs .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  mapFilterCat = cat;
+  renderMapPins();
+}
+
+G.toggleMapPlacing = toggleMapPlacing;
+G.handleMapClick = handleMapClick;
+G.submitNewPin = submitNewPin;
+G.filterMap = filterMap;
+G.openMapPinDetail = openMapPinDetail;
 </script>
 
 
@@ -2081,6 +2295,7 @@ G.lookupPlayer = lookupPlayer;
         <button class="tab" onclick="G.switchDashTab('gallery',this)">🖼️ Gallery</button>
         <button class="tab" onclick="G.switchDashTab('sections',this)">➕ Custom Sections</button>
         <button class="tab" onclick="G.switchDashTab('jobs',this)">📖 Job Sync Log</button>
+        <button class="tab" onclick="G.switchDashTab('mapPins',this)">🗺️ Map Pins</button>
         <button class="tab" onclick="G.switchDashTab('site',this)">🎨 Site Settings</button>
       </div>
       <div id="dashPanel"></div>
@@ -2149,6 +2364,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderNews(CURRENT_NEWS);
 
   renderGallery();
+  renderMapLock();
+  renderMapPins();
+  setInterval(()=>{ renderMapLock(); renderMapPins(); }, 60000); // catches the moment it unlocks without a page reload
   renderMods();
   renderCharacters();
   renderGuides();
@@ -2175,7 +2393,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 <script>
 (()=>{
-  const SECTIONS=['home','news','gallery','mods','guides','characters','qa','sysreq','faq','policy'];
+  const SECTIONS=['home','news','gallery','map','mods','guides','characters','qa','sysreq','faq','policy'];
   let ticking=false;
   function onScroll(){
     const st=window.scrollY;
