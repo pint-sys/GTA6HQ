@@ -385,6 +385,91 @@ function adminSignIn(){
   if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');updateAdminUI();}
 }
 
+// ─ Admin Dashboard: per-tab content ─
+let currentDashTab = 'mods';
+
+function dashListItem(label, sub, onRemoveJs){
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px">
+      <div>
+        <div style="font-weight:600;font-size:13px">${esc(label)}</div>
+        ${sub?`<div style="font-size:11px;color:var(--text3)">${esc(sub)}</div>`:''}
+      </div>
+      <button class="btn-sid" style="background:var(--pink);font-size:11px;padding:5px 10px" onclick="${onRemoveJs}">Remove</button>
+    </div>`;
+}
+
+// ─ Site Settings: persisted + actually applied to the page ─
+const SITE_SETTINGS_KEY = 'gta6hq_site_settings';
+const SITE_SETTINGS_DEFAULTS = { tickerEnabled: true, autoApproveAnswers: false };
+function loadSiteSettings(){
+  try{
+    const raw = localStorage.getItem(SITE_SETTINGS_KEY);
+    return raw ? { ...SITE_SETTINGS_DEFAULTS, ...JSON.parse(raw) } : { ...SITE_SETTINGS_DEFAULTS };
+  }catch(e){ return { ...SITE_SETTINGS_DEFAULTS }; }
+}
+function saveSiteSettings(s){ try{ localStorage.setItem(SITE_SETTINGS_KEY, JSON.stringify(s)); }catch(e){} }
+function applySiteSettings(){
+  const s = loadSiteSettings();
+  const ticker = document.querySelector('.ticker-wrap');
+  if(ticker) ticker.style.display = s.tickerEnabled ? 'flex' : 'none';
+}
+
+function renderDashPanel(tab){
+  const el = $('dashPanel'); if(!el) return;
+  currentDashTab = tab;
+
+  if (tab === 'mods') {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddModModal()">+ Add Mod</button>
+      </div>
+      ${MODS_DATA.map((m,i)=>dashListItem(m.name, `${m.cat} · ${m.dl} downloads`, `G.dashRemove('mods',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No mods yet.</p>'}`;
+  } else if (tab === 'characters') {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddCharacterModal()">+ Add Character</button>
+      </div>
+      ${CHARACTERS_DATA.map((c,i)=>dashListItem(`${c.first} ${c.last}`, c.role, `G.dashRemove('characters',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No characters yet.</p>'}`;
+  } else if (tab === 'gallery') {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="openAddGalleryModal()">+ Add Image</button>
+      </div>
+      ${GALLERY_DATA.map((g,i)=>dashListItem(g.title, g.cat, `G.dashRemove('gallery',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No images yet.</p>'}`;
+  } else if (tab === 'sections') {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddSectionModal()">+ New Section</button>
+      </div>
+      <p style="color:var(--text3);font-size:13px">Custom homepage sections you create will be listed here.</p>`;
+  } else if (tab === 'jobs') {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px">
+        <button class="btn-sid" onclick="G.syncCommunityJobs()">🔄 Check for New Job Guides</button>
+        <button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="G.openAddJobModal()">+ Add Job Guide</button>
+      </div>
+      ${GUIDES_DATA.map((j,i)=>dashListItem(j.title, `${j.game.toUpperCase()} · ${j.type} · ${j.reward}`, `G.dashRemove('guides',${i})`)).join('') || '<p style="color:var(--text3);font-size:13px">No job guides yet.</p>'}`;
+  } else if (tab === 'site') {
+    const s = loadSiteSettings();
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div><div style="font-weight:600;font-size:13px">Breaking news ticker</div><div style="font-size:11px;color:var(--text3)">Show the scrolling banner under the nav</div></div>
+        <input type="checkbox" ${s.tickerEnabled?'checked':''} onchange="G.toggleSiteSetting('tickerEnabled',this.checked)"/>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0">
+        <div><div style="font-weight:600;font-size:13px">Auto-approve Q&amp;A answers</div><div style="font-size:11px;color:var(--text3)">Publish answers immediately, skipping manual review</div></div>
+        <input type="checkbox" ${s.autoApproveAnswers?'checked':''} onchange="G.toggleSiteSetting('autoApproveAnswers',this.checked)"/>
+      </div>`;
+  }
+}
+
+function switchDashTab(tab, btn){
+  document.querySelectorAll('#admin-dashboard-modal .tabs .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderDashPanel(tab);
+}
+
 // ─ Global API (core/shared) ─
 window.G = {
   openModal, closeModal, closeModalOnOverlay,
@@ -393,8 +478,28 @@ window.G = {
   handleSearch: ()=>{},
   adminLinkClick, adminSignIn,
   adminSignOut: ()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');updateAdminUI();},
-  openAdminDashboard: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('admin-dashboard-modal');},
-  switchDashTab: ()=>{},
+  openAdminDashboard: ()=>{
+    if(!isAdmin()){notify('Admin sign-in required.');return;}
+    openModal('admin-dashboard-modal');
+    switchDashTab('mods', document.querySelector('#admin-dashboard-modal .tabs .tab'));
+  },
+  switchDashTab,
+  dashRemove: (type, idx) => {
+    const map = { mods:[MODS_DATA,renderMods], characters:[CHARACTERS_DATA,renderCharacters], gallery:[GALLERY_DATA,renderGallery], guides:[GUIDES_DATA,renderGuides] };
+    const entry = map[type]; if(!entry) return;
+    const [arr, renderFn] = entry;
+    arr.splice(idx, 1);
+    renderFn();
+    renderDashPanel(currentDashTab);
+    notify('🗑️ Removed.');
+  },
+  toggleSiteSetting: (key, value) => {
+    const s = loadSiteSettings();
+    s[key] = value;
+    saveSiteSettings(s);
+    applySiteSettings();
+    notify('✅ Setting updated.');
+  },
   openAddSectionModal: ()=>{if(!isAdmin()){notify('Admin sign-in required.');return;}openModal('add-section-modal');},
   submitNewSection: ()=>notify('Section created!'),
   submitNewSectionItem: ()=>notify('Item added!'),
@@ -1412,8 +1517,12 @@ function submitAnswer(){
   const text=($('answerText').value||'').trim();
   const author=($('answerAuthor').value||'').trim()||S.username;
   if(!text){notify('Please enter your answer.');return;}
-  pendingAnswers.push({id:'ans_'+Date.now(),questionId:qid,text,author,votes:0,status:'pending',submittedAt:new Date().toISOString(),userId:S.userId});
-  saveAnswers(); closeModal('answer-modal'); notify('✅ Answer submitted for review!'); renderQA();
+  const autoApprove = loadSiteSettings().autoApproveAnswers;
+  const newAnswer = {id:'ans_'+Date.now(),questionId:qid,text,author,votes:0,status: autoApprove ? 'approved' : 'pending',submittedAt:new Date().toISOString(),userId:S.userId};
+  if (autoApprove) { publishedAnswers.push(newAnswer); } else { pendingAnswers.push(newAnswer); }
+  saveAnswers(); closeModal('answer-modal');
+  notify(autoApprove ? '✅ Answer published!' : '✅ Answer submitted for review!');
+  renderQA();
 }
 
 function openQuestionDetail(id){
@@ -2028,6 +2137,7 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 document.addEventListener('DOMContentLoaded',()=>{
   renderQA();
   updateAdminUI();
+  applySiteSettings();
 
   // Load whatever news we have cached (up to 24h old) instantly, so the page never looks empty
   const cachedNews=loadNewsCache();
