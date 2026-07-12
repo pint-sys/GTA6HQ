@@ -1,7 +1,7 @@
 // api/fetch-news.js
 const Parser = require('rss-parser');
 
-// ✅ rss-parser needs these custom fields to extract images
+// rss-parser needs these custom fields to extract images
 const parser = new Parser({
   customFields: {
     item: [
@@ -22,14 +22,13 @@ const FEEDS = [
   'https://kotaku.com/rss',
   'https://www.pcgamer.com/rss/',
   'https://feeds.feedburner.com/ign/all',
-  'https://www.gamespot.com/feeds/mashup/', // ✅ Fixed: was missing comma before next entry
+  'https://www.gamespot.com/feeds/mashup/',
   'https://www.vg247.com/feed',
   'https://www.gamesradar.com/rss/',
   'https://screenrant.com/feed/',
   'https://www.polygon.com/rss/index.xml',
 ];
 
-// ✅ Fixed: removed duplicate keywords, fixed missing comma after 'leonida'
 const GTA6_KEYWORDS = [
   // GTA 6
   'gta 6', 'gta6', 'gta vi', 'grand theft auto 6', 'grand theft auto vi',
@@ -58,7 +57,6 @@ function detectCategory(text) {
   return 'update';
 }
 
-// ✅ Fixed: was missing comma after 'update: 📰'
 const EMOJI = {
   official:   '🚀',
   rumor:      '🕵️',
@@ -75,42 +73,32 @@ const EMOJI = {
   gta5:       '5️⃣',
 };
 
-// ✅ NEW: Extract real image from RSS item
+// Extract a real image from an RSS item
 function extractImage(item) {
-  // Method 1: media:content (most common - IGN, Kotaku, etc.)
   if (item['media:content']) {
     const mc = item['media:content'];
     if (mc.$ && mc.$.url) return mc.$.url;
     if (mc.url) return mc.url;
   }
-
-  // Method 2: media:thumbnail
   if (item['media:thumbnail']) {
     const mt = item['media:thumbnail'];
     if (mt.$ && mt.$.url) return mt.$.url;
     if (mt.url) return mt.url;
   }
-
-  // Method 3: enclosure (some feeds)
   if (item.enclosure && item.enclosure.url) {
     if (!item.enclosure.type || item.enclosure.type.startsWith('image/')) {
       return item.enclosure.url;
     }
   }
-
-  // Method 4: scrape first <img> from content:encoded
   const content = item['content:encoded'] || item.content || '';
   if (content) {
     const match = content.match(/<img[^>]+src=["']([^"']+)["']/i);
     if (match && match[1]) return match[1];
   }
-
-  // Method 5: scrape from contentSnippet og tags
   const snippet = item.contentSnippet || '';
   const ogMatch = snippet.match(/https?:\/\/[^\s"'<>]+\.(jpg|jpeg|png|webp|gif)/i);
   if (ogMatch) return ogMatch[0];
-
-  return null; // no image found
+  return null;
 }
 
 module.exports = async function handler(req, res) {
@@ -127,18 +115,17 @@ module.exports = async function handler(req, res) {
 
         if (GTA6_KEYWORDS.some(kw => combined.includes(kw))) {
           const category = detectCategory(combined);
-          const imageUrl = extractImage(item); // ✅ NEW: grab image
+          const imageUrl = extractImage(item);
 
           allArticles.push({
             title:     item.title,
             url:       item.link,
             excerpt:   (item.contentSnippet || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').slice(0, 200),
             source:    source,
-            // ✅ Fixed: timestamp stored as ISO string for Firestore REST API
             timestamp: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
             category:  category,
             emoji:     EMOJI[category] || '📰',
-            imageUrl:  imageUrl || null, // ✅ NEW
+            imageUrl:  imageUrl || null,
             id:        Buffer.from(item.link).toString('base64').replace(/[/+=]/g, '_').slice(0, 60),
           });
         }
@@ -158,7 +145,12 @@ module.exports = async function handler(req, res) {
 
   console.log(`📰 Found ${allArticles.length} articles`);
 
-  if (allArticles.length > 0 && FIREBASE_API_KEY) {
+  let saved = 0;
+  const errors = [];
+
+  if (!FIREBASE_API_KEY) {
+    console.warn('⚠️ FIREBASE_API_KEY not set — skipping Firestore write');
+  } else if (allArticles.length > 0) {
     const savePromises = allArticles.map(async (article) => {
       const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/automated_news/${article.id}?key=${FIREBASE_API_KEY}`;
 
@@ -167,38 +159,47 @@ module.exports = async function handler(req, res) {
         url:       { stringValue: article.url },
         excerpt:   { stringValue: article.excerpt },
         source:    { stringValue: article.source },
-        timestamp: { timestampValue: article.timestamp }, // ISO string works with Firestore REST
+        timestamp: { timestampValue: article.timestamp },
         category:  { stringValue: article.category },
         emoji:     { stringValue: article.emoji },
       };
 
-      // ✅ NEW: Only add imageUrl field if we actually have one
       if (article.imageUrl) {
         fields.imageUrl = { stringValue: article.imageUrl };
       }
 
       try {
-        await fetch(url, {
+        const resp = await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fields })
         });
+        if (resp.ok) {
+          saved++;
+        } else {
+          const body = await resp.text();
+          console.error(`❌ Firestore rejected "${article.title}": ${resp.status} ${body}`);
+          errors.push({ title: article.title, status: resp.status, detail: body.slice(0, 300) });
+        }
       } catch (e) {
-        console.error(`❌ Failed to save "${article.title}": ${e.message}`);
+        console.error(`❌ Network error saving "${article.title}": ${e.message}`);
+        errors.push({ title: article.title, status: 0, detail: e.message });
       }
     });
 
     await Promise.all(savePromises);
-    console.log(`✅ Saved ${allArticles.length} articles to Firestore`);
-  } else if (!FIREBASE_API_KEY) {
-    console.warn('⚠️ FIREBASE_API_KEY not set — skipping Firestore write');
+    console.log(`✅ Saved ${saved}/${allArticles.length} articles to Firestore (${errors.length} failed)`);
   }
 
   res.status(200).json({
-    success: true,
-    count: allArticles.length,
-    message: `Updated ${allArticles.length} articles.`,
-    // ✅ NEW: shows how many had images in the response
+    success: !!FIREBASE_API_KEY && errors.length === 0,
+    found: allArticles.length,
+    saved: saved,
+    failed: errors.length,
+    errors: errors.slice(0, 5),
     withImages: allArticles.filter(a => a.imageUrl).length,
+    message: FIREBASE_API_KEY
+      ? `Found ${allArticles.length}, saved ${saved}, failed ${errors.length}.`
+      : 'FIREBASE_API_KEY environment variable is missing in Vercel. Nothing was saved.'
   });
 };
