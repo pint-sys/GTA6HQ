@@ -382,7 +382,11 @@ function adminLinkClick(){
 }
 function adminSignIn(){
   const e=($('adminEmail')?.value||'').trim(),p=$('adminPassword')?.value||'';
-  if(e&&p){localStorage.setItem('gta6hq_is_admin','1');notify('✅ Demo admin mode on.');closeModal('admin-login-modal');updateAdminUI();}
+  if(e&&p){
+    localStorage.setItem('gta6hq_is_admin','1');
+    if(!S.loggedIn){ S.loggedIn=true; S.username='Admin'; S.userId=S.userId||`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`; save(); }
+    notify('✅ Demo admin mode on.');closeModal('admin-login-modal');updateAdminUI();
+  }
 }
 
 // ─ Admin Dashboard: per-tab content ─
@@ -1505,7 +1509,7 @@ function renderQA(list){
 }
 
 function openAnswerModal(qid){
-  if(!S.loggedIn){notify('Please sign in to submit an answer.');openModal('auth-modal');return;}
+  if(!S.loggedIn && !isAdmin()){notify('Please sign in to submit an answer.');openModal('auth-modal');return;}
   $('answerQuestionId').value=qid;
   $('answerText').value='';
   $('answerAuthor').value=S.username;
@@ -1555,7 +1559,7 @@ function openQuestionDetail(id){
 }
 
 function voteAnswer(id){
-  if(!S.loggedIn){notify('Please sign in to vote.');openModal('auth-modal');return;}
+  if(!S.loggedIn && !isAdmin()){notify('Please sign in to vote.');openModal('auth-modal');return;}
   const a=publishedAnswers.find(x=>x.id===id);
   if(a){a.votes++;saveAnswers();renderQA();notify('✓ Voted!');}
 }
