@@ -733,6 +733,12 @@ window.closeModal = closeModal;
 .nl-tag.vehicles{background:rgba(0,212,255,.12);color:var(--cyan)}
 .nl-tag.map{background:rgba(0,212,255,.12);color:var(--cyan)}
 .nl-tag.gameplay{background:rgba(0,230,118,.1);color:var(--green)}
+.nl-tag.trailer{background:rgba(255,60,110,.12);color:var(--pink)}
+.nl-tag.music{background:rgba(168,85,247,.14);color:var(--purple)}
+.nl-tag.online{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.weapons{background:rgba(240,180,41,.15);color:var(--gold)}
+.nl-tag.pc{background:rgba(0,212,255,.12);color:var(--cyan)}
+.nl-tag.gta5{background:rgba(255,255,255,.08);color:var(--text2)}
 </style>
   <!-- NEWS -->
   <section class="section container" id="news">
@@ -845,6 +851,7 @@ async function refreshNews(force){
           category:a.category||'update',
           emoji:a.emoji||'📰',
           url:a.url||null,
+          imageUrl:a.imageUrl||null,
           time:d?d.toLocaleDateString():(a.time||'Recent'),
           _sortMs:d?d.getTime():0
         };
@@ -858,13 +865,22 @@ async function refreshNews(force){
   if(cache){ applyNews(cache.items,false); }
   else if(force){ notify('📰 No new articles found.'); }
 }
+
+// Renders a real article thumbnail when we have one, falling back to the emoji box otherwise.
+function newsThumbHTML(a, fontSize){
+  if (a.imageUrl) {
+    return `<img src="${esc(a.imageUrl)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='${(a.emoji||'📰').replace(/'/g,"\\'")}'"/>`;
+  }
+  return a.emoji || '📰';
+}
+
 function renderNewsTabList(cat){
   newsTabActiveCat=cat;
   const el=document.getElementById('newsTabList'); if(!el) return;
   const filtered=cat==='all'?CURRENT_NEWS:CURRENT_NEWS.filter(a=>a.category===cat);
   el.innerHTML=filtered.length?filtered.map(a=>`
       <div class="ntp-item" onclick="G.openNewsDetail('${a.id}')">
-        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px">${a.emoji||'📰'}</div>
+        <div style="width:88px;height:62px;border-radius:6px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden">${newsThumbHTML(a)}</div>
         <div class="ntp-body">
           <div class="ntp-title">${esc(a.title)}</div>
           <div class="ntp-excerpt">${esc(a.excerpt)}</div>
@@ -882,7 +898,7 @@ function renderNews(items){
   el.innerHTML=items.map((a,i)=>{
     const cls=i===0?'featured':i===3?'wide':'mini';
     return`<div class="nf-card ${cls}" onclick="G.openNewsDetail('${a.id}')">
-      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'}">${a.emoji||'📰'}</div>
+      <div class="nf-card-img" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:${cls==='featured'?'64px':'40px'};overflow:hidden">${newsThumbHTML(a)}</div>
       <div class="nf-card-body">
         <div class="nf-eyebrow"><span class="${cats[a.category]||'cat-update'}">${a.category?.toUpperCase()||'NEWS'}</span><span class="sep">·</span><span style="color:var(--text3)">${a.time}</span></div>
         <div class="nf-card-title">${esc(a.title)}</div>
@@ -912,6 +928,7 @@ G.openNewsDetail = (id)=>{
   const a=CURRENT_NEWS.find(x=>x.id===id); if(!a)return;
   $('guideDetailTitle').innerHTML=`${a.emoji||'📰'} ${esc(a.title)}`;
   setHTML('guideDetailBody',`
+    ${a.imageUrl?`<img src="${esc(a.imageUrl)}" alt="" style="width:100%;border-radius:var(--r);margin-bottom:14px;max-height:220px;object-fit:cover" onerror="this.remove()"/>`:''}
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
       <span class="nl-tag ${a.category||'update'}">${(a.category||'news').toUpperCase()}</span>
       <span style="color:var(--text3);font-size:12px">${a.time||''}</span>
@@ -922,6 +939,7 @@ G.openNewsDetail = (id)=>{
   openModal('guide-detail-modal');
 };
 </script>
+
 
 
 <!-- ══════════════════ GALLERY SECTION ══════════════════ -->
