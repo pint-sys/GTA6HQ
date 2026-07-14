@@ -17,7 +17,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Proza+Libre:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* ── TOKENS ── */
 :root{
   --bg:#0a0a0e;--bg2:#111118;--bg3:#18181f;
   --card:#1a1a23;--card2:#1e1e28;
@@ -32,9 +31,6 @@
   --fb:'Proza Libre',sans-serif;
   --fu:'Inter',sans-serif;
 }
-
-
-/* ── RESET & BASE ── */
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:16px;line-height:1.6;overflow-x:hidden}
@@ -48,26 +44,14 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 .skip-link{position:absolute;top:-48px;left:8px;z-index:10000;background:var(--gold);color:#111;padding:10px 18px;border-radius:0 0 8px 8px;font-family:var(--fu);font-weight:700;font-size:13px;transition:top .15s}
 .skip-link:focus{top:0}
-
-
-/* ── SCROLL PROGRESS ── */
 .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--gold));z-index:10001;width:0%;transition:width .1s linear}
-
-
-/* ── OFFLINE BANNER ── */
 .offline-banner{position:fixed;top:0;left:0;right:0;background:var(--pink);color:#fff;text-align:center;padding:9px 16px;font-family:var(--fu);font-size:13px;font-weight:600;z-index:10002;transform:translateY(-100%);transition:transform .25s ease}
 .offline-banner.show{transform:translateY(0)}
-
-
-/* ── TOP BAR ── */
 .topbar{background:#0d0d14;border-bottom:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;font-family:var(--fu);font-size:12px;color:var(--text3)}
 .topbar a{color:var(--gold);margin-left:12px}
 .live-badge{display:inline-flex;align-items:center;gap:5px;color:var(--pink)}
 .live-dot{width:7px;height:7px;background:var(--pink);border-radius:50%;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-
-
-/* ── NAV ── */
 nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
 .nav-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;height:60px;gap:0}
 .logo{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-right:24px;flex-shrink:0}
@@ -85,7 +69,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .btn-gold:hover{background:var(--gold2)}
 .btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-/* hamburger */
 .hamburger-btn{flex-direction:column;justify-content:center;align-items:center;gap:4px;width:34px;height:34px;background:transparent;border:1px solid var(--border2);border-radius:6px;flex-shrink:0;display:none}
 .hamburger-btn span{width:16px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
 .hamburger-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
@@ -97,17 +80,11 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
   .nav-links.open{max-height:400px}
   .nav-links a{padding:14px 20px;border-bottom:1px solid var(--border);border-radius:0}
 }
-
-
-/* ── PAGE TABS ── */
 .page-tabs{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:900}
 .page-tabs-inner{max-width:1300px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;gap:0}
 .ptl{font-family:var(--fu);font-size:13px;font-weight:500;padding:12px 16px;border:none;background:transparent;color:var(--text3);border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;display:block}
 .ptl:hover{color:var(--text)}
 .ptl.active{color:var(--gold);border-bottom-color:var(--gold)}
-
-
-/* ── TICKER ── */
 .ticker-wrap{background:var(--pink);overflow:hidden;height:36px;display:flex;align-items:center}
 .ticker-label{background:var(--bg);color:var(--pink);font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:0 16px;height:100%;display:flex;align-items:center;flex-shrink:0}
 .ticker-inner{overflow:hidden;flex:1}
@@ -115,9 +92,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .ticker-track:hover{animation-play-state:paused}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{padding:0 36px;font-family:var(--fu);font-size:13px;font-weight:600;color:#fff}
-
-
-/* ── HERO ── */
 .hero{position:relative;min-height:520px;display:flex;align-items:center;overflow:hidden;background:#150a24}
 .hero-scene{position:absolute;inset:0;z-index:0}
 .hero-scene svg{width:100%;height:100%;display:block}
@@ -138,9 +112,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .hero-stat{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
 .hero-stat-num{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--gold)}
 .hero-stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-
-
-/* ── COUNTDOWN ── */
 .countdown-box{background:var(--bg2);border:1px solid rgba(240,180,41,.2);border-radius:var(--r2);padding:20px;text-align:center}
 .cd-title{font-family:var(--fd);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
 .cd-units{display:flex;justify-content:center;gap:12px}
@@ -152,9 +123,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .cd-done{font-family:var(--fd);font-size:26px;font-weight:700;letter-spacing:1px;color:var(--gold);text-transform:uppercase;padding:6px 0}
 @media(max-width:960px){.hero-content{grid-template-columns:1fr}}
 @media(max-width:600px){.hero-stats{grid-template-columns:1fr 1fr}.cd-units{gap:6px}.cd-unit{padding:8px 10px;min-width:50px}.cd-num{font-size:24px}}
-
-
-/* ── LAYOUT ── */
 .container{max-width:1300px;margin:0 auto;padding:0 20px}
 .section{padding:44px 0}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--border)}
@@ -164,9 +132,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .hero-scroll-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text3);font-family:var(--fu);font-size:11px;text-transform:uppercase;letter-spacing:1px;z-index:3;animation:bounce 2s infinite}
 .hero-scroll-indicator svg{width:18px;height:18px}
 @keyframes bounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
-
-
-/* ── CARDS ── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:.2s}
 .card:hover{border-color:var(--border2);transform:translateY(-2px)}
 .card-thumb-ph{width:100%;aspect-ratio:16/9;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
@@ -189,22 +154,13 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .like-btn{display:flex;align-items:center;gap:5px;font-family:var(--fu);font-size:12px;color:var(--text3);padding:4px 8px;border-radius:4px;border:none;background:transparent;transition:.15s}
 .like-btn:hover{color:var(--pink);background:rgba(255,60,110,.08)}
 .like-btn.liked{color:var(--pink)}
-
-
-/* ── GRIDS ── */
 .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 .characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-
-
-/* ── TABS ── */
 .tabs{display:flex;gap:3px;margin-bottom:16px;flex-wrap:wrap}
 .tab{font-family:var(--fu);font-size:12px;font-weight:500;padding:7px 14px;border:1px solid var(--border);background:var(--bg3);color:var(--text3);border-radius:20px;transition:.15s}
 .tab:hover{color:var(--text);border-color:var(--border2)}
 .tab.active{background:var(--gold);color:#111;border-color:var(--gold)}
-
-
-/* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:440px;overflow:hidden;max-height:90vh;overflow-y:auto}
@@ -225,9 +181,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .btn-submit{width:100%;background:var(--gold);color:#111;border:none;padding:11px;border-radius:var(--r);font-family:var(--fd);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:.15s;margin-top:4px}
 .btn-submit:hover{background:var(--gold2)}
 .modal-footer{padding:12px 22px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text3)}
-
-
-/* ── TAB PAGES (full-screen overlays) ── */
 .tab-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:3500;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .tab-page-hdr{position:sticky;top:0;background:rgba(10,10,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10}
 .tab-page-hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;height:54px;gap:14px;padding:0 20px}
@@ -239,9 +192,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .ntab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);padding:10px 16px;font-family:var(--fu);font-size:13px;font-weight:600;white-space:nowrap;transition:.15s}
 .ntab:hover{color:var(--gold)}.ntab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-page-content{max-width:1100px;margin:0 auto;padding:20px}
-
-
-/* ── MISC UI ── */
 .notify{position:fixed;bottom:22px;right:22px;background:var(--green);color:#0a0a0e;padding:10px 18px;border-radius:8px;font-family:var(--fu);font-size:13px;font-weight:700;z-index:6000;transform:translateY(80px);transition:.3s;max-width:320px}
 .notify.show{transform:translateY(0)}
 .disc-float{position:fixed;bottom:22px;right:22px;background:#5865F2;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1500;box-shadow:0 4px 18px rgba(88,101,242,.4);transition:.2s;font-size:22px}
@@ -261,9 +211,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,14,.97);backdrop-fi
 .skel-line{height:12px;margin:10px 14px}
 .skel-line.short{width:60%}
 .skel-line.tiny{height:9px;width:40%;margin-top:6px}
-
-
-/* ── FOOTER ── */
 footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 18px}
 .footer-grid{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
 @media(max-width:960px){.footer-grid{grid-template-columns:1fr 1fr}}
@@ -279,16 +226,14 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </style>
 </head>
 <body>
-<!-- ── PROGRESS / OFFLINE ── -->
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="offline-banner" id="offlineBanner" role="status" aria-live="polite">📡 You're offline — live content won't update until your connection is back.</div>
 <a class="skip-link" href="#home">Skip to main content</a>
 
-<!-- ══════════════════ SHARED / CORE (loads first) ══════════════════ -->
 <script type="module">
 import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
 const CFG = {
   apiKey:'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
@@ -309,14 +254,34 @@ window.fetchLiveNews = async function(){
 };
 
 window.FB = {
-  ready:!!(db&&auth),
-  signIn:(e,p)=>signInWithEmailAndPassword(auth,e,p).then(c=>c.user),
-  signOutUser:()=>signOut(auth),
-  onAuthChange:cb=>onAuthStateChanged(auth,cb),
-  getAdminDoc:async uid=>{ const s=await getDoc(doc(db,'admins',uid)); return s.exists(); },
-  getCollection:async name=>(await getDocs(collection(db,name))).docs.map(d=>({id:d.id,...d.data()})),
-  setDoc:(c,id,data)=>setDoc(doc(db,c,id),data),
-  deleteDoc:(c,id)=>deleteDoc(doc(db,c,id))
+  ready: !!(db && auth),
+
+  // Creates a real Firebase Auth account, sets the display name, and stores a
+  // matching profile document in Firestore's users/{uid} collection.
+  register: async (email, password, username) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: username });
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      username, email, createdAt: serverTimestamp()
+    });
+    return cred.user;
+  },
+  signIn: (email, password) => signInWithEmailAndPassword(auth, email, password).then(c => c.user),
+  signOutUser: () => signOut(auth),
+  resetPassword: (email) => sendPasswordResetEmail(auth, email),
+  onAuthChange: (cb) => onAuthStateChanged(auth, cb),
+
+  // Real, server-verified admin check — reads admins/{uid}. Firestore rules only
+  // allow a signed-in user to read their OWN admin doc, never anyone else's.
+  checkAdmin: async (uid) => {
+    if (!uid) return false;
+    try { const s = await getDoc(doc(db, 'admins', uid)); return s.exists(); }
+    catch(e){ return false; }
+  },
+  getAdminDoc: async uid => { const s=await getDoc(doc(db,'admins',uid)); return s.exists(); },
+  getCollection: async name => (await getDocs(collection(db, name))).docs.map(d => ({ id: d.id, ...d.data() })),
+  setDoc: (c, id, data) => setDoc(doc(db, c, id), data),
+  deleteDoc: (c, id) => deleteDoc(doc(db, c, id)),
 };
 window.dispatchEvent(new Event('fb-ready'));
 </script>
@@ -337,11 +302,14 @@ const S=loadState();
 let _t=null;
 function save(){clearTimeout(_t);_t=setTimeout(()=>{try{localStorage.setItem(SK,JSON.stringify({...S,liked:[...S.liked]}));}catch(e){}},400);}
 
-// ─ Utils ─
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const $=id=>document.getElementById(id);
 const setHTML=(id,h)=>{const e=$(id);if(e)e.innerHTML=h;};
-const isAdmin=()=>localStorage.getItem('gta6hq_is_admin')==='1';
+// Real admin status — a cached boolean populated by the Firebase auth listener below,
+// since the actual Firestore check is async but isAdmin() is called synchronously
+// throughout the app. The cache is refreshed every time auth state changes.
+let _adminCache = false;
+const isAdmin=()=>_adminCache;
 
 function notify(msg){
   const t=$('notifyToast'),m=$('notifyMsg');
@@ -353,47 +321,97 @@ function openModal(id){const e=$(id);if(e)e.classList.add('open');}
 function closeModal(id){const e=$(id);if(e)e.classList.remove('open');}
 function closeModalOnOverlay(ev,id){if(ev.target===$(id))closeModal(id);}
 
-// ─ Auth ─
 function switchAuthTab(mode,btn){
   btn.parentElement.querySelectorAll('.form-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   $('auth-login').style.display=mode==='login'?'block':'none';
   $('auth-register').style.display=mode==='register'?'block':'none';
 }
-function loginUser(){S.loggedIn=true;S.username='GTA6Fan';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Signed in.');save();}
-function registerUser(){S.loggedIn=true;S.username='NewRecruit';S.userId=`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;closeModal('auth-modal');notify('✅ Welcome to GTA6HQ!');save();}
+function authErrorMessage(e){
+  const code = e?.code || '';
+  const map = {
+    'auth/email-already-in-use': 'That email already has an account — try signing in instead.',
+    'auth/invalid-email': 'That email address looks invalid.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/user-not-found': 'No account found with that email.',
+    'auth/wrong-password': 'Incorrect password.',
+    'auth/invalid-credential': 'Incorrect email or password.',
+    'auth/too-many-requests': 'Too many attempts — try again in a bit.',
+    'auth/missing-password': 'Please enter a password.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
 
-// ─ Tab page helpers ─
+async function loginUser(){
+  const email=($('loginEmail')?.value||'').trim();
+  const password=$('loginPassword')?.value||'';
+  if(!email||!password){ notify('Enter your email and password.'); return; }
+  try{
+    await FB.signIn(email,password);
+    closeModal('auth-modal');
+    notify('✅ Signed in.');
+  }catch(e){ notify(authErrorMessage(e)); }
+}
+
+async function registerUser(){
+  const username=($('registerUsername')?.value||'').trim();
+  const email=($('registerEmail')?.value||'').trim();
+  const password=$('registerPassword')?.value||'';
+  if(!username||!email||!password){ notify('Fill in all fields.'); return; }
+  if(password.length<8){ notify('Password must be at least 8 characters.'); return; }
+  try{
+    await FB.register(email,password,username);
+    S.username = username; save();
+    closeModal('auth-modal');
+    notify('✅ Welcome to GTA6HQ!');
+  }catch(e){ notify(authErrorMessage(e)); }
+}
+
+async function forgotPassword(){
+  const email=($('loginEmail')?.value||'').trim();
+  if(!email){ notify('Enter your email above, then click "Forgot password?" again.'); return; }
+  try{
+    await FB.resetPassword(email);
+    notify('📧 Password reset email sent.');
+  }catch(e){ notify(authErrorMessage(e)); }
+}
+
+function logoutUser(){
+  FB.signOutUser().then(()=>notify('Signed out.'));
+}
+
 const bodyLock=lock=>{document.documentElement.style.overflow=lock?'hidden':'';document.body.style.overflow=lock?'hidden':'';}
 const openTab=id=>{const p=$(id);if(p){p.style.display='block';p.scrollTop=0;bodyLock(true);}};
 const closeTab=id=>{const p=$(id);if(p)p.style.display='none';bodyLock(false);}
 
-// ─ Admin ─
 function updateAdminUI(){
   const admin = isAdmin();
-  const signInLink = $('adminToggleLink');
   const dashLink = $('adminDashLink');
-  if (signInLink) signInLink.textContent = admin ? 'Admin Sign Out' : 'Admin Sign In';
   if (dashLink) dashLink.style.display = admin ? 'inline' : 'none';
   ['addJobBtn','addCharacterBtn','addGalleryBtn','addMapPinBtn','reviewAnswersBtn'].forEach(id=>{
     const el = $(id);
     if (el) el.style.display = admin ? 'inline-block' : 'none';
   });
 }
-function adminLinkClick(){
-  if(isAdmin()){localStorage.setItem('gta6hq_is_admin','0');notify('Signed out of admin mode.');updateAdminUI();return;}
-  openModal('admin-login-modal');
-}
-function adminSignIn(){
-  const e=($('adminEmail')?.value||'').trim(),p=$('adminPassword')?.value||'';
-  if(e&&p){
-    localStorage.setItem('gta6hq_is_admin','1');
-    if(!S.loggedIn){ S.loggedIn=true; S.username='Admin'; S.userId=S.userId||`GTA6HQ-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`; save(); }
-    notify('✅ Demo admin mode on.');closeModal('admin-login-modal');updateAdminUI();
+
+// Reflects the real signed-in state in the top bar: "Sign In" when logged out,
+// username + "Sign Out" when logged in, "Dashboard" only for real admins.
+function updateAccountUI(user){
+  const accountLink = $('adminToggleLink');
+  const signOutLink = $('signOutLink');
+  if (accountLink){
+    if (user){
+      accountLink.textContent = `👤 ${S.username||'Account'}`;
+      accountLink.onclick = null;
+    } else {
+      accountLink.textContent = 'Sign In';
+      accountLink.onclick = ()=>openModal('auth-modal');
+    }
   }
+  if (signOutLink) signOutLink.style.display = user ? 'inline' : 'none';
+  updateAdminUI();
 }
 
-// ─ Admin Dashboard: per-tab content ─
 let currentDashTab = 'characters';
 
 function dashListItem(label, sub, onRemoveJs){
@@ -407,7 +425,6 @@ function dashListItem(label, sub, onRemoveJs){
     </div>`;
 }
 
-// ─ Site Settings: persisted + actually applied to the page ─
 const SITE_SETTINGS_KEY = 'gta6hq_site_settings';
 const SITE_SETTINGS_DEFAULTS = { tickerEnabled: true, autoApproveAnswers: false };
 function loadSiteSettings(){
@@ -478,14 +495,11 @@ function switchDashTab(tab, btn){
   renderDashPanel(tab);
 }
 
-// ─ Global API (core/shared) ─
 window.G = {
   openModal, closeModal, closeModalOnOverlay,
-  switchAuthTab, loginUser, registerUser,
+  switchAuthTab, loginUser, registerUser, forgotPassword, logoutUser,
   submitQuestion: ()=>{closeModal('ask-modal');notify('Question posted!');},
   handleSearch: ()=>{},
-  adminLinkClick, adminSignIn,
-  adminSignOut: ()=>{localStorage.setItem('gta6hq_is_admin','0');notify('Signed out.');updateAdminUI();},
   openAdminDashboard: ()=>{
     if(!isAdmin()){notify('Admin sign-in required.');return;}
     openModal('admin-dashboard-modal');
@@ -513,18 +527,40 @@ window.G = {
   submitNewSectionItem: ()=>notify('Item added!'),
 };
 window.closeModal = closeModal;
+
+// ─ Real auth state sync: this is the one place that keeps S.loggedIn/username/userId
+// and the admin cache in sync with the actual signed-in Firebase user, instead of
+// those being manually set anywhere else in the app. ─
+window.addEventListener('fb-ready', ()=>{
+  if(!window.FB || !FB.ready) return;
+  FB.onAuthChange(async (user)=>{
+    if(user){
+      S.loggedIn=true;
+      S.username = user.displayName || (user.email ? user.email.split('@')[0] : 'Member');
+      S.userId = user.uid;
+      save();
+      _adminCache = await FB.checkAdmin(user.uid);
+    } else {
+      S.loggedIn=false;
+      S.username='Guest';
+      S.userId=null;
+      save();
+      _adminCache=false;
+    }
+    updateAccountUI(user);
+  });
+},{once:true});
 </script>
 
-<!-- ── TOP BAR ── -->
 <div class="topbar">
   <span class="live-badge"><span class="live-dot"></span>LIVE — GTA 6 releases Nov 19, 2026 on PS5 &amp; Xbox Series X|S</span>
   <div>
-    <a href="javascript:void(0)" id="adminToggleLink" onclick="G.adminLinkClick()">Admin Sign In</a>
+    <a href="javascript:void(0)" id="adminToggleLink" onclick="G.openModal('auth-modal')">Sign In</a>
     <a href="javascript:void(0)" id="adminDashLink" onclick="G.openAdminDashboard()" style="display:none">Dashboard</a>
+    <a href="javascript:void(0)" id="signOutLink" onclick="G.logoutUser()" style="display:none">Sign Out</a>
   </div>
 </div>
 
-<!-- ── NAV ── -->
 <nav aria-label="Main navigation">
   <div class="nav-inner">
     <a class="logo" href="#home" aria-label="GTA6HQ home">GTA<span>6</span>HQ</a>
@@ -554,7 +590,6 @@ window.closeModal = closeModal;
   </div>
 </nav>
 
-<!-- ── PAGE TABS ── -->
 <div class="page-tabs">
   <div class="page-tabs-inner">
     <a class="ptl active" href="#home">🏠 Home</a>
@@ -570,7 +605,6 @@ window.closeModal = closeModal;
   </div>
 </div>
 
-<!-- ── TICKER ── -->
 <div class="ticker-wrap">
   <div class="ticker-label">🔴 BREAKING</div>
   <div class="ticker-inner">
@@ -591,7 +625,6 @@ window.closeModal = closeModal;
   </div>
 </div>
 
-<!-- ── HERO ── -->
 <section id="home" class="hero">
   <div class="hero-scene">
     <svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -612,19 +645,15 @@ window.closeModal = closeModal;
       <rect width="1600" height="600" fill="url(#heroSky)"/>
       <circle cx="800" cy="430" r="600" fill="url(#heroSun)"/>
       <circle cx="800" cy="420" r="70" fill="#ffe6b0" opacity=".85"/>
-      <!-- city silhouette left -->
       <g fill="#1a0e28" opacity=".55">
         <rect x="60" y="330" width="34" height="180"/><rect x="110" y="300" width="26" height="210"/>
         <rect x="150" y="360" width="46" height="150"/><rect x="210" y="280" width="30" height="230"/>
       </g>
-      <!-- city silhouette right -->
       <g fill="#1a0e28" opacity=".55">
         <rect x="1330" y="310" width="30" height="200"/><rect x="1370" y="270" width="24" height="240"/>
         <rect x="1410" y="350" width="46" height="160"/><rect x="1470" y="290" width="30" height="220"/>
       </g>
-      <!-- ground -->
       <rect x="0" y="420" width="1600" height="180" fill="#170c26" opacity=".7"/>
-      <!-- palm trees -->
       <g fill="#120a1f" opacity=".85">
         <path d="M120 600 C120 470 100 420 90 400 C80 420 60 470 60 600 Z"/>
         <path d="M90 405 C60 390 30 385 10 392 C30 400 55 410 90 412 Z"/>
@@ -680,13 +709,9 @@ window.closeModal = closeModal;
   </a>
 </section>
 
-<!-- ── MAIN CONTENT ── -->
 <div style="padding:28px 0">
 
-
-<!-- ══════════════════ NEWS SECTION ══════════════════ -->
 <style>
-/* ── NEWS FEATURE LAYOUT ── */
 .news-feature-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto;gap:16px}
 .nf-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column;transition:.2s;cursor:pointer;color:inherit}
 .nf-card:hover{border-color:var(--gold);transform:translateY(-2px)}
@@ -706,9 +731,6 @@ window.closeModal = closeModal;
 .nf-card-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .nf-read{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--pink)}
 @media(max-width:760px){.news-feature-grid{grid-template-columns:1fr}.nf-card.featured,.nf-card.mini,.nf-card.wide{grid-column:1;grid-row:auto}.nf-card.wide{flex-direction:column}.nf-card.wide .nf-card-img{width:100%;aspect-ratio:16/10}}
-
-
-/* ── NEWS LIST ITEMS ── */
 .ntp-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
 .ntp-item:hover{background:rgba(255,255,255,.02)}
 .ntp-thumb{width:88px;height:62px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
@@ -717,9 +739,6 @@ window.closeModal = closeModal;
 .ntp-excerpt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ntp-meta{display:flex;align-items:center;gap:8px;font-family:var(--fu);font-size:11px;color:var(--text3)}
 .ntp-src{color:var(--gold);opacity:.8}
-
-
-/* ── NEWS TAGS ── */
 .nl-tag{font-family:var(--fu);font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
 .nl-tag.official{background:rgba(240,180,41,.15);color:var(--gold)}
 .nl-tag.rumor{background:rgba(255,60,110,.12);color:var(--pink)}
@@ -735,14 +754,11 @@ window.closeModal = closeModal;
 .nl-tag.pc{background:rgba(0,212,255,.12);color:var(--cyan)}
 .nl-tag.gta5{background:rgba(255,255,255,.08);color:var(--text2)}
 </style>
-  <!-- NEWS -->
   <section class="section container" id="news">
     <div class="section-header">
       <h2 class="section-title">📰 Latest News <span class="auto-badge" style="margin-left:8px">⚡ Live</span></h2>
-  
     </div>
     <div class="news-feature-grid" id="newsListHome">
-      <!-- skeleton -->
       <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
       <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
       <div class="skel-card"><div class="skeleton skel-thumb"></div><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div>
@@ -751,7 +767,6 @@ window.closeModal = closeModal;
     <button onclick="G.openNewsTab()" style="width:100%;margin-top:14px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);color:var(--gold);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(240,180,41,.15)'" onmouseout="this.style.background='rgba(240,180,41,.07)'">📰 Browse All News &amp; Articles →</button>
   </section>
 
-<!-- NEWS TAB -->
 <div class="tab-page" id="news-tab-page">
   <div class="tab-page-hdr">
     <div class="tab-page-hdr-inner">
@@ -776,8 +791,6 @@ window.closeModal = closeModal;
 <script>
 'use strict';
 
-// ─ Static Data ─────────────────────────────────────────
-
 const NEWS_DATA = [
   {id:'n1',title:'GTA 6 Release Date Confirmed: November 19, 2026',excerpt:'Rockstar Games officially locked in the date after two delays. Pre-orders now open on PlayStation and Xbox stores.',category:'official',time:'2h ago',emoji:'🚀'},
   {id:'n2',title:'Lucia & Jason Gameplay Deep Dive — New Details Emerge',excerpt:'Leaked playtesting footage reveals how switching between dual protagonists works mid-mission.',category:'characters',time:'5h ago',emoji:'🎮'},
@@ -785,19 +798,18 @@ const NEWS_DATA = [
   {id:'n4',title:'GTA 6 PC Version — What We Know So Far',excerpt:'Rockstar has yet to announce PC, but historical patterns and job listings suggest it\'s in development.',category:'rumor',time:'1d ago',emoji:'💻'},
 ];
 
-// ─ News auto-refresh (every 3h) + 24h local cache ─────────
 const NEWS_CACHE_KEY='gta6hq_news_cache_v1';
-const NEWS_REFRESH_MS=3*60*60*1000;   // re-check Firestore for fresh articles every 3 hours
-const NEWS_MAX_AGE_MS=24*60*60*1000;  // never show cached news older than 24 hours
+const NEWS_REFRESH_MS=3*60*60*1000;
+const NEWS_MAX_AGE_MS=24*60*60*1000;
 
-let CURRENT_NEWS=NEWS_DATA.slice();    // what's actually rendered right now (falls back to static list)
-let newsTabActiveCat='all';            // remembers which filter tab is open in the full News overlay
+let CURRENT_NEWS=NEWS_DATA.slice();
+let newsTabActiveCat='all';
 
 function firestoreTimestampToDate(ts){
   if(!ts) return null;
-  if(typeof ts.toDate==='function') return ts.toDate();          // real Firestore Timestamp instance
-  if(typeof ts==='number') return new Date(ts);                   // already a JS millis number
-  if(typeof ts.seconds==='number') return new Date(ts.seconds*1000); // plain {seconds,nanoseconds} object
+  if(typeof ts.toDate==='function') return ts.toDate();
+  if(typeof ts==='number') return new Date(ts);
+  if(typeof ts.seconds==='number') return new Date(ts.seconds*1000);
   const d=new Date(ts);
   return isNaN(d.getTime())?null:d;
 }
@@ -808,7 +820,7 @@ function loadNewsCache(){
     const parsed=JSON.parse(raw);
     if(!parsed||!parsed.timestamp||!Array.isArray(parsed.items)||!parsed.items.length) return null;
     if(Date.now()-parsed.timestamp>NEWS_MAX_AGE_MS){
-      localStorage.removeItem(NEWS_CACHE_KEY); // older than 24h — expire it
+      localStorage.removeItem(NEWS_CACHE_KEY);
       return null;
     }
     return parsed;
@@ -830,7 +842,6 @@ async function refreshNews(force){
   const cache=loadNewsCache();
   const stale=!cache||(Date.now()-cache.timestamp)>=NEWS_REFRESH_MS;
   if(cache && !stale && !force){
-    // cache is under 3h old — just make sure it's what's on screen, don't hit Firestore again
     if(CURRENT_NEWS!==cache.items) applyNews(cache.items,false);
     return;
   }
@@ -851,17 +862,15 @@ async function refreshNews(force){
           _sortMs:d?d.getTime():0
         };
       }).sort((x,y)=>y._sortMs-x._sortMs);
-      applyNews(mapped,true); // persist fresh fetch, resets the 24h/3h clocks
+      applyNews(mapped,true);
       if(force) notify('✅ News updated!');
       return;
     }
   }catch(e){ console.warn('[news] live fetch failed, keeping existing news',e); }
-  // fetch failed or Firestore had nothing new — keep showing whatever we already have (cache, up to 24h old, or the static fallback)
   if(cache){ applyNews(cache.items,false); }
   else if(force){ notify('📰 No new articles found.'); }
 }
 
-// Renders a real article thumbnail when we have one, falling back to the emoji box otherwise.
 function newsThumbHTML(a, fontSize){
   if (a.imageUrl) {
     return `<img src="${esc(a.imageUrl)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='${(a.emoji||'📰').replace(/'/g,"\\'")}'"/>`;
@@ -935,11 +944,7 @@ G.openNewsDetail = (id)=>{
 };
 </script>
 
-
-
-<!-- ══════════════════ GALLERY SECTION ══════════════════ -->
 <style>
-/* ── GALLERY ── */
 .gallery-tile{position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.2s}
 .gallery-tile:hover{border-color:var(--gold);transform:translateY(-3px)}
 .gallery-tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
@@ -947,9 +952,6 @@ G.openNewsDetail = (id)=>{
 .gallery-tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.82) 100%)}
 .gallery-tile-cat{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 7px;border-radius:4px}
 .gallery-tile-title{position:absolute;left:10px;right:10px;bottom:8px;font-family:var(--fu);font-size:12px;font-weight:600;color:#fff}
-
-
-/* ── LIGHTBOX ── */
 .lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:6000;display:none;align-items:center;justify-content:center;padding:24px}
 .lightbox-overlay.open{display:flex}
 .lightbox-content{max-width:900px;width:100%;text-align:center}
@@ -959,7 +961,6 @@ G.openNewsDetail = (id)=>{
 .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:1px solid var(--border2);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center}
 .lightbox-prev{left:18px}.lightbox-next{right:18px}
 </style>
-  <!-- GALLERY -->
   <section class="section container" id="gallery">
     <div class="section-header">
       <h2 class="section-title">🖼️ Gallery</h2>
@@ -983,7 +984,6 @@ G.openNewsDetail = (id)=>{
     </div>
   </section>
 
-<!-- ── LIGHTBOX ── -->
 <div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightboxOnOverlay(event)">
   <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">×</button>
   <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)" aria-label="Previous image">‹</button>
@@ -994,7 +994,6 @@ G.openNewsDetail = (id)=>{
   <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)" aria-label="Next image">›</button>
 </div>
 
-<!-- ADD GALLERY -->
 <div class="modal-overlay" id="add-gallery-modal" onclick="G.closeModalOnOverlay(event,'add-gallery-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -1043,13 +1042,12 @@ function filterGallery(cat,btn){
   if(btn)btn.classList.add('active');
   if(typeof renderGallery==='function') renderGallery(cat);
 }
-function openAddGalleryModal(){if(localStorage.getItem('gta6hq_is_admin')!=='1'){alert('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
+function openAddGalleryModal(){if(!isAdmin()){notify('Admin sign-in required.');return;}G.openModal('add-gallery-modal');}
 function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open');}
 function closeLightboxOnOverlay(ev){if(ev.target===document.getElementById('lightbox-overlay'))closeLightbox();}
 function lightboxNav(){}
 </script>
 
-<!-- ══════════════════ MAP SECTION ══════════════════ -->
 <style>
 .map-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);background:#0d0518}
 .map-svg{width:100%;height:100%;display:block}
@@ -1090,7 +1088,6 @@ function lightboxNav(){}
   </div>
   <div class="map-wrap" id="mapWrap" onclick="G.handleMapClick(event)">
     <svg class="map-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <!-- Original stylized illustrative map — not a reproduction of any leaked or licensed artwork -->
       <defs>
         <linearGradient id="mapWater" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#1a0b2e"/>
@@ -1126,7 +1123,6 @@ function lightboxNav(){}
   </div>
 </section>
 
-<!-- ADD MAP PIN -->
 <div class="modal-overlay" id="add-pin-modal" onclick="G.closeModalOnOverlay(event,'add-pin-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -1155,8 +1151,6 @@ function lightboxNav(){}
 <script>
 'use strict';
 
-// Original community-curated location data — starts empty until real, confirmed
-// in-game locations exist after release. Admins add pins via the "+ Add Pin" tool.
 let MAP_DATA = [];
 
 const MAP_RELEASE_TS = new Date('2026-11-19T08:00:00').getTime();
@@ -1255,15 +1249,10 @@ G.filterMap = filterMap;
 G.openMapPinDetail = openMapPinDetail;
 </script>
 
-
-  <!-- 2-COL GRID -->
   <div class="page-grid">
     <div>
 
-
-<!-- ══════════════════ GUIDES SECTION ══════════════════ -->
 <style>
-/* ── GUIDE CARDS ── */
 .guide-card{position:relative;transition:all .3s ease}
 .guide-card.completed{border-color:var(--green)!important;background:rgba(0,230,118,.03)}
 .guide-card.completed::after{content:'✔';position:absolute;top:10px;right:10px;background:var(--green);color:#000;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;box-shadow:0 0 10px rgba(0,230,118,.4)}
@@ -1271,7 +1260,6 @@ G.openMapPinDetail = openMapPinDetail;
 .guide-step:hover{transform:translateX(5px);background:var(--bg2)}
 .guide-step strong{color:var(--gold);margin-right:8px}
 </style>
-      <!-- GUIDES -->
       <section class="section" id="guides">
         <div class="section-header">
           <h2 class="section-title">📖 Job Guides <span class="auto-badge" style="margin-left:8px">⚡ GTA V &amp; VI</span></h2>
@@ -1289,7 +1277,6 @@ G.openMapPinDetail = openMapPinDetail;
         <button onclick="G.openGuidesTab()" style="width:100%;margin-top:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:10px;border-radius:var(--r);font-family:var(--fu);font-size:13px;font-weight:700" onmouseover="this.style.background='rgba(0,230,118,.15)'" onmouseout="this.style.background='rgba(0,230,118,.07)'">📖 Browse All Job Guides →</button>
       </section>
 
-<!-- GUIDES TAB -->
 <div class="tab-page" id="guides-tab-page">
   <div class="tab-page-hdr">
     <div class="tab-page-hdr-inner">
@@ -1312,7 +1299,6 @@ G.openMapPinDetail = openMapPinDetail;
   </div>
 </div>
 
-<!-- ADD JOB -->
 <div class="modal-overlay" id="add-job-modal" onclick="G.closeModalOnOverlay(event,'add-job-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -1370,10 +1356,8 @@ function renderGuides(game='all',type='all'){
   }).join('');
   const g=$('guidesGrid'); if(g)g.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
   const t=$('guidesTabGrid'); if(t)t.innerHTML=html||'<p style="color:var(--text3);padding:20px">No guides found.</p>';
-  // update progress
   const prog=$('guideProgressText');
   if(prog)prog.textContent=`${completed.filter(id=>GUIDES_DATA.find(j=>j.id===id)).length} / ${GUIDES_DATA.length} Jobs Completed`;
-  // update stat
   const stat=$('heroStatGuides'); if(stat)stat.textContent=GUIDES_DATA.length;
 }
 
@@ -1417,10 +1401,7 @@ G.submitNewJob = ()=>{notify('Job guide submitted!');closeModal('add-job-modal')
 G.syncCommunityJobs = ()=>notify('🔍 Checking for job guides…');
 </script>
 
-
-<!-- ══════════════════ CHARACTERS SECTION ══════════════════ -->
 <style>
-/* ── CHARACTERS ── */
 .character-card{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--bg3);border:1px solid var(--border);transition:.25s}
 .character-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.45)}
 .character-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
@@ -1431,7 +1412,6 @@ G.syncCommunityJobs = ()=>notify('🔍 Checking for job guides…');
 .character-arrow{position:absolute;right:7px;bottom:7px;width:18px;height:18px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
 .character-role-pill{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:var(--gold);font-family:var(--fu);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:3px}
 </style>
-      <!-- CHARACTERS -->
       <section class="section" id="characters">
         <div class="section-header">
           <h2 class="section-title">👥 GTA 6 Characters <span class="auto-badge" style="margin-left:8px">⚡ Confirmed</span></h2>
@@ -1447,7 +1427,6 @@ G.syncCommunityJobs = ()=>notify('🔍 Checking for job guides…');
         </div>
       </section>
 
-<!-- ADD CHARACTER -->
 <div class="modal-overlay" id="add-character-modal" onclick="G.closeModalOnOverlay(event,'add-character-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -1497,13 +1476,9 @@ G.submitNewCharacter = ()=>notify('Character submitted!');
 function openAddCharacterModal(){G.openAddCharacterModal();}
 </script>
 
-
       <div id="customSectionsContainer"></div>
 
-
-<!-- ══════════════════ Q&A SECTION ══════════════════ -->
 <style>
-/* ── Q&A ── */
 .qa-list{display:flex;flex-direction:column;gap:12px}
 .qa-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;gap:14px;transition:.2s;cursor:pointer}
 .qa-item:hover{border-color:var(--gold)}
@@ -1518,7 +1493,6 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
 .qa-meta{font-size:12px;color:var(--text3);display:flex;gap:10px;font-family:var(--fu)}
 .answer-badge{background:rgba(0,230,118,.12);color:var(--green);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
 </style>
-      <!-- Q&A -->
       <section class="section" id="qa">
         <div class="section-header">
           <h2 class="section-title">❓ Questions &amp; Solutions</h2>
@@ -1535,7 +1509,6 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
         </div>
       </section>
 
-<!-- ASK QUESTION -->
 <div class="modal-overlay" id="ask-modal" onclick="G.closeModalOnOverlay(event,'ask-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -1551,7 +1524,6 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
   </div>
 </div>
 
-<!-- ANSWER MODAL -->
 <div class="modal-overlay" id="answer-modal" onclick="G.closeModalOnOverlay(event,'answer-modal')">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:600px">
     <div class="modal-header">
@@ -1570,7 +1542,6 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
   </div>
 </div>
 
-<!-- REVIEW ANSWERS -->
 <div class="modal-overlay" id="review-answers-modal" onclick="G.closeModalOnOverlay(event,'review-answers-modal')">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:800px">
     <div class="modal-header">
@@ -1586,7 +1557,6 @@ function openAddCharacterModal(){G.openAddCharacterModal();}
 <script>
 'use strict';
 
-// ─ Q&A ─
 const QA=[
   {id:1,votes:247,solved:false,title:'How do you unlock the helicopter at the start of GTA 6?',excerpt:'Stuck at the Port district and need to get across fast without unlocking the bridge.',time:'2h ago',author:'PlayerOne'},
   {id:2,votes:189,solved:false,title:'What is the fastest car available before the first open-world segment?',excerpt:'Looking for speed builds that work in early missions without much grind.',time:'5h ago',author:'SpeedDemon'},
@@ -1732,10 +1702,7 @@ window.approveAnswer = approveAnswer;
 window.rejectAnswer = rejectAnswer;
 </script>
 
-
-<!-- ══════════════════ SYSTEM REQUIREMENTS SECTION ══════════════════ -->
 <style>
-/* ── SYS REQ ── */
 .sys-req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .req-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .req-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1759,7 +1726,6 @@ window.rejectAnswer = rejectAnswer;
 .rb-platforms{display:flex;gap:8px}
 .platform-pill{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-family:var(--fu);font-size:12px;font-weight:600}
 </style>
-      <!-- SYS REQ -->
       <section class="section" id="sysreq">
         <div class="section-header">
           <h2 class="section-title">💻 GTA 6 System Requirements</h2>
@@ -1831,7 +1797,6 @@ window.rejectAnswer = rejectAnswer;
 <script>
 'use strict';
 
-// ─ PC Check ─
 function checkPC(){
   const gpu=parseInt($('pcGpu')?.value||'');
   const ram=parseInt($('pcRam')?.value||'');
@@ -1886,10 +1851,7 @@ function renderSysReq(){
 G.checkPC = checkPC;
 </script>
 
-
-<!-- ══════════════════ FAQ SECTION ══════════════════ -->
 <style>
-/* ── FAQ ── */
 .faq-list{display:flex;flex-direction:column;gap:10px}
 .faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .faq-item summary{padding:14px 18px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:14px;color:var(--text);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -1899,7 +1861,6 @@ G.checkPC = checkPC;
 .faq-item summary:hover{color:var(--gold)}
 .faq-answer{padding:0 18px 16px;font-size:13px;color:var(--text2);line-height:1.6}
 </style>
-      <!-- FAQ -->
       <section class="section" id="faq">
         <div class="section-header"><h2 class="section-title">💬 Frequently Asked Questions</h2></div>
         <div class="faq-list">
@@ -1930,17 +1891,13 @@ G.checkPC = checkPC;
         </div>
       </section>
 
-
-<!-- ══════════════════ POLICY SECTION ══════════════════ -->
 <style>
-/* ── POLICY ── */
 .policy-box{background:rgba(255,60,110,.04);border:1px solid rgba(255,60,110,.2);border-radius:var(--r2);padding:20px}
 .policy-title{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--pink);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
 .policy-rule{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;color:var(--text2)}
 .policy-rule:last-child{border-bottom:none}
 .rule-num{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--pink);min-width:24px}
 </style>
-      <!-- POLICY -->
       <section class="section" id="policy">
         <div class="section-header"><h2 class="section-title">⚠️ Community Rules &amp; Ban Policy</h2></div>
         <div class="policy-box">
@@ -1954,13 +1911,9 @@ G.checkPC = checkPC;
         </div>
       </section>
 
-    </div><!-- /main col -->
+    </div>
 
-
-
-<!-- ══════════════════ SIDEBAR SECTION ══════════════════ -->
 <style>
-/* ── SIDEBAR ── */
 .sidebar{display:flex;flex-direction:column;gap:18px}
 .sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .sidebar-header{padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold)}
@@ -1984,7 +1937,6 @@ G.checkPC = checkPC;
 .sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .sd-dc{background:#5865F2}.sd-ig{background:#e1306c}.sd-yt{background:#ff0000}.sd-tw{background:#1d9bf0}
 </style>
-    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-card">
         <div class="sidebar-header">📡 Auto News Feed</div>
@@ -2020,7 +1972,6 @@ G.checkPC = checkPC;
 <script>
 'use strict';
 
-// ─ Player Lookup ─
 function lookupPlayer(){
   const v=($('playerIdInput')?.value||'').trim(); if(!v)return;
   setHTML('playerResult',`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px">
@@ -2043,7 +1994,6 @@ const EVENTS_DATA = [
 ];
 
 function renderSidebar(){
-  // News feed — driven by CURRENT_NEWS so it stays in sync with the live/cached articles
   const nf=$('newsFeed'); if(nf){
     nf.innerHTML=CURRENT_NEWS.map(a=>`
       <div class="nf-item">
@@ -2054,7 +2004,6 @@ function renderSidebar(){
         </div>
       </div>`).join('');
   }
-  // Events
   const ev=$('eventsList'); if(ev){
     ev.innerHTML=EVENTS_DATA.map(e=>`
       <div style="padding:9px 0;border-bottom:1px solid var(--border)">
@@ -2062,7 +2011,6 @@ function renderSidebar(){
         <div style="font-size:13px;font-weight:600">${e.title}</div>
         <div style="font-size:11px;color:var(--text3)">${e.note}</div>
       </div>`).join('');
-    // remove last border
     const last=ev.querySelector('div:last-child'); if(last)last.style.borderBottom='none';
   }
 }
@@ -2070,11 +2018,9 @@ function renderSidebar(){
 G.lookupPlayer = lookupPlayer;
 </script>
 
-  </div><!-- /page-grid -->
-</div><!-- /outer pad -->
+  </div>
+</div>
 
-
-<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-grid">
     <div>
@@ -2112,17 +2058,11 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </footer>
 
-
-<!-- ── FLOATING BUTTONS ── -->
 <a class="disc-float" href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" title="Join Discord" aria-label="Join our Discord server">💬</a>
 <button class="back-to-top" id="backToTopBtn" aria-label="Back to top" onclick="scrollToTop()">↑</button>
 
-
-<!-- ══════════════════ SHARED MODALS / ADMIN ══════════════════ -->
-<!-- ── TOAST ── -->
 <div class="notify" id="notifyToast"><span id="notifyMsg"></span></div>
 
-<!-- AUTH -->
 <div class="modal-overlay" id="auth-modal" onclick="G.closeModalOnOverlay(event,'auth-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -2135,14 +2075,15 @@ G.lookupPlayer = lookupPlayer;
         <div class="form-tab" onclick="G.switchAuthTab('register',this)">Create Account</div>
       </div>
       <div id="auth-login">
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="loginEmail" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="loginPassword" placeholder="••••••••"/></div>
         <button class="btn-submit" onclick="G.loginUser()">Sign In</button>
+        <div style="text-align:center;margin-top:10px"><a href="javascript:void(0)" onclick="G.forgotPassword()" style="font-size:12px;color:var(--text3)">Forgot password?</a></div>
       </div>
       <div id="auth-register" style="display:none">
-        <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" placeholder="LuciaFan2026"/></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="your@email.com"/></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min 8 characters"/></div>
+        <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" id="registerUsername" placeholder="LuciaFan2026"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="registerEmail" placeholder="your@email.com"/></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="registerPassword" placeholder="Min 8 characters"/></div>
         <button class="btn-submit" onclick="G.registerUser()">Create Account</button>
       </div>
     </div>
@@ -2150,7 +2091,6 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </div>
 
-<!-- GUIDE DETAIL -->
 <div class="modal-overlay" id="guide-detail-modal" onclick="G.closeModalOnOverlay(event,'guide-detail-modal')">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:600px">
     <div class="modal-header">
@@ -2161,26 +2101,6 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </div>
 
-<!-- ADMIN LOGIN -->
-<div class="modal-overlay" id="admin-login-modal" onclick="G.closeModalOnOverlay(event,'admin-login-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--gold)">🔐 Admin Sign In</div>
-      <button class="modal-close" onclick="G.closeModal('admin-login-modal')" aria-label="Close dialog">×</button>
-    </div>
-    <div class="modal-body">
-      <div id="adminAuthModeNotice" style="display:none;background:rgba(255,60,110,.08);border:1px solid rgba(255,60,110,.25);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--text2);margin-bottom:14px">
-        ⚠️ Firebase isn't configured yet — running in local demo mode. Admin status is only stored in your browser.
-      </div>
-      <div class="form-group"><label class="form-label">Admin Email</label><input class="form-input" type="email" id="adminEmail" placeholder="you@gta6hq.com"/></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="adminPassword" placeholder="••••••••"/></div>
-      <button class="btn-submit" onclick="G.adminSignIn()">Sign In</button>
-      <div id="adminAuthStatus" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN DASHBOARD -->
 <div class="modal-overlay" id="admin-dashboard-modal" onclick="G.closeModalOnOverlay(event,'admin-dashboard-modal')">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:720px">
     <div class="modal-header">
@@ -2202,7 +2122,6 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </div>
 
-<!-- ADD SECTION -->
 <div class="modal-overlay" id="add-section-modal" onclick="G.closeModalOnOverlay(event,'add-section-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -2218,7 +2137,6 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </div>
 
-<!-- ADD SECTION ITEM -->
 <div class="modal-overlay" id="add-section-item-modal" onclick="G.closeModalOnOverlay(event,'add-section-item-modal')">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -2238,8 +2156,6 @@ G.lookupPlayer = lookupPlayer;
   </div>
 </div>
 
-
-<!-- ══════════════════ BOOT (loads last) ══════════════════ -->
 <script>
 'use strict';
 
@@ -2251,13 +2167,11 @@ function toggleNav(){
 }
 function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 
-// ─ Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   renderQA();
   updateAdminUI();
   applySiteSettings();
 
-  // Load whatever news we have cached (up to 24h old) instantly, so the page never looks empty
   const cachedNews=loadNewsCache();
   if(cachedNews && cachedNews.items.length) CURRENT_NEWS=cachedNews.items;
   renderNews(CURRENT_NEWS);
@@ -2265,20 +2179,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderGallery();
   renderMapLock();
   renderMapPins();
-  setInterval(()=>{ renderMapLock(); renderMapPins(); }, 60000); // catches the moment it unlocks without a page reload
+  setInterval(()=>{ renderMapLock(); renderMapPins(); }, 60000);
   renderCharacters();
   renderGuides();
   renderSysReq();
   renderSidebar();
 
-  // Once Firebase is ready: check if news needs a refresh (older than 3h or no cache),
-  // then keep re-checking every 3 hours for as long as the tab stays open.
   window.addEventListener('fb-ready', ()=>{
     refreshNews(false);
     setInterval(()=>refreshNews(false), NEWS_REFRESH_MS);
   },{once:true});
 
-  // Reconnect handling
   window.addEventListener('online',()=>{
     document.getElementById('offlineBanner')?.classList.remove('show');
     refreshNews(false);
