@@ -399,6 +399,8 @@ function updateAdminUI(){
 function updateAccountUI(user){
   const accountLink = $('adminToggleLink');
   const signOutLink = $('signOutLink');
+  const navSignIn = $('navSignInBtn');
+  const navJoin = $('navJoinBtn');
   if (accountLink){
     if (user){
       accountLink.textContent = `👤 ${S.username||'Account'}`;
@@ -409,6 +411,8 @@ function updateAccountUI(user){
     }
   }
   if (signOutLink) signOutLink.style.display = user ? 'inline' : 'none';
+  if (navSignIn) navSignIn.style.display = user ? 'none' : 'inline-block';
+  if (navJoin) navJoin.style.display = user ? 'none' : 'inline-block';
   updateAdminUI();
 }
 
@@ -581,8 +585,8 @@ window.addEventListener('fb-ready', ()=>{
         <label for="globalSearch" class="sr-only">Search</label>
         <input type="text" id="globalSearch" placeholder="Search or enter #PlayerID…" autocomplete="off" oninput="G.handleSearch(this.value)"/>
       </div>
-      <button class="btn btn-outline" onclick="G.openModal('auth-modal')">Sign In</button>
-      <button class="btn btn-gold" onclick="G.openModal('auth-modal')">Join Free</button>
+      <button class="btn btn-outline" id="navSignInBtn" onclick="G.openModal('auth-modal')">Sign In</button>
+      <button class="btn btn-gold" id="navJoinBtn" onclick="G.openModal('auth-modal')">Join Free</button>
       <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks" onclick="toggleNav()">
         <span></span><span></span><span></span>
       </button>
