@@ -275,8 +275,14 @@ window.FB = {
   // allow a signed-in user to read their OWN admin doc, never anyone else's.
   checkAdmin: async (uid) => {
     if (!uid) return false;
-    try { const s = await getDoc(doc(db, 'admins', uid)); return s.exists(); }
-    catch(e){ return false; }
+    try {
+      const s = await getDoc(doc(db, 'admins', uid));
+      console.log('[admin check] uid:', uid, '-> exists:', s.exists());
+      return s.exists();
+    } catch(e){
+      console.error('[admin check] FAILED for uid:', uid, '-', e.code || e.message, e);
+      return false;
+    }
   },
   getAdminDoc: async uid => { const s=await getDoc(doc(db,'admins',uid)); return s.exists(); },
   getCollection: async name => (await getDocs(collection(db, name))).docs.map(d => ({ id: d.id, ...d.data() })),
@@ -539,11 +545,13 @@ window.addEventListener('fb-ready', ()=>{
   if(!window.FB || !FB.ready) return;
   FB.onAuthChange(async (user)=>{
     if(user){
+      console.log('[auth] Signed in as UID:', user.uid, '| email:', user.email);
       S.loggedIn=true;
       S.username = user.displayName || (user.email ? user.email.split('@')[0] : 'Member');
       S.userId = user.uid;
       save();
       _adminCache = await FB.checkAdmin(user.uid);
+      console.log('[auth] Admin cache set to:', _adminCache);
     } else {
       S.loggedIn=false;
       S.username='Guest';
