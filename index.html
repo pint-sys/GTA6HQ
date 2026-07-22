@@ -227,7 +227,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
-
+<div id="authDebugPanel" style="position:fixed;top:40px;left:10px;background:#000;color:#0f0;font-family:monospace;font-size:12px;padding:12px 14px;border-radius:8px;z-index:99999;max-width:360px;white-space:pre-wrap;border:2px solid #0f0;line-height:1.6">Loading auth debug info…</div>
 <div class="offline-banner" id="offlineBanner" role="status" aria-live="polite">📡 You're offline — live content won't update until your connection is back.</div>
 <a class="skip-link" href="#home">Skip to main content</a>
 
@@ -278,10 +278,10 @@ window.FB = {
     if (!uid) return false;
     try {
       const s = await getDoc(doc(db, 'admins', uid));
-      console.log('[admins check] uid:', uid, '-> exists:', s.exists());
+      console.log('[admin check] uid:', uid, '-> exists:', s.exists());
       return s.exists();
     } catch(e){
-      console.error('[admins check] FAILED for uid:', uid, '-', e.code || e.message, e);
+      console.error('[admin check] FAILED for uid:', uid, '-', e.code || e.message, e);
       return false;
     }
   },
@@ -289,7 +289,6 @@ window.FB = {
   getCollection: async name => (await getDocs(collection(db, name))).docs.map(d => ({ id: d.id, ...d.data() })),
   setDoc: (c, id, data) => setDoc(doc(db, c, id), data),
   deleteDoc: (c, id) => deleteDoc(doc(db, c, id)),
-  serverTimestamp: () => serverTimestamp(),
 };
 window.dispatchEvent(new Event('fb-ready'));
 </script>
@@ -2274,200 +2273,5 @@ document.addEventListener('DOMContentLoaded',()=>{
 })();
 </script>
 
-<script>
-'use strict';
-/* ================================================================
-   GTA6HQ FIRESTORE ADMIN CRUD — FINAL PATCH
-   Collections: characters, gallery, automated_news, custom_sections, mapPins
-   Admin authorization is enforced by Firestore rules AND this UI.
-================================================================ */
-(function(){
-  const COL={characters:'characters',gallery:'gallery',news:'automated_news',sections:'custom_sections',mapPins:'mapPins'};
-  let activeNewsCat='all';
-  let activeEdit={collection:null,id:null};
-
-  function adminGuard(){
-    if(!isAdmin()){ notify('Admin sign-in required.'); return false; }
-    if(!window.FB || !FB.ready){ notify('Firebase is not ready.'); return false; }
-    return true;
-  }
-  function uid(){ return S.userId || ''; }
-  function now(){ return FB.serverTimestamp ? FB.serverTimestamp() : new Date().toISOString(); }
-  function val(id){ return ($(id)?.value||'').trim(); }
-  function setVal(id,v){ if($(id)) $(id).value=v??''; }
-  function newId(prefix){ return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8); }
-  function safeImg(url,emoji){ return url ? `<img src="${esc(url)}" alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">` : `<div style="position:absolute;inset:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:42px">${esc(emoji||'🖼️')}</div>`; }
-
-  async function save(collection,id,data){
-    if(!adminGuard()) return false;
-    try{
-      await FB.setDoc(collection,id,{...data,updatedAt:now(),updatedBy:uid()});
-      return true;
-    }catch(e){ console.error('[Firestore save]',e); notify('❌ Save failed: '+(e.code||e.message)); return false; }
-  }
-  async function remove(collection,id){
-    if(!adminGuard()) return false;
-    if(!confirm('Delete this item permanently?')) return false;
-    try{
-      await FB.deleteDoc(collection,id);
-      return true;
-    }catch(e){ console.error('[Firestore delete]',e); notify('❌ Delete failed: '+(e.code||e.message)); return false; }
-  }
-  async function loadCollection(name){
-    try{return await FB.getCollection(name);}catch(e){console.error('[Firestore load]',name,e);return []}
-  }
-
-  function normalizeCharacter(x){return {id:x.id||newId('char'),first:x.first||'',last:x.last||'',role:x.role||'',color:x.color||'pink',emoji:x.emoji||'👤',desc:x.desc||'',imgUrl:x.imgUrl||''};}
-  function normalizeGallery(x){return {id:x.id||newId('gal'),title:x.title||'',cat:x.cat||'screenshot',emoji:x.emoji||'🖼️',imgUrl:x.imgUrl||'',desc:x.desc||''};}
-  function normalizeNews(x){return {id:x.id||newId('news'),title:x.title||'',excerpt:x.excerpt||x.description||'',category:x.category||'official',url:x.url||'',emoji:x.emoji||'📰',timestamp:x.timestamp||null};}
-  function normalizeSection(x){return {id:x.id||newId('sec'),name:x.name||x.title||'',icon:x.icon||'📍',items:Array.isArray(x.items)?x.items:[]};}
-  function normalizePin(x){return {id:x.id||newId('pin'),name:x.name||'',category:x.category||'heist',desc:x.desc||'',x:Number(x.x)||0,y:Number(x.y)||0};}
-
-  async function loadAllAdminData(){
-    if(!FB?.ready) return;
-    const [chars,gallery,news,sections,pins]=await Promise.all([
-      loadCollection(COL.characters),loadCollection(COL.gallery),loadCollection(COL.news),loadCollection(COL.sections),loadCollection(COL.mapPins)
-    ]);
-    if(chars.length){ CHARACTERS_DATA.splice(0,CHARACTERS_DATA.length,...chars.map(normalizeCharacter)); renderCharacters(); }
-    if(gallery.length){ GALLERY_DATA.splice(0,GALLERY_DATA.length,...gallery.map(normalizeGallery)); renderGallery(); }
-    if(news.length){ CURRENT_NEWS.splice(0,CURRENT_NEWS.length,...news.map(normalizeNews)); renderNews(CURRENT_NEWS); }
-    if(pins.length){ MAP_DATA.splice(0,MAP_DATA.length,...pins.map(normalizePin)); renderMapPins(); }
-    window.GTA6HQ_CUSTOM_SECTIONS=sections.map(normalizeSection);
-    renderCustomSectionsFromFirestore();
-    if($('admin-dashboard-modal')?.classList.contains('open')) renderDashPanel(currentDashTab||'characters');
-  }
-
-  function renderCustomSectionsFromFirestore(){
-    const wrap=$('customSectionsContainer'); if(!wrap)return;
-    const sections=window.GTA6HQ_CUSTOM_SECTIONS||[];
-    if(!sections.length){wrap.innerHTML='';return;}
-    wrap.innerHTML=sections.map(s=>`<section class="section container" id="custom-${esc(s.id)}">
-      <div class="section-header"><h2 class="section-title">${esc(s.icon)} ${esc(s.name)}</h2></div>
-      <div class="cards-grid">${(s.items||[]).map(i=>`<div class="card" style="padding:16px"><h3>${esc(i.title||'Untitled')}</h3><p style="color:var(--text2);font-size:13px;line-height:1.6">${esc(i.desc||'')}</p>${i.price?`<div class="tag">${esc(i.price)}</div>`:''}${i.link?`<a href="${esc(i.link)}" target="_blank" rel="noopener" class="btn btn-outline" style="margin-top:10px">Open</a>`:''}</div>`).join('')}</div>
-    </section>`).join('');
-  }
-
-  function openEditModal(collection,item){
-    activeEdit={collection,id:item.id};
-    const title=collection==='characters'?'Edit Character':collection==='gallery'?'Edit Gallery Image':collection==='news'?'Edit News':collection==='sections'?'Edit Section':'Edit Map Pin';
-    let body='';
-    if(collection==='characters') body=`<input id="editId" type="hidden"><div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="editFirst"></div><div class="form-group"><label class="form-label">Surname</label><input class="form-input" id="editLast"></div><div class="form-group"><label class="form-label">Role</label><input class="form-input" id="editRole"></div><div class="form-group"><label class="form-label">Color</label><select class="form-input" id="editColor"><option>pink</option><option>gold</option><option>cyan</option><option>purple</option><option>green</option></select></div><div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="editEmoji"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editDesc" rows="3"></textarea></div><div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="editImgUrl"></div>`;
-    if(collection==='gallery') body=`<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="editTitle"></div><div class="form-group"><label class="form-label">Category</label><input class="form-input" id="editCat"></div><div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="editEmoji"></div><div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="editImgUrl"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editDesc" rows="3"></textarea></div>`;
-    if(collection==='news') body=`<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="editTitle"></div><div class="form-group"><label class="form-label">Excerpt</label><textarea class="form-input" id="editExcerpt" rows="3"></textarea></div><div class="form-group"><label class="form-label">Category</label><input class="form-input" id="editCat"></div><div class="form-group"><label class="form-label">URL</label><input class="form-input" id="editUrl"></div><div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="editEmoji"></div>`;
-    if(collection==='sections') body=`<div class="form-group"><label class="form-label">Section Name</label><input class="form-input" id="editName"></div><div class="form-group"><label class="form-label">Icon</label><input class="form-input" id="editIcon"></div>`;
-    if(collection==='mapPins') body=`<div class="form-group"><label class="form-label">Name</label><input class="form-input" id="editName"></div><div class="form-group"><label class="form-label">Category</label><select class="form-input" id="editCat"><option value="heist">Heist</option><option value="job">Job / Side Hustle</option><option value="collectible">Collectible</option><option value="easter">Easter Egg</option><option value="vehicle">Vehicle Spawn</option></select></div><div class="form-group"><label class="form-label">X Position (%)</label><input class="form-input" id="editX" type="number" min="0" max="100" step="0.01"></div><div class="form-group"><label class="form-label">Y Position (%)</label><input class="form-input" id="editY" type="number" min="0" max="100" step="0.01"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editDesc" rows="3"></textarea></div>`;
-    let modal=$('firestore-edit-modal');
-    if(!modal){modal=document.createElement('div');modal.id='firestore-edit-modal';modal.className='modal-overlay';modal.innerHTML='<div class="modal" role="dialog" aria-modal="true"><div class="modal-header"><div class="modal-title" id="firestoreEditTitle"></div><button class="modal-close" onclick="G.closeModal(\'firestore-edit-modal\')">×</button></div><div class="modal-body" id="firestoreEditBody"></div></div>';document.body.appendChild(modal);}
-    $('firestoreEditTitle').textContent=title;
-    $('firestoreEditBody').innerHTML=body+`<button class="btn-submit" onclick="G.saveEdit()">Save Changes</button>`;
-    if(collection==='characters'){setVal('editFirst',item.first);setVal('editLast',item.last);setVal('editRole',item.role);setVal('editColor',item.color);setVal('editEmoji',item.emoji);setVal('editDesc',item.desc);setVal('editImgUrl',item.imgUrl)}
-    if(collection==='gallery'){setVal('editTitle',item.title);setVal('editCat',item.cat);setVal('editEmoji',item.emoji);setVal('editImgUrl',item.imgUrl);setVal('editDesc',item.desc)}
-    if(collection==='news'){setVal('editTitle',item.title);setVal('editExcerpt',item.excerpt);setVal('editCat',item.category);setVal('editUrl',item.url);setVal('editEmoji',item.emoji)}
-    if(collection==='sections'){setVal('editName',item.name);setVal('editIcon',item.icon)}
-    if(collection==='mapPins'){setVal('editName',item.name);setVal('editCat',item.category);setVal('editX',item.x);setVal('editY',item.y);setVal('editDesc',item.desc)}
-    openModal('firestore-edit-modal');
-  }
-
-  async function saveEdit(){
-    if(!adminGuard()||!activeEdit.id)return;
-    const c=activeEdit.collection,id=activeEdit.id; let data={};
-    if(c==='characters') data={first:val('editFirst'),last:val('editLast'),role:val('editRole'),color:val('editColor'),emoji:val('editEmoji')||'👤',desc:val('editDesc'),imgUrl:val('editImgUrl')};
-    if(c==='gallery') data={title:val('editTitle'),cat:val('editCat')||'screenshot',emoji:val('editEmoji')||'🖼️',imgUrl:val('editImgUrl'),desc:val('editDesc')};
-    if(c==='news') data={title:val('editTitle'),excerpt:val('editExcerpt'),category:val('editCat')||'official',url:val('editUrl'),emoji:val('editEmoji')||'📰'};
-    if(c==='sections') data={name:val('editName'),icon:val('editIcon')||'📍'};
-    if(c==='mapPins') data={name:val('editName'),category:val('editCat'),x:Number(val('editX')),y:Number(val('editY')),desc:val('editDesc')};
-    if(!data.name && c==='sections'){notify('Section name is required.');return}
-    if(!data.title && (c==='gallery'||c==='news')){notify('Title is required.');return}
-    if(c==='characters' && (!data.first||!data.last)){notify('First name and surname are required.');return}
-    if(c==='mapPins' && (!data.name||data.x<0||data.x>100||data.y<0||data.y>100)){notify('Enter a valid name and X/Y values from 0 to 100.');return}
-    if(await save(c,id,data)){closeModal('firestore-edit-modal');await loadAllAdminData();renderDashPanel(currentDashTab);notify('✅ Changes saved to Firestore.');}
-  }
-
-  async function deleteItem(c,id){if(await remove(c,id)){await loadAllAdminData();renderDashPanel(currentDashTab);notify('🗑️ Deleted from Firestore.');}}
-
-  function dashButton(label,fn,kind='') { return `<button class="btn-sid" style="margin-left:5px;${kind==='danger'?'background:var(--pink)':''}" onclick="${fn}">${label}</button>`; }
-  function dashRow(item,label,c){return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:11px 12px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><strong>${esc(label)}</strong><div style="font-size:11px;color:var(--text3);margin-top:3px">${esc(c)}</div></div>${dashButton('Edit',`G.editFirestore('${item._collection}','${item.id}')`)}${dashButton('Delete',`G.deleteFirestore('${item._collection}','${item.id}')`,'danger')}</div></div>`;}
-
-  window.renderDashPanel=function(tab){
-    currentDashTab=tab; const el=$('dashPanel'); if(!el)return;
-    if(!isAdmin()){el.innerHTML='<p>Admin access required.</p>';return;}
-    if(tab==='characters'){
-      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Characters</strong><button class="btn btn-gold" onclick="G.openAddCharacterModal()">+ Add Character</button></div>`+CHARACTERS_DATA.map(x=>dashRow({...x,_collection:'characters'},`${x.first} ${x.last}`,x.role)).join('')||'<p>No characters.</p>';return;
-    }
-    if(tab==='gallery'){
-      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Gallery</strong><button class="btn btn-gold" onclick="G.openAddGalleryModal()">+ Add Image</button></div>`+GALLERY_DATA.map(x=>dashRow({...x,_collection:'gallery'},x.title,x.cat)).join('')||'<p>No gallery items.</p>';return;
-    }
-    if(tab==='news'){
-      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>News</strong><button class="btn btn-gold" onclick="G.openAddNewsModal()">+ Add News</button></div>`+CURRENT_NEWS.map(x=>dashRow({...x,_collection:'news'},x.title,x.category)).join('')||'<p>No news in Firestore.</p>';return;
-    }
-    if(tab==='sections'){
-      const sections=window.GTA6HQ_CUSTOM_SECTIONS||[];
-      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Custom Sections</strong><button class="btn btn-gold" onclick="G.openAddSectionModal()">+ Add Section</button></div>`+sections.map(x=>dashRow({...x,_collection:'sections'},`${x.icon} ${x.name}`,`${(x.items||[]).length} items`)).join('')||'<p>No custom sections.</p>';return;
-    }
-    if(tab==='mapPins'){
-      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Map Pins</strong><button class="btn btn-gold" onclick="G.openAddPinAdminModal()">+ Add Pin</button></div>`+MAP_DATA.map(x=>dashRow({...x,_collection:'mapPins'},x.name,`${MAP_CAT_LABEL[x.category]||x.category} · ${x.x}%, ${x.y}%`)).join('')||'<p>No map pins.</p>';return;
-    }
-    if(tab==='site'){el.innerHTML='<p style="color:var(--text2)">Site settings remain local to this browser. Content CRUD is persisted in Firestore.</p>';return;}
-    if(tab==='jobs'){el.innerHTML='<p style="color:var(--text2)">Job sync tools are not part of the requested Firestore CRUD collections.</p>';return;}
-  };
-
-  async function addCharacter(){
-    if(!adminGuard())return; const first=val('newCharFirst'),last=val('newCharLast');
-    if(!first||!last){notify('First name and surname are required.');return;}
-    const id=newId('char'); const data={first,last,role:val('newCharRole')||'Character',color:val('newCharColor')||'pink',emoji:'👤',desc:val('newCharDesc'),imgUrl:val('newCharImgUrl')};
-    if(await save(COL.characters,id,data)){closeModal('add-character-modal');await loadAllAdminData();renderDashPanel('characters');notify('✅ Character saved to Firestore.');}
-  }
-  async function addGallery(){
-    if(!adminGuard())return; const title=val('newGalleryTitle'),cat=val('newGalleryCat')||'screenshot',img=val('newGalleryImgUrl');
-    if(!title){notify('Gallery title is required.');return}
-    const id=newId('gal'); if(await save(COL.gallery,id,{title,cat,imgUrl:img,emoji:'🖼️',desc:val('newGalleryDesc')})){closeModal('add-gallery-modal');await loadAllAdminData();renderDashPanel('gallery');notify('✅ Gallery item saved to Firestore.');}
-  }
-  function ensureNewsModal(){
-    if($('add-news-firestore-modal'))return;
-    const d=document.createElement('div');d.id='add-news-firestore-modal';d.className='modal-overlay';d.innerHTML=`<div class="modal"><div class="modal-header"><div class="modal-title" style="color:var(--gold)">+ Add News</div><button class="modal-close" onclick="G.closeModal('add-news-firestore-modal')">×</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Title</label><input class="form-input" id="newNewsTitle"></div><div class="form-group"><label class="form-label">Excerpt</label><textarea class="form-input" id="newNewsExcerpt" rows="4"></textarea></div><div class="form-group"><label class="form-label">Category</label><input class="form-input" id="newNewsCat" value="official"></div><div class="form-group"><label class="form-label">URL</label><input class="form-input" id="newNewsUrl"></div><div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="newNewsEmoji" value="📰"></div><button class="btn-submit" onclick="G.submitNewNewsFirestore()">Publish News</button></div></div>`;document.body.appendChild(d);
-  }
-  async function addNews(){if(!adminGuard())return;const title=val('newNewsTitle');if(!title){notify('News title is required.');return}const id=newId('news');if(await save(COL.news,id,{title,excerpt:val('newNewsExcerpt'),category:val('newNewsCat')||'official',url:val('newNewsUrl'),emoji:val('newNewsEmoji')||'📰',timestamp:now()})){closeModal('add-news-firestore-modal');await loadAllAdminData();renderDashPanel('news');notify('✅ News saved to Firestore.');}}
-  function ensurePinAdminModal(){
-    if($('add-pin-admin-modal'))return;
-    const d=document.createElement('div');d.id='add-pin-admin-modal';d.className='modal-overlay';d.innerHTML=`<div class="modal"><div class="modal-header"><div class="modal-title" style="color:var(--pink)">+ Add Map Pin</div><button class="modal-close" onclick="G.closeModal('add-pin-admin-modal')">×</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="adminPinName"></div><div class="form-group"><label class="form-label">Category</label><select class="form-input" id="adminPinCat"><option value="heist">Heist</option><option value="job">Job / Side Hustle</option><option value="collectible">Collectible</option><option value="easter">Easter Egg</option><option value="vehicle">Vehicle Spawn</option></select></div><div class="form-group"><label class="form-label">X Position (%)</label><input class="form-input" id="adminPinX" type="number" min="0" max="100" step="0.01" value="50"></div><div class="form-group"><label class="form-label">Y Position (%)</label><input class="form-input" id="adminPinY" type="number" min="0" max="100" step="0.01" value="50"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="adminPinDesc" rows="3"></textarea></div><button class="btn-submit" onclick="G.submitAdminPin()">Save Pin</button></div></div>`;document.body.appendChild(d);
-  }
-  async function addPin(){if(!adminGuard())return;const name=val('adminPinName'),x=Number(val('adminPinX')),y=Number(val('adminPinY'));if(!name||x<0||x>100||y<0||y>100){notify('Enter a valid name and X/Y values from 0 to 100.');return}const id=newId('pin');if(await save(COL.mapPins,id,{name,category:val('adminPinCat'),x,y,desc:val('adminPinDesc')})){closeModal('add-pin-admin-modal');await loadAllAdminData();renderDashPanel('mapPins');notify('✅ Map pin saved to Firestore.');}}
-
-  // Replace the old no-op functions with real Firestore operations.
-  G.submitNewCharacter=addCharacter;
-  G.submitNewGalleryImage=addGallery;
-  G.openAddNewsModal=()=>{if(!adminGuard())return;ensureNewsModal();openModal('add-news-firestore-modal');};
-  G.submitNewNewsFirestore=addNews;
-  G.openAddPinAdminModal=()=>{if(!adminGuard())return;ensurePinAdminModal();openModal('add-pin-admin-modal');};
-  G.submitAdminPin=addPin;
-  G.editFirestore=(c,id)=>{const source=c==='characters'?CHARACTERS_DATA:c==='gallery'?GALLERY_DATA:c==='news'?CURRENT_NEWS:c==='mapPins'?MAP_DATA:(window.GTA6HQ_CUSTOM_SECTIONS||[]);const item=source.find(x=>x.id===id);if(item)openEditModal(c,item);};
-  G.saveEdit=saveEdit;
-  G.deleteFirestore=deleteItem;
-
-  // Real Firestore-backed section creation.
-  G.submitNewSection=async()=>{
-    if(!adminGuard())return; const name=val('newSectionName'); if(!name){notify('Section name is required.');return}
-    const id=newId('sec'); if(await save(COL.sections,id,{name,icon:val('newSectionIcon')||'📍',items:[]})){closeModal('add-section-modal');await loadAllAdminData();renderDashPanel('sections');notify('✅ Section saved to Firestore.');}
-  };
-
-  // Add News tab to the existing dashboard.
-  function addNewsTab(){
-    const tabs=document.querySelector('#admin-dashboard-modal .tabs');
-    if(tabs&&!tabs.querySelector('[data-firestore-news-tab]')){const b=document.createElement('button');b.className='tab';b.dataset.firestoreNewsTab='1';b.textContent='📰 News';b.onclick=()=>G.switchDashTab('news',b);tabs.insertBefore(b,tabs.children[2]||null);}
-  }
-
-  // Make dashboard operations load from Firestore first.
-  const originalOpenAdmin=G.openAdminDashboard;
-  G.openAdminDashboard=async()=>{if(!isAdmin()){notify('Admin sign-in required.');return}addNewsTab();openModal('admin-dashboard-modal');await loadAllAdminData();switchDashTab('characters',document.querySelector('#admin-dashboard-modal .tabs .tab'));};
-
-  // Hide public admin-only upload buttons unless admin.
-  const oldUpdate=window.updateAdminUI;
-  window.updateAdminUI=function(){try{if(typeof oldUpdate==='function')oldUpdate();}catch(e){}['addCharacterBtn','addMapPinBtn'].forEach(id=>{const e=$(id);if(e)e.style.display=isAdmin()?'inline-flex':'none';});};
-
-  // Load Firestore content after auth is ready.
-  window.addEventListener('fb-ready',()=>{setTimeout(loadAllAdminData,300);},{once:true});
-  document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{addNewsTab();if(window.FB?.ready)loadAllAdminData();},800);},{once:true});
-})();
-</script>
 </body>
 </html>
