@@ -4,12 +4,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
+  authDomain:    'gta6hq-befa7.firebaseapp.com',
+  projectId:     'gta6hq-befa7',
+  apiKey: 'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
+  authDomain: 'gta6hq-befa7.firebaseapp.com',
+  projectId: 'gta6hq-befa7',
+  storageBucket: 'gta6hq-befa7.appspot.com'
 };
 
 const app = initializeApp(firebaseConfig);
