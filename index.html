@@ -1032,6 +1032,170 @@ window.addEventListener('fb-ready', () => {
   // Site settings on load
   applySiteSettings();
 })();
+  /* ─── FAQ toggle ─── */
+function toggleFAQ(btn) {
+  const answer = btn.nextElementSibling;
+  const icon   = btn.querySelector('span:last-child');
+  const isOpen = answer.style.display !== 'none';
+  answer.style.display = isOpen ? 'none' : 'block';
+  icon.textContent = isOpen ? '+' : '−';
+  icon.style.transform = isOpen ? '' : 'rotate(45deg)';
+}
+
+/* ─── Like toggle ─── */
+function toggleLike(btn, id) {
+  if (S.liked.has(id)) {
+    S.liked.delete(id);
+    btn.classList.remove('liked');
+  } else {
+    S.liked.add(id);
+    btn.classList.add('liked');
+  }
+  const span = btn.querySelector('span');
+  if (span) span.textContent = parseInt(span.textContent) + (S.liked.has(id) ? 1 : -1);
+  save();
+}
+
+/* ─── Gallery filter ─── */
+function filterGallery(cat, btn) {
+  if (btn) {
+    btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const cards = document.querySelectorAll('#galleryGrid .card');
+  cards.forEach(c => {
+    if (cat === 'all') { c.style.display = ''; return; }
+    const tags = c.querySelectorAll('.tag');
+    let match = false;
+    tags.forEach(t => { if (t.textContent.trim() === cat) match = true; });
+    c.style.display = match ? '' : 'none';
+  });
+}
+
+/* ─── Guides filter ─── */
+function filterGuides(type, btn) {
+  if (btn) {
+    btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const cards = document.querySelectorAll('#guidesGrid .card');
+  cards.forEach(c => {
+    if (type === 'all') { c.style.display = ''; return; }
+    c.style.display = c.dataset.type === type ? '' : 'none';
+  });
+}
+
+/* ─── Q&A search ─── */
+function filterQA(query) {
+  const q = query.toLowerCase().trim();
+  const items = document.querySelectorAll('#qaList .card');
+  items.forEach(c => {
+    const text = (c.dataset.q || '') + ' ' + c.textContent.toLowerCase();
+    c.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+
+/* ─── Live News Fetch & Render ─── */
+async function loadNews() {
+  const skeleton = $('newsSkeleton');
+  const featureGrid = $('newsFeatureGrid');
+  const newsList = $('newsList');
+
+  try {
+    const news = await window.fetchLiveNews();
+    if (skeleton) skeleton.style.display = 'none';
+
+    if (!news.length) {
+      if (featureGrid) featureGrid.innerHTML = '<p style="color:var(--text3);font-size:14px;text-align:center;padding:40px">No live news yet — check back soon!</p>';
+      return;
+    }
+
+    // Top 3 for feature grid
+    const top3 = news.slice(0, 3);
+    const rest = news.slice(3);
+
+    if (featureGrid) {
+      featureGrid.innerHTML = top3.map((n, i) => {
+        const cat     = n.category || 'official';
+        const catCls  = cat === 'official' ? 'cat-official' : cat === 'rumor' ? 'cat-rumor' : 'cat-update';
+        const title   = esc(n.title || 'Untitled');
+        const excerpt = esc(n.summary || n.excerpt || '');
+        const source  = esc(n.source || 'GTA6HQ');
+        const time    = esc(n.time || '');
+        const img     = n.image_url || '';
+        const cls     = i === 0 ? 'featured' : i === 2 ? 'wide mini' : 'mini';
+        const imgHtml = img
+          ? `<div class="nf-card-img"><img src="${esc(img)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:20px;color:var(--gold)\\'>VI</div>'"/></div>`
+          : `<div class="nf-card-img"><div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:20px;color:var(--gold)">VI</div></div>`;
+
+        return `
+          <div class="nf-card ${cls}">
+            ${imgHtml}
+            <div class="nf-card-body">
+              <div class="nf-eyebrow">
+                <span class="${catCls}">${esc(cat.toUpperCase())}</span>
+                <span class="sep">·</span>
+                <span class="sep">${time}</span>
+              </div>
+              <div class="nf-card-title">${title}</div>
+              ${excerpt ? `<div class="nf-card-excerpt">${excerpt}</div>` : ''}
+              <div class="nf-read">Read more →</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Rest as list items
+    if (newsList && rest.length) {
+      newsList.innerHTML = rest.map(n => {
+        const title   = esc(n.title || '');
+        const excerpt = esc(n.summary || n.excerpt || '');
+        const source  = esc(n.source || 'GTA6HQ');
+        const time    = esc(n.time || '');
+        const img     = n.image_url || '';
+        const cat     = n.category || 'news';
+        const catCls  = cat === 'official' ? 'tag-official' : cat === 'rumor' ? 'tag-news' : 'tag-update';
+
+        return `
+          <div class="ntp-item">
+            ${img
+              ? `<img class="ntp-thumb" src="${esc(img)}" alt="" loading="lazy" onerror="this.style.background='var(--bg3)'"/>`
+              : `<div class="ntp-thumb" style="display:flex;align-items:center;justify-content:center;font-family:var(--fd);color:var(--gold)">VI</div>`}
+            <div class="ntp-body">
+              <div style="display:flex;gap:6px;margin-bottom:4px"><span class="tag ${catCls}">${esc(cat.toUpperCase())}</span></div>
+              <div class="ntp-title">${title}</div>
+              <div class="ntp-excerpt">${excerpt}</div>
+              <div class="ntp-meta"><span class="ntp-src">${source}</span><span>${time}</span></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+  } catch(e) {
+    console.error('[news load]', e);
+    if (skeleton) skeleton.style.display = 'none';
+    if (featureGrid) featureGrid.innerHTML = '<p style="color:var(--text3);text-align:center;padding:40px">Could not load news. Try again later.</p>';
+  }
+}
+
+// Auto-load news when FB is ready
+window.addEventListener('fb-ready', () => {
+  if (window.FB && FB.ready) {
+    loadNews();
+    // Refresh every 5 minutes
+    setInterval(loadNews, 300000);
+  }
+}, { once: true });
+
+// PC specs responsive grid fix
+const sysreqGrid = document.querySelector('#sysreq .container > div:last-of-type');
+if (sysreqGrid && window.innerWidth <= 600) {
+  sysreqGrid.style.gridTemplateColumns = '1fr';
+}
+window.addEventListener('resize', () => {
+  if (sysreqGrid) {
+    sysreqGrid.style.gridTemplateColumns = window.innerWidth <= 600 ? '1fr' : '1fr 1fr';
+  }
+});
 </script>
 
 <footer>
