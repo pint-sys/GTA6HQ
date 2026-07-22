@@ -4,31 +4,32 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
-  authDomain:    'gta6hq-befa7.firebaseapp.com',
-  projectId:     'gta6hq-befa7',
-  apiKey: 'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
-  authDomain: 'gta6hq-befa7.firebaseapp.com',
-  projectId: 'gta6hq-befa7',
-  storageBucket: 'gta6hq-befa7.appspot.com
+  apiKey: "AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA",
+  authDomain: "gta6hq-5b56a.firebaseapp.com",
+  projectId: "gta6hq-5b56a",
+  storageBucket: "gta6hq-5b56a.firebasestorage.app",
+  messagingSenderId: "487411015433",
+  appId: "1:487411015433:web:9059535ae9b45f78ccbdd8",
+  measurementId: "G-NRJS36XFXS"
 };
 
+// ── Initialize Firebase ──────────────────────────────────
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db   = getFirestore(app);
 
-// ✅ Create or update user document on first login
+// ── Create or update user document on first login ─────────
 export async function createUserDocument(user) {
   try {
-    const userDocRef = doc(db, "users", user.uid);
+    const userDocRef  = doc(db, "users", user.uid);
     const userDocSnap = await getDoc(userDocRef);
 
     if (!userDocSnap.exists()) {
       const userData = {
-        email: user.email || "no-email-provided",
-        uid: user.uid,
-        admin: false,
-        role: "user",
+        email:     user.email || "no-email-provided",
+        uid:       user.uid,
+        admin:     false,
+        role:      "user",
         createdAt: new Date().toISOString()
       };
       await setDoc(userDocRef, userData);
@@ -41,10 +42,10 @@ export async function createUserDocument(user) {
   }
 }
 
-// ✅ Check admin status from Firestore user document
+// ── Check admin status from Firestore user document ───────
 export async function checkAdminStatus(uid) {
   try {
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef  = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
     if (userDocSnap.exists()) {
@@ -62,17 +63,18 @@ export async function checkAdminStatus(uid) {
   }
 }
 
-// ✅ Robust auth state listener with debug logging
+// ── Robust auth state listener with debug logging ─────────
 export function monitorAuthState(callback) {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       console.log("✅ AUTH DEBUG — User signed in:");
       console.log("  Email:", user.email);
-      console.log("  UID:", user.uid);
+      console.log("  UID:",  user.uid);
 
       await createUserDocument(user);
       const isAdmin = await checkAdminStatus(user.uid);
       console.log("  isAdmin():", isAdmin);
+
       callback({ user, isAdmin });
     } else {
       console.log("❌ AUTH DEBUG — No user signed in");
