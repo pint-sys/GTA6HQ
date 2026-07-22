@@ -227,6 +227,7 @@ footer{background:#060608;border-top:1px solid var(--border);padding:44px 20px 1
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
+<div id="authDebugPanel" style="position:fixed;top:40px;left:10px;background:#000;color:#0f0;font-family:monospace;font-size:12px;padding:12px 14px;border-radius:8px;z-index:99999;max-width:360px;white-space:pre-wrap;border:2px solid #0f0;line-height:1.6">Loading auth debug info…</div>
 <div class="offline-banner" id="offlineBanner" role="status" aria-live="polite">📡 You're offline — live content won't update until your connection is back.</div>
 <a class="skip-link" href="#home">Skip to main content</a>
 
@@ -544,20 +545,35 @@ window.closeModal = closeModal;
 window.addEventListener('fb-ready', ()=>{
   if(!window.FB || !FB.ready) return;
   FB.onAuthChange(async (user)=>{
+    const dbg = $('authDebugPanel');
     if(user){
       console.log('[auth] Signed in as UID:', user.uid, '| email:', user.email);
       S.loggedIn=true;
       S.username = user.displayName || (user.email ? user.email.split('@')[0] : 'Member');
       S.userId = user.uid;
       save();
-      _adminCache = await FB.checkAdmin(user.uid);
+      let adminResult, adminError = null;
+      try{
+        adminResult = await FB.checkAdmin(user.uid);
+      }catch(e){
+        adminError = e.code || e.message;
+        adminResult = false;
+      }
+      _adminCache = adminResult;
       console.log('[auth] Admin cache set to:', _adminCache);
+      if(dbg) dbg.textContent =
+        'AUTH DEBUG\n'+
+        'Email: '+user.email+'\n'+
+        'UID: '+user.uid+'\n'+
+        'isAdmin(): '+_adminCache+
+        (adminError ? '\nERROR: '+adminError : '');
     } else {
       S.loggedIn=false;
       S.username='Guest';
       S.userId=null;
       save();
       _adminCache=false;
+      if(dbg) dbg.textContent = 'AUTH DEBUG\nNot signed in.';
     }
     updateAccountUI(user);
   });
