@@ -1,68 +1,78 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+// firebase-config.js
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
-  authDomain: 'gta6hq-befa7.firebaseapp.com',
-  projectId: 'gta6hq-befa7',
-  storageBucket: 'gta6hq-befa7.appspot.com',
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-let db = null;
-let auth = null;
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-try {
-  const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
-  console.log('[firebase] Initialised successfully.');
-} catch (err) {
-  console.error('[firebase] Init failed:', err.message);
-}
-
-// Global helpers attached to window
-window.firebaseAuth = auth;
-window.db = db;
-
-window.checkAdmin = async function(uid) {
-  if (!uid) return false;
-  try {
-    const s = await getDoc(doc(db, 'admins', uid));
-    console.log('[admin check] uid:', uid, '-> exists:', s.exists());
-    return s.exists();
-  } catch(e) {
-    console.error('[admin check] FAILED for uid:', uid, '-', e.code || e.message, e);
-    return false;
-  }
-};
-
-window.fetchLiveNews = async function() {
-  if (!db) return [];
-  try {
-    const q = query(collection(db, 'automated_news'), orderBy('timestamp', 'desc'), limit(12));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error('[firebase] Error reading from Firestore:', error);
-    return [];
-  }
-};
-
-// Safe initialization listener to ensure authentication state is loaded before checking admin status
-if (auth) {
-  onAuthStateChanged(auth, async (user) => {
+// ✅ Robust auth state listener with debug logging
+export function monitorAuthState(callback) {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log('[auth] User signed in:', user.email, user.uid);
-      const isAdminUser = await window.checkAdmin(user.uid);
-      console.log('isAdmin():', isAdminUser);
-      // Dispatch custom event for your UI to update
-      window.dispatchEvent(new CustomEvent('admin-status-resolved', { detail: { isAdmin: isAdminUser, user } }));
+      console.log("✅ AUTH DEBUG — User signed in:");
+      console.log("  Email:", user.email);
+      console.log("  UID:", user.uid);
+      checkAdminStatus(user.uid).then((isAdmin) => {
+        console.log("  isAdmin():", isAdmin);
+        callback({ user, isAdmin });
+      });
     } else {
-      console.log('[auth] No user signed in. isAdmin(): false');
-      window.dispatchEvent(new CustomEvent('admin-status-resolved', { detail: { isAdmin: false, user: null } }));
+      console.log("❌ AUTH DEBUG — No user signed in");
+      callback({ user: null, isAdmin: false });
     }
   });
 }
 
-window.dispatchEvent(new Event('fb-ready'));
+// ✅ Check admin status from Firestore user document
+export async function checkAdminStatus(uid) {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const data = userDocSnap.data();
+      console.log("  Firestore user doc data:", data);
+      return data.admin === true || data.role === "admin";
+    } else {
+      console.log("⚠️ AUTH DEBUG — No Firestore document found for UID:", uid);
+      console.log("  → You need to create a /users/" + uid + " document with { admin: true }");
+      return false;
+    }
+  } catch (error) {
+    console.error("❌ AUTH DEBUG — Error checking admin status:", error.code, error.message);
+    return false;
+  }
+}
+
+// ✅ Create or update user document on first login
+export async function createUserDocument(user) {
+  const userDocRef = doc(db, "users", user.uid);
+  const userDocSnap = await getDoc(userDocRef);
+
+  if (!userDocSnap.exists()) {
+    const userData = {
+      email: user.email,
+      uid: user.uid,
+      admin: false,        // default: NOT admin
+      role: "user",
+      createdAt: new Date().toISOString()
+    };
+    try {
+      await setDoc(userDocRef, userData);
+      console.log("✅ AUTH DEBUG — User document created:", user.uid);
+    } catch (error) {
+      console.error("❌ AUTH DEBUG — Error creating user doc:", error.message);
+    }
+  }
+}
