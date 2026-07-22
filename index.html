@@ -278,10 +278,10 @@ window.FB = {
     if (!uid) return false;
     try {
       const s = await getDoc(doc(db, 'admins', uid));
-      console.log('[admin check] uid:', uid, '-> exists:', s.exists());
+      console.log('[admins check] uid:', uid, '-> exists:', s.exists());
       return s.exists();
     } catch(e){
-      console.error('[admin check] FAILED for uid:', uid, '-', e.code || e.message, e);
+      console.error('[admins check] FAILED for uid:', uid, '-', e.code || e.message, e);
       return false;
     }
   },
