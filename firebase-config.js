@@ -10,29 +10,35 @@ const firebaseConfig = {
   apiKey: 'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
   authDomain: 'gta6hq-befa7.firebaseapp.com',
   projectId: 'gta6hq-befa7',
-  storageBucket: 'gta6hq-befa7.appspot.com'
+  storageBucket: 'gta6hq-befa7.appspot.com
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// ✅ Robust auth state listener with debug logging
-export function monitorAuthState(callback) {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("✅ AUTH DEBUG — User signed in:");
-      console.log("  Email:", user.email);
-      console.log("  UID:", user.uid);
-      checkAdminStatus(user.uid).then((isAdmin) => {
-        console.log("  isAdmin():", isAdmin);
-        callback({ user, isAdmin });
-      });
+// ✅ Create or update user document on first login
+export async function createUserDocument(user) {
+  try {
+    const userDocRef = doc(db, "users", user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (!userDocSnap.exists()) {
+      const userData = {
+        email: user.email || "no-email-provided",
+        uid: user.uid,
+        admin: false,
+        role: "user",
+        createdAt: new Date().toISOString()
+      };
+      await setDoc(userDocRef, userData);
+      console.log("✅ AUTH DEBUG — User document created:", user.uid);
     } else {
-      console.log("❌ AUTH DEBUG — No user signed in");
-      callback({ user: null, isAdmin: false });
+      console.log("ℹ️ AUTH DEBUG — User document already exists:", user.uid);
     }
-  });
+  } catch (error) {
+    console.error("❌ AUTH DEBUG — Error creating user doc:", error.code, error.message);
+  }
 }
 
 // ✅ Check admin status from Firestore user document
@@ -47,7 +53,7 @@ export async function checkAdminStatus(uid) {
       return data.admin === true || data.role === "admin";
     } else {
       console.log("⚠️ AUTH DEBUG — No Firestore document found for UID:", uid);
-      console.log("  → You need to create a /users/" + uid + " document with { admin: true }");
+      console.log("  → Create /users/" + uid + " document with { admin: true }");
       return false;
     }
   } catch (error) {
@@ -56,24 +62,21 @@ export async function checkAdminStatus(uid) {
   }
 }
 
-// ✅ Create or update user document on first login
-export async function createUserDocument(user) {
-  const userDocRef = doc(db, "users", user.uid);
-  const userDocSnap = await getDoc(userDocRef);
+// ✅ Robust auth state listener with debug logging
+export function monitorAuthState(callback) {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("✅ AUTH DEBUG — User signed in:");
+      console.log("  Email:", user.email);
+      console.log("  UID:", user.uid);
 
-  if (!userDocSnap.exists()) {
-    const userData = {
-      email: user.email,
-      uid: user.uid,
-      admin: false,        // default: NOT admin
-      role: "user",
-      createdAt: new Date().toISOString()
-    };
-    try {
-      await setDoc(userDocRef, userData);
-      console.log("✅ AUTH DEBUG — User document created:", user.uid);
-    } catch (error) {
-      console.error("❌ AUTH DEBUG — Error creating user doc:", error.message);
+      await createUserDocument(user);
+      const isAdmin = await checkAdminStatus(user.uid);
+      console.log("  isAdmin():", isAdmin);
+      callback({ user, isAdmin });
+    } else {
+      console.log("❌ AUTH DEBUG — No user signed in");
+      callback({ user: null, isAdmin: false });
     }
-  }
+  });
 }
