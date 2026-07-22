@@ -1,61 +1,46 @@
-/**
- * firebase-config.js — Frontend Firebase initialisation.
- *
- * BUGS FIXED:
- *
- * FIX BUG-08: apiKey was missing from the config object.
- *   Firebase Web SDK REQUIRES apiKey. Without it, initializeApp succeeds
- *   but all Firestore operations fail with "auth/invalid-api-key" or,
- *   if security rules are open, with unexpected permission errors.
- *   Added apiKey placeholder — replace with your actual key from the
- *   Firebase console (Project Settings → Your apps → Web app → Config).
- *
- * FIX BUG-01: window.fetchLiveNews was defined here but never called.
- *   This module is loaded as <script type="module"> which defers it.
- *   The function is now defined on window.fetchLiveNews as before.
- *   news.js's fetchLatestNews() checks for it explicitly before falling
- *   through to RSS. The 200ms setTimeout in app.js init ensures Firebase
- *   is ready before fetchLatestNews is called.
- *
- * NOTE: The Firebase Web API key is NOT a secret — it is safe to commit
- * to a public repo. Access control is handled by Firestore Security Rules.
- * However, NEVER commit your firebase-admin service account JSON.
- */
-
-import { initializeApp }                    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, getDocs,
-         query, orderBy, limit }             from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey:        'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA', // ← Required. Get from Firebase console.
-  authDomain:    'gta6hq-befa7.firebaseapp.com',
-  projectId:     'gta6hq-befa7',
+  apiKey: 'AIzaSyB8hyGumMpfXfupsEhhd53Zg8JDoTcqfzA',
+  authDomain: 'gta6hq-befa7.firebaseapp.com',
+  projectId: 'gta6hq-befa7',
   storageBucket: 'gta6hq-befa7.appspot.com',
 };
 
 let db = null;
+let auth = null;
 
 try {
   const app = initializeApp(firebaseConfig);
   db = getFirestore(app);
+  auth = getAuth(app);
   console.log('[firebase] Initialised successfully.');
 } catch (err) {
-  console.error('[firebase] Init failed — Firestore news will be unavailable:', err.message);
+  console.error('[firebase] Init failed:', err.message);
 }
 
-/**
- * Fetch the latest 12 news articles from Firestore.
- * Exposed on window so news.js can call it without importing Firebase directly.
- *
- * Returns an empty array on failure — callers must handle gracefully.
- *
- * @returns {Promise<Array>}
- */
-window.fetchLiveNews = async function fetchLiveNews() {
-  if (!db) return [];
+// Global helpers attached to window
+window.firebaseAuth = auth;
+window.db = db;
 
+window.checkAdmin = async function(uid) {
+  if (!uid) return false;
   try {
-    const q             = query(collection(db, 'automated_news'), orderBy('timestamp', 'desc'), limit(12));
+    const s = await getDoc(doc(db, 'admins', uid));
+    console.log('[admin check] uid:', uid, '-> exists:', s.exists());
+    return s.exists();
+  } catch(e) {
+    console.error('[admin check] FAILED for uid:', uid, '-', e.code || e.message, e);
+    return false;
+  }
+};
+
+window.fetchLiveNews = async function() {
+  if (!db) return [];
+  try {
+    const q = query(collection(db, 'automated_news'), orderBy('timestamp', 'desc'), limit(12));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
@@ -63,3 +48,21 @@ window.fetchLiveNews = async function fetchLiveNews() {
     return [];
   }
 };
+
+// Safe initialization listener to ensure authentication state is loaded before checking admin status
+if (auth) {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log('[auth] User signed in:', user.email, user.uid);
+      const isAdminUser = await window.checkAdmin(user.uid);
+      console.log('isAdmin():', isAdminUser);
+      // Dispatch custom event for your UI to update
+      window.dispatchEvent(new CustomEvent('admin-status-resolved', { detail: { isAdmin: isAdminUser, user } }));
+    } else {
+      console.log('[auth] No user signed in. isAdmin(): false');
+      window.dispatchEvent(new CustomEvent('admin-status-resolved', { detail: { isAdmin: false, user: null } }));
+    }
+  });
+}
+
+window.dispatchEvent(new Event('fb-ready'));
